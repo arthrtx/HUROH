@@ -1,0 +1,22 @@
+:root {
+    --cor-fundo: black;
+    --cor-cartao:#17171a;
+    --cor-cartao-alto:#222226;
+    --cor-borda:#2a2a2f;
+    --cor-texto:#f2f2f3;
+    --cor-texto-suave:#8b8b93;
+    --cor-destaque:#3df2a0;
+    --cor-destaque-fundo:rgba(61, 242, 160, 0.12);
+    --cor-despesa:#ff5c6c;
+    --cor-aviso:#ffb547;
+    --raio-cartao:22px;
+    --raio-pilula:999px;
+    --fonte:'Inter', system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: var(--fonte);
+}
