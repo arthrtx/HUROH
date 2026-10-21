@@ -1,42 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HUROH</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="css/base.css">
-
-</head>
-<body>
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
     <div class="app">
       <aside class="menu">
         <div class="logo">HUROH</div>
         <nav>
-            <a href="#" class="ativo">Dashboard</a>
-            <a href="#">Finanças</a>
-            <a href="#">Agenda</a>
-            <a href="#">Tarefas</a>
-            <a href="#">Widgets</a>
-            <a href="#">Definições</a>
-          </nav>
-        </aside>
+          <a href="#" class="ativo">Dashboard</a>
+          <a href="#">Finanças</a>
+          <a href="#">Agenda</a>
+          <a href="#">Tarefas</a>
+          <a href="#">Widgets</a>
+          <a href="#">Definições</a>
+        </nav>
+      </aside>
 
-        <main class="conteudo">
-          <h1>Olá, Arthur</h1>
-          <section class="grelha">
-            <article class="widget grande">
-              <h2 class="widget-titulo">Saldo</h2>
-              <p class="widget-valor">1.250,00 €</p>
-              <p class="widget-detalhe"><span class="positivo">+ 320,00 €</span> este mês</p>
-            </article>
-          </section>
-        </main>
+      <main class="conteudo">
+        <h1>Olá, Arthur</h1>
+        <section class="grelha">
+          <article class="widget grande">
+            <h2 class="widget-titulo">Saldo</h2>
+            <p class="widget-valor">1.250,00 €</p>
+            <p class="widget-detalhe">
+              <span class="positivo">+ 320,00 €</span> este mês
+            </p>
+          </article>
+
+          <article class="widget">
+            <h2 class="widget-titulo">Finanças</h2>
+            <p class="widget-valor">820,00 €</p>
+            <p class="widget-detalhe">
+              <span class="negativo">- 430,00 €</span> Despesas este mês
+            </p>
+          </article>
+
+          <article class="widget-detalhe">
+            <h2 class="widget-titulo">Agenda</h2>
+            <p class="widget-valor">14:30</p>
+            <p class="widget-detalhe">Reunião de Estágio</p>
+          </article>
+
+          <article class="widget-detalhe">
+            <h2 class="widget-titulo">Tarefas</h2>
+            <p class="widget-valor">3</p>
+            <p class="widget-detalhe">Tarefas pendentes</p>
+          </article>
+
+          <article class="widget-detalhe">
+            <h2 class="widget-titulo">Relógio</h2>
+            <p class="widget-valor">09:41</p>
+            <p class="widget-detalhe">terça, 21 de outubro</p>
+          </article>
+
+          <article class="widget-detalhe">
+            <h2 class="widget-titulo">Lembretes</h2>
+            <p class="widget-valor">2</p>
+            <p class="widget-detalhe">Pagar renda amanhã</p>
+          </article>
+        </section>
+      </main>
     </div>
-
-
-</body>
+  </body>
 </html>
