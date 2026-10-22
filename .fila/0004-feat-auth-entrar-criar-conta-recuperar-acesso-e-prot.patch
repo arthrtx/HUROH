@@ -1,0 +1,240 @@
+From eca1267d78eb3aa270e1da8f2bc3cc9e21ba6bf8 Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:19:36 +0100
+Subject: [PATCH 04/20] =?UTF-8?q?feat(auth):=20entrar,=20criar=20conta,=20?=
+ =?UTF-8?q?recuperar=20acesso=20e=20prote=C3=A7=C3=A3o=20do=20painel?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/index.html |   2 +-
+ web/js/app.js  |  34 ++++++++++++
+ web/js/auth.js | 146 +++++++++++++++++++++++++++++++++++++++++++++++++
+ web/login.html |   1 +
+ 4 files changed, 182 insertions(+), 1 deletion(-)
+ create mode 100644 web/js/auth.js
+
+diff --git a/web/index.html b/web/index.html
+index 35c68b8..8ff1eb7 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -30,7 +30,7 @@
+ 
+       <main class="conteudo">
+         <section class="pagina ativa" id="dashboard">
+-          <h1>Olá, Arthur</h1>
++          <h1 id="saudacao">Olá</h1>
+           <section class="grelha">
+             <article class="widget grande">
+               <h2 class="widget-titulo">Saldo</h2>
+diff --git a/web/js/app.js b/web/js/app.js
+index d364276..8d1ba36 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -1,3 +1,37 @@
++import { supabase } from './supabase.js';
++
++
++// sessão
++// ======================================================
++const { data: { session } } = await supabase.auth.getSession();
++
++if (!session) {
++    location.replace('login.html');
++    throw new Error('sem sessão');
++}
++
++export const utilizador = session.user;
++
++supabase.auth.onAuthStateChange(evento => {
++    if (evento === 'SIGNED_OUT') {
++        location.replace('login.html');
++    }
++});
++
++async function carregarPerfil() {
++    const { data } = await supabase
++        .from('profiles')
++        .select('display_name')
++        .eq('id', utilizador.id)
++        .single();
++
++    const nome = data?.display_name || utilizador.email.split('@')[0];
++    document.getElementById('saudacao').textContent = `Olá, ${nome}`;
++}
++
++carregarPerfil();
++
++
+ // relógio
+ // ======================================================
+ const relogioHora = document.getElementById('relogio-hora');
+diff --git a/web/js/auth.js b/web/js/auth.js
+new file mode 100644
+index 0000000..27bd373
+--- /dev/null
++++ b/web/js/auth.js
+@@ -0,0 +1,146 @@
++import { supabase } from './supabase.js';
++
++const mensagem = document.getElementById('mensagem');
++const formularios = document.querySelectorAll('.formulario');
++const separadores = document.getElementById('separadores');
++
++try {
++    if (localStorage.getItem('tema') === 'claro') {
++        document.body.classList.add('tema-claro');
++    }
++} catch {}
++
++
++// mudar de formulário
++// ======================================================
++function mostrar(modo) {
++    formularios.forEach(form => form.classList.toggle('escondido', form.dataset.modo !== modo));
++    separadores.classList.toggle('escondido', modo === 'recuperar' || modo === 'nova-senha');
++    separadores.querySelectorAll('.separador').forEach(botao => {
++        botao.classList.toggle('ativo', botao.dataset.modo === modo);
++    });
++    escrever('');
++}
++
++function escrever(texto, tipo = '') {
++    mensagem.textContent = texto;
++    mensagem.className = `mensagem ${tipo}`;
++}
++
++function traduzirErro(erro) {
++    const texto = erro?.message || '';
++
++    if (texto.includes('Invalid login credentials')) return 'Email ou palavra-passe errados.';
++    if (texto.includes('Email not confirmed')) return 'Confirma primeiro o teu email (vê a caixa de entrada).';
++    if (texto.includes('User already registered')) return 'Já existe uma conta com este email.';
++    if (texto.includes('Password should be')) return 'A palavra-passe é demasiado fraca.';
++    if (texto.includes('rate limit')) return 'Demasiadas tentativas. Espera um pouco e tenta outra vez.';
++
++    return 'Algo correu mal. Tenta outra vez.';
++}
++
++async function enviar(form, acao) {
++    const botao = form.querySelector('button[type="submit"]');
++    botao.disabled = true;
++    escrever('');
++
++    try {
++        await acao(new FormData(form));
++    } catch (erro) {
++        escrever(traduzirErro(erro), 'erro');
++    } finally {
++        botao.disabled = false;
++    }
++}
++
++separadores.addEventListener('click', evento => {
++    const modo = evento.target.dataset.modo;
++    if (modo) {
++        mostrar(modo);
++    }
++});
++
++document.getElementById('link-recuperar').addEventListener('click', () => mostrar('recuperar'));
++document.getElementById('link-voltar').addEventListener('click', () => mostrar('entrar'));
++
++
++// entrar
++// ======================================================
++document.getElementById('form-entrar').addEventListener('submit', evento => {
++    evento.preventDefault();
++    enviar(evento.target, async dados => {
++        const { error } = await supabase.auth.signInWithPassword({
++            email: dados.get('email').trim(),
++            password: dados.get('senha'),
++        });
++        if (error) throw error;
++        location.replace('index.html');
++    });
++});
++
++
++// criar conta
++// ======================================================
++document.getElementById('form-registar').addEventListener('submit', evento => {
++    evento.preventDefault();
++    enviar(evento.target, async dados => {
++        const { data, error } = await supabase.auth.signUp({
++            email: dados.get('email').trim(),
++            password: dados.get('senha'),
++            options: {
++                data: { display_name: dados.get('nome').trim() },
++                emailRedirectTo: new URL('index.html', location.href).href,
++            },
++        });
++        if (error) throw error;
++
++        if (data.session) {
++            location.replace('index.html');
++            return;
++        }
++
++        evento.target.reset();
++        mostrar('entrar');
++        escrever('Conta criada. Confirma o email que te enviámos e depois entra.', 'ok');
++    });
++});
++
++
++// recuperar acesso
++// ======================================================
++document.getElementById('form-recuperar').addEventListener('submit', evento => {
++    evento.preventDefault();
++    enviar(evento.target, async dados => {
++        const { error } = await supabase.auth.resetPasswordForEmail(dados.get('email').trim(), {
++            redirectTo: new URL('login.html', location.href).href,
++        });
++        if (error) throw error;
++        escrever('Se o email existir, vais receber um link em breve.', 'ok');
++    });
++});
++
++document.getElementById('form-nova-senha').addEventListener('submit', evento => {
++    evento.preventDefault();
++    enviar(evento.target, async dados => {
++        const { error } = await supabase.auth.updateUser({ password: dados.get('senha') });
++        if (error) throw error;
++        escrever('Palavra-passe alterada. A entrar...', 'ok');
++        setTimeout(() => location.replace('index.html'), 1000);
++    });
++});
++
++supabase.auth.onAuthStateChange(evento => {
++    if (evento === 'PASSWORD_RECOVERY') {
++        mostrar('nova-senha');
++    }
++});
++
++
++// já tem sessão? vai direto para o painel
++// ======================================================
++const { data: { session } } = await supabase.auth.getSession();
++const veioRecuperar = location.hash.includes('type=recovery');
++
++if (session && !veioRecuperar) {
++    location.replace('index.html');
++}
+diff --git a/web/login.html b/web/login.html
+index 7a6782b..74a6328 100644
+--- a/web/login.html
++++ b/web/login.html
+@@ -78,5 +78,6 @@
+         <p class="mensagem" id="mensagem" role="status"></p>
+       </div>
+     </main>
++    <script type="module" src="js/auth.js"></script>
+   </body>
+ </html>
+-- 
+2.43.0
+

@@ -1,0 +1,306 @@
+From a8abe46e02d25ee67b25e2b4c2cf47520699fa96 Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:23:23 +0100
+Subject: [PATCH 07/20] feat(financas): registar, editar e apagar movimentos
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/css/paginas.css  |  10 +++
+ web/index.html       |  42 +++++++++++
+ web/js/app.js        |   4 +-
+ web/js/movimentos.js | 176 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 231 insertions(+), 1 deletion(-)
+ create mode 100644 web/js/movimentos.js
+
+diff --git a/web/css/paginas.css b/web/css/paginas.css
+index 12a5628..aac500a 100644
+--- a/web/css/paginas.css
++++ b/web/css/paginas.css
+@@ -39,6 +39,16 @@
+     margin-top: 0;
+ }
+ 
++.colunas-financas {
++    grid-template-columns: 2fr 1fr;
++}
++
++@media (max-width: 1000px) {
++    .colunas-financas {
++        grid-template-columns: 1fr;
++    }
++}
++
+ 
+ /* listas */
+ 
+diff --git a/web/index.html b/web/index.html
+index 4829e8a..1a52441 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -79,9 +79,15 @@
+         <section class="pagina" id="financas">
+           <div class="cabecalho-pagina">
+             <h1>Finanças</h1>
++            <button type="button" class="botao botao-principal" id="novo-movimento">+ Movimento</button>
+           </div>
+ 
+           <div class="colunas colunas-financas">
++            <div class="cartao">
++              <h2>Movimentos</h2>
++              <ul class="lista" id="lista-movimentos"></ul>
++            </div>
++
+             <div class="cartao">
+               <div class="cabecalho-pagina">
+                 <h2>Categorias</h2>
+@@ -135,6 +141,42 @@
+       </main>
+     </div>
+ 
++    <dialog class="janela" id="janela-movimento">
++      <h2 id="titulo-movimento">Novo movimento</h2>
++      <form class="formulario" id="form-movimento">
++        <input type="hidden" name="id_movimento" />
++        <div class="alternador">
++          <input type="radio" name="tipo" id="movimento-despesa" value="expense" checked />
++          <label for="movimento-despesa">Despesa</label>
++          <input type="radio" name="tipo" id="movimento-rendimento" value="income" />
++          <label for="movimento-rendimento">Rendimento</label>
++        </div>
++        <div class="linha-campos">
++          <label class="campo">
++            <span>Valor (€)</span>
++            <input type="number" name="valor" min="0.01" step="0.01" inputmode="decimal" required />
++          </label>
++          <label class="campo">
++            <span>Data</span>
++            <input type="date" name="data" required />
++          </label>
++        </div>
++        <label class="campo">
++          <span>Categoria</span>
++          <select name="categoria"></select>
++        </label>
++        <label class="campo">
++          <span>Descrição (opcional)</span>
++          <input type="text" name="descricao" maxlength="140" />
++        </label>
++        <div class="janela-botoes">
++          <button type="button" class="botao botao-perigo escondido" id="apagar-movimento">Apagar</button>
++          <button type="button" class="botao" data-fechar>Cancelar</button>
++          <button type="submit" class="botao botao-principal">Guardar</button>
++        </div>
++      </form>
++    </dialog>
++
+     <dialog class="janela" id="janela-categoria">
+       <h2 id="titulo-categoria">Nova categoria</h2>
+       <form class="formulario" id="form-categoria">
+diff --git a/web/js/app.js b/web/js/app.js
+index fd47d30..71b4208 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -1,6 +1,7 @@
+ import { supabase } from './supabase.js';
+ import { iniciarDefinicoes } from './definicoes.js';
+ import { iniciarCategorias } from './categorias.js';
++import { iniciarMovimentos } from './movimentos.js';
+ 
+ 
+ // sessão
+@@ -37,7 +38,8 @@ async function carregarPerfil() {
+ const perfil = await carregarPerfil();
+ mostrarNome(perfil.nome);
+ iniciarDefinicoes(utilizador, perfil, mostrarNome);
+-iniciarCategorias();
++await iniciarCategorias();
++iniciarMovimentos();
+ document.body.classList.remove('a-carregar');
+ 
+ 
+diff --git a/web/js/movimentos.js b/web/js/movimentos.js
+new file mode 100644
+index 0000000..241409a
+--- /dev/null
++++ b/web/js/movimentos.js
+@@ -0,0 +1,176 @@
++import { supabase } from './supabase.js';
++import { aviso, dataCurta, dataISO, escapar, euros } from './utils.js';
++import { categoriaPorId, obterCategorias } from './categorias.js';
++
++const POR_PAGINA = 50;
++let movimentos = [];
++
++
++// carregar
++// ======================================================
++export async function carregarMovimentos() {
++    const { data, error } = await supabase
++        .from('transactions')
++        .select('id, type, amount, category_id, description, transaction_date')
++        .order('transaction_date', { ascending: false })
++        .order('created_at', { ascending: false })
++        .limit(POR_PAGINA);
++
++    if (error) {
++        aviso('Não foi possível carregar os movimentos.', 'erro');
++        return;
++    }
++
++    movimentos = data;
++    desenharMovimentos();
++}
++
++
++// lista
++// ======================================================
++function desenharMovimentos() {
++    const lista = document.getElementById('lista-movimentos');
++
++    if (movimentos.length === 0) {
++        lista.innerHTML = '<li class="vazio">Sem movimentos. Regista o primeiro com "+ Movimento".</li>';
++        return;
++    }
++
++    lista.innerHTML = movimentos.map(movimento => {
++        const categoria = categoriaPorId(movimento.category_id);
++        const despesa = movimento.type === 'expense';
++
++        return `
++            <li class="lista-item">
++                <span class="bolinha" style="background-color: ${categoria?.color || '#8b8b93'}"></span>
++                <div class="lista-principal">
++                    <p class="lista-titulo">${escapar(movimento.description || categoria?.name || 'Sem descrição')}</p>
++                    <p class="lista-sub">${dataCurta(movimento.transaction_date)} · ${escapar(categoria?.name || 'Sem categoria')}</p>
++                </div>
++                <span class="lista-valor ${despesa ? 'negativo' : 'positivo'}">
++                    ${despesa ? '−' : '+'} ${euros(movimento.amount)}
++                </span>
++                <button type="button" class="botao-link" data-editar="${movimento.id}">Editar</button>
++            </li>
++        `;
++    }).join('');
++}
++
++
++// janela de registar / editar
++// ======================================================
++const janela = document.getElementById('janela-movimento');
++const form = document.getElementById('form-movimento');
++
++function preencherCategorias(selecionada) {
++    const tipo = form.tipo.value;
++    const opcoes = obterCategorias(tipo).map(categoria =>
++        `<option value="${categoria.id}">${escapar(categoria.name)}</option>`
++    );
++
++    form.categoria.innerHTML = '<option value="">Sem categoria</option>' + opcoes.join('');
++    form.categoria.value = selecionada || '';
++}
++
++export function abrirMovimento(movimento, tipo = 'expense') {
++    form.reset();
++    form.id_movimento.value = movimento?.id || '';
++    form.tipo.value = movimento?.type || tipo;
++    form.valor.value = movimento?.amount || '';
++    form.data.value = movimento?.transaction_date || dataISO();
++    form.descricao.value = movimento?.description || '';
++    preencherCategorias(movimento?.category_id);
++
++    document.getElementById('titulo-movimento').textContent = movimento ? 'Editar movimento' : 'Novo movimento';
++    document.getElementById('apagar-movimento').classList.toggle('escondido', !movimento);
++    janela.showModal();
++    form.valor.focus();
++}
++
++function avisarAlteracao() {
++    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'transactions' }));
++}
++
++async function guardar(evento) {
++    evento.preventDefault();
++
++    const valor = Number(String(form.valor.value).replace(',', '.'));
++
++    if (!(valor > 0)) {
++        aviso('O valor tem de ser maior que zero.', 'erro');
++        return;
++    }
++
++    const dados = {
++        type: form.tipo.value,
++        amount: Math.round(valor * 100) / 100,
++        transaction_date: form.data.value,
++        category_id: form.categoria.value || null,
++        description: form.descricao.value.trim() || null,
++    };
++
++    const id = form.id_movimento.value;
++    const botao = form.querySelector('button[type="submit"]');
++    botao.disabled = true;
++
++    const { error } = id
++        ? await supabase.from('transactions').update(dados).eq('id', id)
++        : await supabase.from('transactions').insert(dados);
++
++    botao.disabled = false;
++
++    if (error) {
++        aviso('Não foi possível guardar o movimento.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso(id ? 'Movimento atualizado.' : 'Movimento registado.');
++    avisarAlteracao();
++}
++
++async function apagar() {
++    const id = form.id_movimento.value;
++
++    if (!id || !confirm('Apagar este movimento?')) {
++        return;
++    }
++
++    const { error } = await supabase.from('transactions').delete().eq('id', id);
++
++    if (error) {
++        aviso('Não foi possível apagar o movimento.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso('Movimento apagado.');
++    avisarAlteracao();
++}
++
++
++// início
++// ======================================================
++export function iniciarMovimentos() {
++    document.getElementById('novo-movimento').addEventListener('click', () => abrirMovimento());
++    document.getElementById('lista-movimentos').addEventListener('click', evento => {
++        const id = evento.target.dataset.editar;
++        if (id) {
++            abrirMovimento(movimentos.find(movimento => movimento.id === id));
++        }
++    });
++
++    form.addEventListener('submit', guardar);
++    document.getElementById('apagar-movimento').addEventListener('click', apagar);
++    form.querySelector('[data-fechar]').addEventListener('click', () => janela.close());
++    form.querySelectorAll('[name="tipo"]').forEach(opcao => opcao.addEventListener('change', () => preencherCategorias()));
++
++    document.addEventListener('categorias-alteradas', desenharMovimentos);
++    document.addEventListener('dados-alterados', evento => {
++        if (evento.detail === 'transactions') {
++            carregarMovimentos();
++        }
++    });
++
++    return carregarMovimentos();
++}
+-- 
+2.43.0
+

@@ -1,0 +1,277 @@
+From ad1c6cd75461f39af04083019121e2f76fe798cf Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:22:51 +0100
+Subject: [PATCH 06/20] feat(financas): categorias com cor e limite mensal
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/css/formularios.css |   6 ++
+ web/index.html          |  47 ++++++++++++-
+ web/js/app.js           |   2 +
+ web/js/categorias.js    | 152 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 206 insertions(+), 1 deletion(-)
+ create mode 100644 web/js/categorias.js
+
+diff --git a/web/css/formularios.css b/web/css/formularios.css
+index 6546bba..9e70576 100644
+--- a/web/css/formularios.css
++++ b/web/css/formularios.css
+@@ -34,6 +34,12 @@
+     min-height: 70px;
+ }
+ 
++.campo input[type="color"] {
++    padding: 4px;
++    height: 44px;
++    cursor: pointer;
++}
++
+ .campo input:focus,
+ .campo select:focus,
+ .campo textarea:focus {
+diff --git a/web/index.html b/web/index.html
+index 795e4da..4829e8a 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -77,7 +77,19 @@
+         </section>
+ 
+         <section class="pagina" id="financas">
+-          <h1>Finanças</h1>
++          <div class="cabecalho-pagina">
++            <h1>Finanças</h1>
++          </div>
++
++          <div class="colunas colunas-financas">
++            <div class="cartao">
++              <div class="cabecalho-pagina">
++                <h2>Categorias</h2>
++                <button type="button" class="botao" id="nova-categoria">+ Categoria</button>
++              </div>
++              <ul class="lista" id="lista-categorias"></ul>
++            </div>
++          </div>
+         </section>
+ 
+         <section class="pagina" id="agenda">
+@@ -122,6 +134,39 @@
+         </section>
+       </main>
+     </div>
++
++    <dialog class="janela" id="janela-categoria">
++      <h2 id="titulo-categoria">Nova categoria</h2>
++      <form class="formulario" id="form-categoria">
++        <input type="hidden" name="id_categoria" />
++        <div class="alternador">
++          <input type="radio" name="tipo" id="categoria-despesa" value="expense" checked />
++          <label for="categoria-despesa">Despesa</label>
++          <input type="radio" name="tipo" id="categoria-rendimento" value="income" />
++          <label for="categoria-rendimento">Rendimento</label>
++        </div>
++        <label class="campo">
++          <span>Nome</span>
++          <input type="text" name="nome" maxlength="40" required />
++        </label>
++        <div class="linha-campos">
++          <label class="campo">
++            <span>Cor</span>
++            <input type="color" name="cor" value="#8b8b93" />
++          </label>
++          <label class="campo">
++            <span>Limite mensal (€)</span>
++            <input type="number" name="limite" min="0.01" step="0.01" inputmode="decimal" />
++          </label>
++        </div>
++        <div class="janela-botoes">
++          <button type="button" class="botao botao-perigo escondido" id="apagar-categoria">Apagar</button>
++          <button type="button" class="botao" data-fechar>Cancelar</button>
++          <button type="submit" class="botao botao-principal">Guardar</button>
++        </div>
++      </form>
++    </dialog>
++
+     <script type="module" src="js/app.js"></script>
+   </body>
+ </html>
+diff --git a/web/js/app.js b/web/js/app.js
+index 9df5228..fd47d30 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -1,5 +1,6 @@
+ import { supabase } from './supabase.js';
+ import { iniciarDefinicoes } from './definicoes.js';
++import { iniciarCategorias } from './categorias.js';
+ 
+ 
+ // sessão
+@@ -36,6 +37,7 @@ async function carregarPerfil() {
+ const perfil = await carregarPerfil();
+ mostrarNome(perfil.nome);
+ iniciarDefinicoes(utilizador, perfil, mostrarNome);
++iniciarCategorias();
+ document.body.classList.remove('a-carregar');
+ 
+ 
+diff --git a/web/js/categorias.js b/web/js/categorias.js
+new file mode 100644
+index 0000000..996a2e4
+--- /dev/null
++++ b/web/js/categorias.js
+@@ -0,0 +1,152 @@
++import { supabase } from './supabase.js';
++import { aviso, escapar, euros } from './utils.js';
++
++let categorias = [];
++
++export function obterCategorias(tipo) {
++    return tipo ? categorias.filter(categoria => categoria.type === tipo) : categorias;
++}
++
++export function categoriaPorId(id) {
++    return categorias.find(categoria => categoria.id === id);
++}
++
++
++// carregar
++// ======================================================
++export async function carregarCategorias() {
++    const { data, error } = await supabase
++        .from('categories')
++        .select('id, name, type, color, monthly_limit')
++        .order('type', { ascending: false })
++        .order('name');
++
++    if (error) {
++        aviso('Não foi possível carregar as categorias.', 'erro');
++        return;
++    }
++
++    categorias = data;
++    desenharCategorias();
++    document.dispatchEvent(new CustomEvent('categorias-alteradas'));
++}
++
++
++// lista
++// ======================================================
++function desenharCategorias() {
++    const lista = document.getElementById('lista-categorias');
++
++    if (categorias.length === 0) {
++        lista.innerHTML = '<li class="vazio">Ainda não tens categorias.</li>';
++        return;
++    }
++
++    lista.innerHTML = categorias.map(categoria => `
++        <li class="lista-item">
++            <span class="bolinha" style="background-color: ${categoria.color}"></span>
++            <div class="lista-principal">
++                <p class="lista-titulo">${escapar(categoria.name)}</p>
++                <p class="lista-sub">
++                    ${categoria.type === 'income' ? 'Rendimento' : 'Despesa'}
++                    ${categoria.monthly_limit ? ` · limite ${euros(categoria.monthly_limit)}/mês` : ''}
++                </p>
++            </div>
++            <div class="lista-acoes">
++                <button type="button" class="botao-link" data-editar="${categoria.id}">Editar</button>
++            </div>
++        </li>
++    `).join('');
++}
++
++
++// janela de criar / editar
++// ======================================================
++const janela = document.getElementById('janela-categoria');
++const form = document.getElementById('form-categoria');
++
++function mostrarLimite() {
++    form.limite.closest('.campo').classList.toggle('escondido', form.tipo.value !== 'expense');
++}
++
++function abrirJanela(categoria) {
++    form.reset();
++    form.id_categoria.value = categoria?.id || '';
++    form.nome.value = categoria?.name || '';
++    form.tipo.value = categoria?.type || 'expense';
++    form.cor.value = categoria?.color || '#8b8b93';
++    form.limite.value = categoria?.monthly_limit || '';
++
++    document.getElementById('titulo-categoria').textContent = categoria ? 'Editar categoria' : 'Nova categoria';
++    document.getElementById('apagar-categoria').classList.toggle('escondido', !categoria);
++    mostrarLimite();
++    janela.showModal();
++}
++
++async function guardar(evento) {
++    evento.preventDefault();
++
++    const dados = {
++        name: form.nome.value.trim(),
++        type: form.tipo.value,
++        color: form.cor.value,
++        monthly_limit: form.tipo.value === 'expense' && form.limite.value ? Number(form.limite.value) : null,
++    };
++
++    const id = form.id_categoria.value;
++    const pedido = id
++        ? supabase.from('categories').update(dados).eq('id', id)
++        : supabase.from('categories').insert(dados);
++
++    const { error } = await pedido;
++
++    if (error) {
++        const repetida = error.code === '23505';
++        aviso(repetida ? 'Já existe uma categoria com esse nome.' : 'Não foi possível guardar a categoria.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso('Categoria guardada.');
++    carregarCategorias();
++}
++
++async function apagar() {
++    const id = form.id_categoria.value;
++
++    if (!id || !confirm('Apagar esta categoria? Os movimentos ficam sem categoria.')) {
++        return;
++    }
++
++    const { error } = await supabase.from('categories').delete().eq('id', id);
++
++    if (error) {
++        aviso('Não foi possível apagar a categoria.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso('Categoria apagada.');
++    await carregarCategorias();
++    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'transactions' }));
++}
++
++
++// início
++// ======================================================
++export function iniciarCategorias() {
++    document.getElementById('nova-categoria').addEventListener('click', () => abrirJanela());
++    document.getElementById('lista-categorias').addEventListener('click', evento => {
++        const id = evento.target.dataset.editar;
++        if (id) {
++            abrirJanela(categoriaPorId(id));
++        }
++    });
++
++    form.addEventListener('submit', guardar);
++    document.getElementById('apagar-categoria').addEventListener('click', apagar);
++    form.querySelector('[data-fechar]').addEventListener('click', () => janela.close());
++    form.querySelectorAll('[name="tipo"]').forEach(opcao => opcao.addEventListener('change', mostrarLimite));
++
++    return carregarCategorias();
++}
+-- 
+2.43.0
+

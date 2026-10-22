@@ -1,0 +1,275 @@
+From dab62131819ed5ff0c091191375aa90f4dbb1937 Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:27:37 +0100
+Subject: [PATCH 18/20] =?UTF-8?q?feat(pwa):=20instalar=20no=20telem=C3=B3v?=
+ =?UTF-8?q?el=20e=20abrir=20sem=20rede?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/assets/.gitkeep                      |   0
+ web/assets/icones/icone-192-maskable.png | Bin 0 -> 672 bytes
+ web/assets/icones/icone-192.png          | Bin 0 -> 1093 bytes
+ web/assets/icones/icone-512-maskable.png | Bin 0 -> 2021 bytes
+ web/assets/icones/icone-512.png          | Bin 0 -> 3288 bytes
+ web/index.html                           |   4 ++
+ web/js/app.js                            |   4 ++
+ web/login.html                           |   4 ++
+ web/manifest.json                        |  17 ++++++
+ web/sw.js                                |  65 +++++++++++++++++++++++
+ 10 files changed, 94 insertions(+)
+ delete mode 100644 web/assets/.gitkeep
+ create mode 100644 web/assets/icones/icone-192-maskable.png
+ create mode 100644 web/assets/icones/icone-192.png
+ create mode 100644 web/assets/icones/icone-512-maskable.png
+ create mode 100644 web/assets/icones/icone-512.png
+ create mode 100644 web/manifest.json
+ create mode 100644 web/sw.js
+
+diff --git a/web/assets/.gitkeep b/web/assets/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/web/assets/icones/icone-192-maskable.png b/web/assets/icones/icone-192-maskable.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b9f53ac5e81dcb192d1d70a57d0d08790b7d03af
+GIT binary patch
+literal 672
+zcmeAS@N?(olHy`uVBq!ia0vp^2SAvE2}s`E_d9@rfhpb7#WAE}&f7bVTCRaI2NF{j
+z-Iktl>VSvm-Ze*}QWmW_(6Kh6L3V~lYJx)c1?h^9DeP0^ZKuDNp8xJAf8E^R?YCoP
+z+fH)TT)nl4J>d?Ei;{v6<3x@Q7Y7w4B|(AC29Lodlu~<>`Olh{cW?fB_TgaD?75G(
+z|Mb3@lw4o^{?(Ia*3GZme;@ANbTt1N3u%u3bliT`|0@R{|J>v*VXltp?Vs=Uh4Pm#
+z&;NY=Q%mpOwRcZ1&X-EB`B&}Gz5Mx)>gh*w{>2{dnW)`EQm~zTW#BW-mRXrp#|}gk
+bO)Br6A*bi5Tyq+j@)$f_{an^LB{Ts5tXs|~
+
+literal 0
+HcmV?d00001
+
+diff --git a/web/assets/icones/icone-192.png b/web/assets/icones/icone-192.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..7cbbcebda60aba9e0ebd92fdad81022d47329f83
+GIT binary patch
+literal 1093
+zcmeAS@N?(olHy`uVBq!ia0vp^2SAvE4M+yv$zf+;VBzs}aSW-L^Y*S`-sJ>_w#4O5
+zI)U!Xx+XFkY${-BX|Z4sf55`g*(%z}UBG1Kci_O8LsuAQyle<bP0(Uy+N$cA{Cj)-
+z?fakKsEF09uU8M*kfoNk*KXg6T3(*?&6e?3_qCl~71y)zvPtP;iNC$Q^J<UvC2lb{
+zuDK<l-E#2$kq<AEUkI>O7am@|WTBJBzeR25CwR3NgnT;MGk@XKdl3_7@ywU<n!~o&
+zpW*THX+pPOi#B`=j=s-Z#&_Vy%r3j=HzExmjZI_CZ(1=tPG7YvXLBgSvGZ59-hFY9
+zQNq6XV%lnU)`UN2&Mut2*AS>+9pBBoi}I}vJ8w!i?6xm1zuZ>NmheaC=sw+Q7NuL)
+z81DRyoE1B}j7i|_eh_<A?rjj;i{afrox5Lqtr<JM=`)nq2gTgmCESp~q;M<na>XCT
+z^Y_mJWz-lJae~E8u_sKjMDS-Zz@<oM-d$D87+n1Q>*Z(XHn*>>zx#6X_Om~iUuImF
+zvHkb``zEVzzx~HiUu&Jc&!)okg6P?Pu&YS72JCRSwtuNRoZjuNkNYk3;sB?E38R27
+zgNrc3MHV#X*?uRHPmk{&e|G))=D_=(pFDk>R(jfY4L_sEr_YC<U;ID)#ANY)srCx{
+zy6+T(0IJhgfBp4i(KlBIT|a1O!yV0}Ko-+|_Sv7SfClmc=~GCa?VI)Ne0$?9ai-*7
+zyDQZ}p5Ic>Siz%o^yyk)T$iabENAd8uYC-3#$WM<;D)8Qw&em<ZDV^Nl8{-JdyCUy
+z%Unha)`+g!=zG;n9Su8oXC9Vo>?liS@MC=TYQkH&5|E%}$!2zYrp|_)8Jn+$&1ZBu
+z08F<TulWxuC4dt0<?Rki30b@HHhsRnKq*1%SI)-k_nA8yZvD#J@IAhzvmweWXZ?$c
+z>#rYoPg>7@d&-`dVt)fUmNPnQ@7;Ki?X}5*B@6S`HQ(RZ>LBlIAKLTngc8dwiPwcy
+zU((AIH=MsQUwL(1hA6Xd@b}Y`Pu6BDccsq0W!}1<F-!H?@~4;2F9Q}244$rjF6*2U
+FngBr0&B_1(
+
+literal 0
+HcmV?d00001
+
+diff --git a/web/assets/icones/icone-512-maskable.png b/web/assets/icones/icone-512-maskable.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..7fb9c0b6bf84ba9437dc8ea0bbce5609460d2f86
+GIT binary patch
+literal 2021
+zcmeAS@N?(olHy`uVBq!ia0y~yU;;9k7&t&wwUqN(1_t&uo-U3d6?5L+FzlKfDA5+E
+zoaj(@X^FI3;;n<nj``kLHvbZ9M{C3`hSe+6#SE+kw8Ik;*C%AAN;X{-&EQapIa7R&
+z$?o2}hxcxp=*lr%_+0RXf#H|{LxTn*Lx<2PH5vp1l?rC{%N=+bv2I@cy%_n&pPru%
+zzy0-@#Pt4GuO82K_t)pE`*!^9^7r}g`Rk@B=nwI9y5i>x#tpYO=f8LNZxDXM${?W1
+zz!1npEy`5hmZ9wTuTS5;KfC@yw7U9FUg@_K%PQ7CQyD(U|M>avblG0Xy-E4c*T?tF
+zWBC7wn?u2ifngB~!_cSFE^m?8%h<rUXPEeBIK;_F_QOAh{Sk7;FEWg3fz>yIr>mdK
+II;Vst03(i(W&i*H
+
+literal 0
+HcmV?d00001
+
+diff --git a/web/assets/icones/icone-512.png b/web/assets/icones/icone-512.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a58cffb856e1ef0838e01a7612c50a8be3f342b
+GIT binary patch
+literal 3288
+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
+Zb+6|KZ(SbhBfnT+<1aVG*Q}Es`48s*jR^n%
+
+literal 0
+HcmV?d00001
+
+diff --git a/web/index.html b/web/index.html
+index 7ae470f..ee8c74f 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -3,6 +3,10 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <meta name="theme-color" content="#000000" />
++    <link rel="manifest" href="manifest.json" />
++    <link rel="icon" href="assets/icones/icone-192.png" />
++    <link rel="apple-touch-icon" href="assets/icones/icone-192.png" />
+     <title>HUROH</title>
+ 
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+diff --git a/web/js/app.js b/web/js/app.js
+index 181b07d..5ddcfdf 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -145,3 +145,7 @@ iniciarDashboard();
+ iniciarWidgets();
+ iniciarNotificacoes();
+ iniciarTempoReal(utilizador);
++
++if ('serviceWorker' in navigator) {
++    navigator.serviceWorker.register('sw.js').catch(() => {});
++}
+diff --git a/web/login.html b/web/login.html
+index 74a6328..0ce316d 100644
+--- a/web/login.html
++++ b/web/login.html
+@@ -3,6 +3,10 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <meta name="theme-color" content="#000000" />
++    <link rel="manifest" href="manifest.json" />
++    <link rel="icon" href="assets/icones/icone-192.png" />
++    <link rel="apple-touch-icon" href="assets/icones/icone-192.png" />
+     <title>HUROH · Entrar</title>
+ 
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+diff --git a/web/manifest.json b/web/manifest.json
+new file mode 100644
+index 0000000..481a36d
+--- /dev/null
++++ b/web/manifest.json
+@@ -0,0 +1,17 @@
++{
++    "name": "HUROH",
++    "short_name": "HUROH",
++    "description": "Your life. In sync.",
++    "lang": "pt-PT",
++    "start_url": "./index.html",
++    "scope": "./",
++    "display": "standalone",
++    "background_color": "#000000",
++    "theme_color": "#000000",
++    "icons": [
++        { "src": "assets/icones/icone-192.png", "sizes": "192x192", "type": "image/png" },
++        { "src": "assets/icones/icone-512.png", "sizes": "512x512", "type": "image/png" },
++        { "src": "assets/icones/icone-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
++        { "src": "assets/icones/icone-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
++    ]
++}
+diff --git a/web/sw.js b/web/sw.js
+new file mode 100644
+index 0000000..2cd1af7
+--- /dev/null
++++ b/web/sw.js
+@@ -0,0 +1,65 @@
++const VERSAO = 'huroh-v1';
++
++const FICHEIROS = [
++    './',
++    './index.html',
++    './login.html',
++    './manifest.json',
++    './css/base.css',
++    './css/formularios.css',
++    './css/paginas.css',
++    './css/login.css',
++    './js/app.js',
++    './js/auth.js',
++    './js/supabase.js',
++    './js/utils.js',
++    './js/definicoes.js',
++    './js/categorias.js',
++    './js/movimentos.js',
++    './js/resumo.js',
++    './js/grafico.js',
++    './js/tarefas.js',
++    './js/agenda.js',
++    './js/calendario.js',
++    './js/dashboard.js',
++    './js/tempo-real.js',
++    './js/widgets.js',
++    './js/notificacoes.js',
++    './assets/icones/icone-192.png',
++    './assets/icones/icone-512.png',
++];
++
++self.addEventListener('install', evento => {
++    evento.waitUntil(caches.open(VERSAO).then(cache => cache.addAll(FICHEIROS)));
++    self.skipWaiting();
++});
++
++self.addEventListener('activate', evento => {
++    evento.waitUntil(
++        caches.keys().then(chaves =>
++            Promise.all(chaves.filter(chave => chave !== VERSAO).map(chave => caches.delete(chave)))
++        )
++    );
++    self.clients.claim();
++});
++
++// ficheiros da app: tenta a rede primeiro (para ver sempre a versão nova) e usa a cache se estiver offline
++// os dados do Supabase nunca passam pela cache
++self.addEventListener('fetch', evento => {
++    const pedido = evento.request;
++    const url = new URL(pedido.url);
++
++    if (pedido.method !== 'GET' || url.origin !== location.origin) {
++        return;
++    }
++
++    evento.respondWith(
++        fetch(pedido)
++            .then(resposta => {
++                const copia = resposta.clone();
++                caches.open(VERSAO).then(cache => cache.put(pedido, copia));
++                return resposta;
++            })
++            .catch(() => caches.match(pedido))
++    );
++});
+-- 
+2.43.0
+
