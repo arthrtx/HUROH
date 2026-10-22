@@ -97,6 +97,14 @@ h1, h2, h3, p {
     gap: 16px;
 }
 
+.pagina {
+    display: none;
+}
+
+.pagina.ativa {
+    display: block;
+}
+
 .widget {
     background-color: var(--cor-cartao);
     border: 1px solid var(--cor-borda);

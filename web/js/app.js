@@ -9,3 +9,32 @@ function atualizarRelogio(){
 
 atualizarRelogio();
 setInterval(atualizarRelogio, 1000);
+
+const links = document.querySelectorAll('.menu nav a');
+const paginas = document.querySelectorAll('.pagina');
+
+function mostrarPagina(id) {
+    const existe = Array.from(paginas).some(pagina => pagina.id === id);
+    if (!existe) {
+        id = 'dashboard';
+    }
+
+    paginas.forEach(pagina => {
+        pagina.classList.toggle('ativa', pagina.id === id);
+    });
+
+    links.forEach(link => {
+        link.classList.toggle('ativo', link.getAttribute('href') === '#' + id);
+    });
+}
+
+links.forEach(link => {
+    link.addEventListener('click', evento => {
+        evento.preventDefault();
+        const id = link.getAttribute('href').slice(1);
+        mostrarPagina(id);
+        history.replaceState(null, '', '#' + id);
+    });
+});
+
+mostrarPagina(location.hash.slice(1));
