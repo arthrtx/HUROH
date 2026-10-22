@@ -1,0 +1,362 @@
+From 387126c3ce9ad02a1045fd497be94931454521c0 Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:24:49 +0100
+Subject: [PATCH 11/20] feat(tarefas): criar, concluir, editar e apagar tarefas
+ com prioridade
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/css/paginas.css |  39 +++++++++
+ web/index.html      |  50 ++++++++++-
+ web/js/app.js       |   2 +
+ web/js/tarefas.js   | 202 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 292 insertions(+), 1 deletion(-)
+ create mode 100644 web/js/tarefas.js
+
+diff --git a/web/css/paginas.css b/web/css/paginas.css
+index 1183f8e..1dc50e1 100644
+--- a/web/css/paginas.css
++++ b/web/css/paginas.css
+@@ -320,3 +320,42 @@
+ .legenda-d {
+     background-color: var(--cor-despesa);
+ }
++
++
++/* tarefas */
++
++.caixa {
++    width: 20px;
++    height: 20px;
++    accent-color: var(--cor-destaque);
++    cursor: pointer;
++    flex-shrink: 0;
++}
++
++.tarefa.feita .lista-titulo {
++    text-decoration: line-through;
++    color: var(--cor-texto-suave);
++}
++
++.prioridade-alta {
++    color: var(--cor-despesa);
++    background-color: rgba(255, 92, 108, 0.1);
++}
++
++.prioridade-media {
++    color: var(--cor-aviso);
++    background-color: rgba(255, 181, 71, 0.1);
++}
++
++.interruptor {
++    display: flex;
++    align-items: center;
++    gap: 8px;
++    font-size: 13px;
++    color: var(--cor-texto-suave);
++    cursor: pointer;
++}
++
++.interruptor input {
++    accent-color: var(--cor-destaque);
++}
+diff --git a/web/index.html b/web/index.html
+index 2d2b1ea..7dfc8b2 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -148,7 +148,21 @@
+         </section>
+ 
+         <section class="pagina" id="tarefas">
+-          <h1>Tarefas</h1>
++          <div class="cabecalho-pagina">
++            <h1>Tarefas</h1>
++            <button type="button" class="botao botao-principal" id="nova-tarefa">+ Tarefa</button>
++          </div>
++
++          <div class="cartao">
++            <div class="cabecalho-pagina">
++              <h2 id="contagem-tarefas">0 pendentes</h2>
++              <label class="interruptor">
++                <input type="checkbox" id="ver-concluidas" />
++                <span>Mostrar concluídas</span>
++              </label>
++            </div>
++            <ul class="lista" id="lista-tarefas"></ul>
++          </div>
+         </section>
+ 
+         <section class="pagina" id="widgets">
+@@ -254,6 +268,40 @@
+       </form>
+     </dialog>
+ 
++    <dialog class="janela" id="janela-tarefa">
++      <h2 id="titulo-tarefa">Nova tarefa</h2>
++      <form class="formulario" id="form-tarefa">
++        <input type="hidden" name="id_tarefa" />
++        <label class="campo">
++          <span>Título</span>
++          <input type="text" name="titulo" maxlength="80" required />
++        </label>
++        <label class="campo">
++          <span>Descrição (opcional)</span>
++          <textarea name="descricao" maxlength="500"></textarea>
++        </label>
++        <div class="linha-campos">
++          <label class="campo">
++            <span>Prazo</span>
++            <input type="datetime-local" name="prazo" />
++          </label>
++          <label class="campo">
++            <span>Prioridade</span>
++            <select name="prioridade">
++              <option value="alta">Alta</option>
++              <option value="media" selected>Média</option>
++              <option value="baixa">Baixa</option>
++            </select>
++          </label>
++        </div>
++        <div class="janela-botoes">
++          <button type="button" class="botao botao-perigo escondido" id="apagar-tarefa">Apagar</button>
++          <button type="button" class="botao" data-fechar>Cancelar</button>
++          <button type="submit" class="botao botao-principal">Guardar</button>
++        </div>
++      </form>
++    </dialog>
++
+     <script type="module" src="js/app.js"></script>
+   </body>
+ </html>
+diff --git a/web/js/app.js b/web/js/app.js
+index 9616a34..9398688 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -4,6 +4,7 @@ import { iniciarCategorias } from './categorias.js';
+ import { iniciarMovimentos } from './movimentos.js';
+ import { iniciarResumo } from './resumo.js';
+ import { iniciarGrafico } from './grafico.js';
++import { iniciarTarefas } from './tarefas.js';
+ 
+ 
+ // sessão
+@@ -44,6 +45,7 @@ await iniciarCategorias();
+ iniciarMovimentos();
+ iniciarResumo();
+ iniciarGrafico();
++iniciarTarefas();
+ document.body.classList.remove('a-carregar');
+ 
+ 
+diff --git a/web/js/tarefas.js b/web/js/tarefas.js
+new file mode 100644
+index 0000000..44fc3e6
+--- /dev/null
++++ b/web/js/tarefas.js
+@@ -0,0 +1,202 @@
++import { supabase } from './supabase.js';
++import { aviso, dataCurta, escapar, hora, paraInputDataHora } from './utils.js';
++
++const PRIORIDADES = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
++const ORDEM = { alta: 0, media: 1, baixa: 2 };
++
++let tarefas = [];
++let mostrarConcluidas = false;
++
++export function obterTarefas() {
++    return tarefas;
++}
++
++
++// carregar
++// ======================================================
++export async function carregarTarefas() {
++    const { data, error } = await supabase
++        .from('tasks')
++        .select('id, title, description, due_at, priority, completed, created_at')
++        .order('completed')
++        .order('due_at', { ascending: true, nullsFirst: false })
++        .limit(300);
++
++    if (error) {
++        aviso('Não foi possível carregar as tarefas.', 'erro');
++        return;
++    }
++
++    tarefas = data;
++    desenharTarefas();
++    document.dispatchEvent(new CustomEvent('tarefas-carregadas'));
++}
++
++
++// lista
++// ======================================================
++function ordenar(a, b) {
++    if (a.completed !== b.completed) return a.completed ? 1 : -1;
++    if (ORDEM[a.priority] !== ORDEM[b.priority]) return ORDEM[a.priority] - ORDEM[b.priority];
++    if (a.due_at && b.due_at) return new Date(a.due_at) - new Date(b.due_at);
++    return a.due_at ? -1 : b.due_at ? 1 : 0;
++}
++
++function textoPrazo(tarefa) {
++    if (!tarefa.due_at) {
++        return '';
++    }
++
++    const atrasada = !tarefa.completed && new Date(tarefa.due_at) < new Date();
++    const texto = `${dataCurta(tarefa.due_at)}, ${hora(tarefa.due_at)}`;
++    return atrasada ? `<span class="negativo">atrasada · ${texto}</span>` : texto;
++}
++
++function desenharTarefas() {
++    const lista = document.getElementById('lista-tarefas');
++    const visiveis = tarefas.filter(tarefa => mostrarConcluidas || !tarefa.completed).sort(ordenar);
++    const pendentes = tarefas.filter(tarefa => !tarefa.completed).length;
++
++    document.getElementById('contagem-tarefas').textContent =
++        pendentes === 1 ? '1 pendente' : `${pendentes} pendentes`;
++
++    if (visiveis.length === 0) {
++        lista.innerHTML = '<li class="vazio">Nada por fazer. Cria uma tarefa com "+ Tarefa".</li>';
++        return;
++    }
++
++    lista.innerHTML = visiveis.map(tarefa => `
++        <li class="lista-item tarefa ${tarefa.completed ? 'feita' : ''}">
++            <input type="checkbox" class="caixa" data-concluir="${tarefa.id}" ${tarefa.completed ? 'checked' : ''}
++                   aria-label="Concluir ${escapar(tarefa.title)}" />
++            <div class="lista-principal">
++                <p class="lista-titulo">${escapar(tarefa.title)}</p>
++                <p class="lista-sub">${textoPrazo(tarefa)}</p>
++            </div>
++            <span class="etiqueta prioridade-${tarefa.priority}">${PRIORIDADES[tarefa.priority]}</span>
++            <button type="button" class="botao-link" data-editar="${tarefa.id}">Editar</button>
++        </li>
++    `).join('');
++}
++
++
++// concluir
++// ======================================================
++async function alternarConcluida(id, concluida) {
++    const tarefa = tarefas.find(t => t.id === id);
++    tarefa.completed = concluida;
++    desenharTarefas();
++
++    const { error } = await supabase.from('tasks').update({ completed: concluida }).eq('id', id);
++
++    if (error) {
++        tarefa.completed = !concluida;
++        desenharTarefas();
++        aviso('Não foi possível atualizar a tarefa.', 'erro');
++        return;
++    }
++
++    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
++}
++
++
++// janela de criar / editar
++// ======================================================
++const janela = document.getElementById('janela-tarefa');
++const form = document.getElementById('form-tarefa');
++
++export function abrirTarefa(tarefa) {
++    form.reset();
++    form.id_tarefa.value = tarefa?.id || '';
++    form.titulo.value = tarefa?.title || '';
++    form.descricao.value = tarefa?.description || '';
++    form.prazo.value = paraInputDataHora(tarefa?.due_at);
++    form.prioridade.value = tarefa?.priority || 'media';
++
++    document.getElementById('titulo-tarefa').textContent = tarefa ? 'Editar tarefa' : 'Nova tarefa';
++    document.getElementById('apagar-tarefa').classList.toggle('escondido', !tarefa);
++    janela.showModal();
++    form.titulo.focus();
++}
++
++async function guardar(evento) {
++    evento.preventDefault();
++
++    const dados = {
++        title: form.titulo.value.trim(),
++        description: form.descricao.value.trim() || null,
++        due_at: form.prazo.value ? new Date(form.prazo.value).toISOString() : null,
++        priority: form.prioridade.value,
++    };
++
++    const id = form.id_tarefa.value;
++    const { error } = id
++        ? await supabase.from('tasks').update(dados).eq('id', id)
++        : await supabase.from('tasks').insert(dados);
++
++    if (error) {
++        aviso('Não foi possível guardar a tarefa.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso('Tarefa guardada.');
++    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
++}
++
++async function apagar() {
++    const id = form.id_tarefa.value;
++
++    if (!id || !confirm('Apagar esta tarefa?')) {
++        return;
++    }
++
++    const { error } = await supabase.from('tasks').delete().eq('id', id);
++
++    if (error) {
++        aviso('Não foi possível apagar a tarefa.', 'erro');
++        return;
++    }
++
++    janela.close();
++    aviso('Tarefa apagada.');
++    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
++}
++
++
++// início
++// ======================================================
++export function iniciarTarefas() {
++    document.getElementById('nova-tarefa').addEventListener('click', () => abrirTarefa());
++
++    const lista = document.getElementById('lista-tarefas');
++    lista.addEventListener('change', evento => {
++        const id = evento.target.dataset.concluir;
++        if (id) {
++            alternarConcluida(id, evento.target.checked);
++        }
++    });
++    lista.addEventListener('click', evento => {
++        const id = evento.target.dataset.editar;
++        if (id) {
++            abrirTarefa(tarefas.find(tarefa => tarefa.id === id));
++        }
++    });
++
++    document.getElementById('ver-concluidas').addEventListener('change', evento => {
++        mostrarConcluidas = evento.target.checked;
++        desenharTarefas();
++    });
++
++    form.addEventListener('submit', guardar);
++    document.getElementById('apagar-tarefa').addEventListener('click', apagar);
++    form.querySelector('[data-fechar]').addEventListener('click', () => janela.close());
++
++    document.addEventListener('dados-alterados', evento => {
++        if (evento.detail === 'tasks') {
++            carregarTarefas();
++        }
++    });
++
++    return carregarTarefas();
++}
+-- 
+2.43.0
+

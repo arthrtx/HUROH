@@ -1,0 +1,137 @@
+From 43251cc21bd8aaf1c6374064b60b405dd0d9377e Mon Sep 17 00:00:00 2001
+From: Arthur da Hora de Sal <304553119+arthrtx@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 00:30:17 +0100
+Subject: [PATCH 19/20] =?UTF-8?q?fix(web):=20menu=20no=20telem=C3=B3vel,?=
+ =?UTF-8?q?=20tema=20nas=20defini=C3=A7=C3=B5es=20e=20formata=C3=A7=C3=A3o?=
+ =?UTF-8?q?=20dos=20valores?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AXRsLwLGtMvQgypVqdQbD7
+---
+ web/css/base.css    | 15 +++++++++------
+ web/css/paginas.css |  2 +-
+ web/index.html      | 10 +++++++++-
+ web/js/app.js       |  7 +++++--
+ web/js/utils.js     |  3 ++-
+ 5 files changed, 26 insertions(+), 11 deletions(-)
+
+diff --git a/web/css/base.css b/web/css/base.css
+index edf047f..1a3d806 100644
+--- a/web/css/base.css
++++ b/web/css/base.css
+@@ -268,18 +268,21 @@ body.a-carregar .app {
+ 
+     .menu nav {
+         flex-direction: row;
+-        justify-content: space-around;
++        justify-content: space-between;
++        overflow-x: auto;
++        scrollbar-width: none;
+     }
+ 
+     .menu nav a {
+-        font-size: 12px;
+-        padding: 8px;
++        flex: 1;
++        text-align: center;
++        font-size: 11px;
++        padding: 8px 2px;
++        white-space: nowrap;
+     }
+ 
+     .botao-tema {
+-        margin-top: 0;
+-        font-size: 12px;
+-        padding: 8px;
++        display: none;
+     }
+ 
+     .conteudo {
+diff --git a/web/css/paginas.css b/web/css/paginas.css
+index 91d38ef..63d8042 100644
+--- a/web/css/paginas.css
++++ b/web/css/paginas.css
+@@ -420,7 +420,7 @@
+ }
+ 
+ .cal-dia {
+-    aspect-ratio: 1;
++    height: 52px;
+     background: none;
+     border: 1px solid transparent;
+     border-radius: 12px;
+diff --git a/web/index.html b/web/index.html
+index ee8c74f..dc287d1 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -103,7 +103,7 @@
+           </div>
+ 
+           <div class="colunas colunas-financas">
+-            <div>
++            <div class="coluna-lateral">
+             <div class="cartao">
+               <div class="cabecalho-pagina">
+                 <h2>Últimos 6 meses</h2>
+@@ -234,6 +234,14 @@
+             </div>
+ 
+             <div class="coluna-lateral">
++            <div class="cartao">
++              <h2>Aparência</h2>
++              <p class="texto-suave">Tema claro ou escuro, guardado neste dispositivo.</p>
++              <div class="janela-botoes">
++                <button type="button" class="botao" id="botao-tema-definicoes">Mudar tema</button>
++              </div>
++            </div>
++
+             <div class="cartao">
+               <h2>Notificações</h2>
+               <p class="texto-suave" id="estado-notificacoes"></p>
+diff --git a/web/js/app.js b/web/js/app.js
+index 5ddcfdf..9982cbe 100644
+--- a/web/js/app.js
++++ b/web/js/app.js
+@@ -119,11 +119,14 @@ function guardarTema(tema) {
+     }
+ }
+ 
+-botaoTema.addEventListener('click', () => {
++function mudarTema() {
+     const novoTema = document.body.classList.contains('tema-claro') ? 'escuro' : 'claro';
+     aplicarTema(novoTema);
+     guardarTema(novoTema);
+-});
++}
++
++botaoTema.addEventListener('click', mudarTema);
++document.getElementById('botao-tema-definicoes').addEventListener('click', mudarTema);
+ 
+ aplicarTema(lerTema());
+ 
+diff --git a/web/js/utils.js b/web/js/utils.js
+index f3367ef..009901e 100644
+--- a/web/js/utils.js
++++ b/web/js/utils.js
+@@ -1,6 +1,6 @@
+ // formatação
+ // ======================================================
+-const formatoEuros = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' });
++const formatoEuros = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', useGrouping: 'always' });
+ 
+ export function euros(valor) {
+     return formatoEuros.format(Number(valor) || 0);
+@@ -48,6 +48,7 @@ export function paraInputDataHora(data) {
+ // avisos
+ // ======================================================
+ export function aviso(texto, tipo = 'ok') {
++    document.querySelectorAll('.aviso').forEach(antigo => antigo.remove());
+     const caixa = document.createElement('div');
+     caixa.className = `aviso aviso-${tipo}`;
+     caixa.textContent = texto;
+-- 
+2.43.0
+
