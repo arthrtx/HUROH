@@ -14,6 +14,18 @@
     --fonte: 'Inter', system-ui, sans-serif;
 }
 
+body.tema-claro {
+    --cor-fundo: #f4f4f6;
+    --cor-cartao: #ffffff;
+    --cor-cartao-alto: #ececf0;
+    --cor-borda: #e2e2e8;
+    --cor-texto: #121214;
+    --cor-texto-suave: #6b6b75;
+    --cor-destaque: #0fae6b;
+    --cor-destaque-fundo: rgba(15, 174, 107, 0.12);
+    --cor-despesa: #e5394b;
+}
+
 *,
 *::before,
 *::after {
@@ -22,6 +34,7 @@
 
 body {
     margin: 0;
+    transition: background-color 0.2s, color 0.2s;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
     font-family: var(--fonte);
@@ -79,6 +92,24 @@ h1, h2, h3, p {
     background-color: var(--cor-destaque-fundo);
     color: var(--cor-destaque);
     font-weight: 500;
+}
+
+.botao-tema {
+    background: none;
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto-suave);
+    padding: 10px 12px;
+    border-radius: var(--raio-pilula);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 16px;
+    text-align: left;
+}
+
+.botao-tema:hover {
+    color: var(--cor-texto);
+    border-color: var(--cor-texto-suave);
 }
 
 .conteudo {
@@ -176,6 +207,12 @@ h1, h2, h3, p {
     }
 
     .menu nav a {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .botao-tema {
+        margin-top: 0;
         font-size: 12px;
         padding: 8px;
     }
