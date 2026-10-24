@@ -4,6 +4,7 @@ import { iniciarCategorias } from './categorias.js';
 import { iniciarMovimentos } from './movimentos.js';
 import { iniciarResumo } from './resumo.js';
 import { iniciarGrafico } from './grafico.js';
+import { iniciarTarefas } from './tarefas.js';
 
 
 // sessão
@@ -44,6 +45,7 @@ await iniciarCategorias();
 iniciarMovimentos();
 iniciarResumo();
 iniciarGrafico();
+iniciarTarefas();
 document.body.classList.remove('a-carregar');
 
 

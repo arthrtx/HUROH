@@ -320,3 +320,42 @@
 .legenda-d {
     background-color: var(--cor-despesa);
 }
+
+
+/* tarefas */
+
+.caixa {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--cor-destaque);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.tarefa.feita .lista-titulo {
+    text-decoration: line-through;
+    color: var(--cor-texto-suave);
+}
+
+.prioridade-alta {
+    color: var(--cor-despesa);
+    background-color: rgba(255, 92, 108, 0.1);
+}
+
+.prioridade-media {
+    color: var(--cor-aviso);
+    background-color: rgba(255, 181, 71, 0.1);
+}
+
+.interruptor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+    cursor: pointer;
+}
+
+.interruptor input {
+    accent-color: var(--cor-destaque);
+}

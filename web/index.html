@@ -148,7 +148,21 @@
         </section>
 
         <section class="pagina" id="tarefas">
-          <h1>Tarefas</h1>
+          <div class="cabecalho-pagina">
+            <h1>Tarefas</h1>
+            <button type="button" class="botao botao-principal" id="nova-tarefa">+ Tarefa</button>
+          </div>
+
+          <div class="cartao">
+            <div class="cabecalho-pagina">
+              <h2 id="contagem-tarefas">0 pendentes</h2>
+              <label class="interruptor">
+                <input type="checkbox" id="ver-concluidas" />
+                <span>Mostrar concluídas</span>
+              </label>
+            </div>
+            <ul class="lista" id="lista-tarefas"></ul>
+          </div>
         </section>
 
         <section class="pagina" id="widgets">
@@ -248,6 +262,40 @@
         </div>
         <div class="janela-botoes">
           <button type="button" class="botao botao-perigo escondido" id="apagar-categoria">Apagar</button>
+          <button type="button" class="botao" data-fechar>Cancelar</button>
+          <button type="submit" class="botao botao-principal">Guardar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="janela" id="janela-tarefa">
+      <h2 id="titulo-tarefa">Nova tarefa</h2>
+      <form class="formulario" id="form-tarefa">
+        <input type="hidden" name="id_tarefa" />
+        <label class="campo">
+          <span>Título</span>
+          <input type="text" name="titulo" maxlength="80" required />
+        </label>
+        <label class="campo">
+          <span>Descrição (opcional)</span>
+          <textarea name="descricao" maxlength="500"></textarea>
+        </label>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Prazo</span>
+            <input type="datetime-local" name="prazo" />
+          </label>
+          <label class="campo">
+            <span>Prioridade</span>
+            <select name="prioridade">
+              <option value="alta">Alta</option>
+              <option value="media" selected>Média</option>
+              <option value="baixa">Baixa</option>
+            </select>
+          </label>
+        </div>
+        <div class="janela-botoes">
+          <button type="button" class="botao botao-perigo escondido" id="apagar-tarefa">Apagar</button>
           <button type="button" class="botao" data-fechar>Cancelar</button>
           <button type="submit" class="botao botao-principal">Guardar</button>
         </div>
