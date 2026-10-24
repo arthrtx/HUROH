@@ -79,9 +79,15 @@
         <section class="pagina" id="financas">
           <div class="cabecalho-pagina">
             <h1>Finanças</h1>
+            <button type="button" class="botao botao-principal" id="novo-movimento">+ Movimento</button>
           </div>
 
           <div class="colunas colunas-financas">
+            <div class="cartao">
+              <h2>Movimentos</h2>
+              <ul class="lista" id="lista-movimentos"></ul>
+            </div>
+
             <div class="cartao">
               <div class="cabecalho-pagina">
                 <h2>Categorias</h2>
@@ -134,6 +140,42 @@
         </section>
       </main>
     </div>
+
+    <dialog class="janela" id="janela-movimento">
+      <h2 id="titulo-movimento">Novo movimento</h2>
+      <form class="formulario" id="form-movimento">
+        <input type="hidden" name="id_movimento" />
+        <div class="alternador">
+          <input type="radio" name="tipo" id="movimento-despesa" value="expense" checked />
+          <label for="movimento-despesa">Despesa</label>
+          <input type="radio" name="tipo" id="movimento-rendimento" value="income" />
+          <label for="movimento-rendimento">Rendimento</label>
+        </div>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Valor (€)</span>
+            <input type="number" name="valor" min="0.01" step="0.01" inputmode="decimal" required />
+          </label>
+          <label class="campo">
+            <span>Data</span>
+            <input type="date" name="data" required />
+          </label>
+        </div>
+        <label class="campo">
+          <span>Categoria</span>
+          <select name="categoria"></select>
+        </label>
+        <label class="campo">
+          <span>Descrição (opcional)</span>
+          <input type="text" name="descricao" maxlength="140" />
+        </label>
+        <div class="janela-botoes">
+          <button type="button" class="botao botao-perigo escondido" id="apagar-movimento">Apagar</button>
+          <button type="button" class="botao" data-fechar>Cancelar</button>
+          <button type="submit" class="botao botao-principal">Guardar</button>
+        </div>
+      </form>
+    </dialog>
 
     <dialog class="janela" id="janela-categoria">
       <h2 id="titulo-categoria">Nova categoria</h2>

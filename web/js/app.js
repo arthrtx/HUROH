@@ -1,6 +1,7 @@
 import { supabase } from './supabase.js';
 import { iniciarDefinicoes } from './definicoes.js';
 import { iniciarCategorias } from './categorias.js';
+import { iniciarMovimentos } from './movimentos.js';
 
 
 // sessão
@@ -37,7 +38,8 @@ async function carregarPerfil() {
 const perfil = await carregarPerfil();
 mostrarNome(perfil.nome);
 iniciarDefinicoes(utilizador, perfil, mostrarNome);
-iniciarCategorias();
+await iniciarCategorias();
+iniciarMovimentos();
 document.body.classList.remove('a-carregar');
 
 
