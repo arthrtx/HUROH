@@ -10,6 +10,7 @@ import { iniciarCalendario } from './calendario.js';
 import { iniciarDashboard } from './dashboard.js';
 import { iniciarTempoReal } from './tempo-real.js';
 import { iniciarWidgets } from './widgets.js';
+import { iniciarNotificacoes } from './notificacoes.js';
 
 
 // sessão
@@ -42,21 +43,6 @@ async function carregarPerfil() {
 
     return { nome: data?.display_name || utilizador.email.split('@')[0] };
 }
-
-const perfil = await carregarPerfil();
-mostrarNome(perfil.nome);
-document.body.classList.remove('a-carregar');
-
-iniciarDefinicoes(utilizador, perfil, mostrarNome);
-await iniciarCategorias();
-iniciarMovimentos();
-iniciarResumo();
-iniciarGrafico();
-await Promise.all([iniciarTarefas(), iniciarAgenda()]);
-iniciarCalendario();
-iniciarDashboard();
-iniciarWidgets();
-iniciarTempoReal(utilizador);
 
 
 // relógio
@@ -140,3 +126,22 @@ botaoTema.addEventListener('click', () => {
 });
 
 aplicarTema(lerTema());
+
+
+// arranque
+// ======================================================
+const perfil = await carregarPerfil();
+mostrarNome(perfil.nome);
+document.body.classList.remove('a-carregar');
+
+iniciarDefinicoes(utilizador, perfil, mostrarNome);
+await iniciarCategorias();
+iniciarMovimentos();
+iniciarResumo();
+iniciarGrafico();
+await Promise.all([iniciarTarefas(), iniciarAgenda()]);
+iniciarCalendario();
+iniciarDashboard();
+iniciarWidgets();
+iniciarNotificacoes();
+iniciarTempoReal(utilizador);
