@@ -155,8 +155,22 @@ body.a-carregar .app {
     border-color: var(--cor-cartao-alto);
 }
 
-.widget.grande {
+.widget.grande,
+.widget.tamanho-l {
     grid-column: span 2;
+}
+
+.widget.tamanho-s {
+    padding: 14px 18px;
+}
+
+.widget.tamanho-s .widget-valor {
+    font-size: 26px;
+}
+
+.widget.tamanho-s .widget-acoes,
+.widget.tamanho-s .widget-lista {
+    display: none;
 }
 
 .widget-titulo {
@@ -272,7 +286,8 @@ body.a-carregar .app {
         padding: 20px 16px 96px;
     }
 
-    .widget.grande {
+    .widget.grande,
+    .widget.tamanho-l {
         grid-column: span 1;
     }
 

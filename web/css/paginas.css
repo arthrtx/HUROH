@@ -457,3 +457,25 @@
     letter-spacing: 1px;
     color: var(--cor-destaque);
 }
+
+
+/* widgets */
+
+#lista-widgets {
+    margin-top: 12px;
+}
+
+.seletor-pequeno {
+    background-color: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+    border-radius: var(--raio-pilula);
+    padding: 6px 10px;
+    font: inherit;
+    font-size: 13px;
+}
+
+.botao-link:disabled {
+    opacity: 0.3;
+    cursor: default;
+}

@@ -9,6 +9,7 @@ import { iniciarAgenda } from './agenda.js';
 import { iniciarCalendario } from './calendario.js';
 import { iniciarDashboard } from './dashboard.js';
 import { iniciarTempoReal } from './tempo-real.js';
+import { iniciarWidgets } from './widgets.js';
 
 
 // sessão
@@ -54,6 +55,7 @@ iniciarGrafico();
 await Promise.all([iniciarTarefas(), iniciarAgenda()]);
 iniciarCalendario();
 iniciarDashboard();
+iniciarWidgets();
 iniciarTempoReal(utilizador);
 
 

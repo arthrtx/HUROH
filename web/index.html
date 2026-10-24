@@ -34,7 +34,7 @@
         <section class="pagina ativa" id="dashboard">
           <h1 id="saudacao">Olá</h1>
           <section class="grelha" id="grelha-dashboard">
-            <article class="widget grande" data-widget="saldo">
+            <article class="widget tamanho-l" data-widget="saldo">
               <h2 class="widget-titulo">Saldo</h2>
               <p class="widget-valor" id="w-saldo">—</p>
               <p class="widget-detalhe" id="w-saldo-detalhe"></p>
@@ -198,7 +198,16 @@
         </section>
 
         <section class="pagina" id="widgets">
-          <h1>Widgets</h1>
+          <div class="cabecalho-pagina">
+            <h1>Widgets</h1>
+            <button type="button" class="botao" id="repor-widgets">Repor padrão</button>
+          </div>
+
+          <div class="cartao">
+            <h2>O teu dashboard</h2>
+            <p class="texto-suave">Escolhe o que aparece, o tamanho e a ordem. Fica guardado na conta e aparece igual nos outros dispositivos.</p>
+            <ul class="lista" id="lista-widgets"></ul>
+          </div>
         </section>
 
         <section class="pagina" id="definicoes">
