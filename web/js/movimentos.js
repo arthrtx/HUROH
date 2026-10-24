@@ -1,20 +1,38 @@
 import { supabase } from './supabase.js';
-import { aviso, dataCurta, dataISO, escapar, euros } from './utils.js';
+import { aviso, dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
 import { categoriaPorId, obterCategorias } from './categorias.js';
 
-const POR_PAGINA = 50;
+const POR_PAGINA = 200;
 let movimentos = [];
+
+const filtros = document.getElementById('filtros-movimentos');
 
 
 // carregar
 // ======================================================
 export async function carregarMovimentos() {
-    const { data, error } = await supabase
+    let pedido = supabase
         .from('transactions')
         .select('id, type, amount, category_id, description, transaction_date')
         .order('transaction_date', { ascending: false })
         .order('created_at', { ascending: false })
         .limit(POR_PAGINA);
+
+    if (filtros.mes.value) {
+        const [ano, mes] = filtros.mes.value.split('-').map(Number);
+        const { inicio, fim } = intervaloDoMes(new Date(ano, mes - 1, 1));
+        pedido = pedido.gte('transaction_date', inicio).lte('transaction_date', fim);
+    }
+
+    if (filtros.tipo.value) {
+        pedido = pedido.eq('type', filtros.tipo.value);
+    }
+
+    if (filtros.categoria.value) {
+        pedido = pedido.eq('category_id', filtros.categoria.value);
+    }
+
+    const { data, error } = await pedido;
 
     if (error) {
         aviso('Não foi possível carregar os movimentos.', 'erro');
@@ -32,7 +50,10 @@ function desenharMovimentos() {
     const lista = document.getElementById('lista-movimentos');
 
     if (movimentos.length === 0) {
-        lista.innerHTML = '<li class="vazio">Sem movimentos. Regista o primeiro com "+ Movimento".</li>';
+        const comFiltro = filtros.tipo.value || filtros.categoria.value;
+        lista.innerHTML = comFiltro
+            ? '<li class="vazio">Nenhum movimento com estes filtros.</li>'
+            : '<li class="vazio">Sem movimentos neste mês. Regista um com "+ Movimento".</li>';
         return;
     }
 
@@ -149,9 +170,26 @@ async function apagar() {
 }
 
 
+// filtros
+// ======================================================
+function preencherFiltroCategorias() {
+    const atual = filtros.categoria.value;
+    const opcoes = obterCategorias().map(categoria =>
+        `<option value="${categoria.id}">${escapar(categoria.name)}</option>`
+    );
+
+    filtros.categoria.innerHTML = '<option value="">Todas as categorias</option>' + opcoes.join('');
+    filtros.categoria.value = obterCategorias().some(categoria => categoria.id === atual) ? atual : '';
+}
+
+
 // início
 // ======================================================
 export function iniciarMovimentos() {
+    filtros.mes.value = dataISO().slice(0, 7);
+    preencherFiltroCategorias();
+    filtros.addEventListener('change', carregarMovimentos);
+
     document.getElementById('novo-movimento').addEventListener('click', () => abrirMovimento());
     document.getElementById('lista-movimentos').addEventListener('click', evento => {
         const id = evento.target.dataset.editar;
@@ -165,7 +203,10 @@ export function iniciarMovimentos() {
     form.querySelector('[data-fechar]').addEventListener('click', () => janela.close());
     form.querySelectorAll('[name="tipo"]').forEach(opcao => opcao.addEventListener('change', () => preencherCategorias()));
 
-    document.addEventListener('categorias-alteradas', desenharMovimentos);
+    document.addEventListener('categorias-alteradas', () => {
+        preencherFiltroCategorias();
+        desenharMovimentos();
+    });
     document.addEventListener('dados-alterados', evento => {
         if (evento.detail === 'transactions') {
             carregarMovimentos();
