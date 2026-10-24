@@ -1,0 +1,52 @@
+.entrada {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+}
+
+.entrada-cartao {
+    width: 100%;
+    max-width: 380px;
+    background-color: var(--cor-cartao);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-cartao);
+    padding: 32px 28px;
+}
+
+.entrada-cartao .logo {
+    padding: 0;
+    margin-bottom: 4px;
+}
+
+.entrada-slogan {
+    color: var(--cor-texto-suave);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.separadores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-pilula);
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+.separador {
+    background: none;
+    border: none;
+    color: var(--cor-texto-suave);
+    border-radius: var(--raio-pilula);
+    padding: 8px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.separador.ativo {
+    background-color: var(--cor-cartao-alto);
+    color: var(--cor-texto);
+}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HUROH · Entrar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/formularios.css" />
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <main class="entrada">
+      <div class="entrada-cartao">
+        <div class="logo">HUROH</div>
+        <p class="entrada-slogan">Your life. In sync.</p>
+
+        <div class="separadores" id="separadores">
+          <button type="button" class="separador ativo" data-modo="entrar">Entrar</button>
+          <button type="button" class="separador" data-modo="registar">Criar conta</button>
+        </div>
+
+        <form class="formulario" id="form-entrar" data-modo="entrar">
+          <label class="campo">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label class="campo">
+            <span>Palavra-passe</span>
+            <input type="password" name="senha" autocomplete="current-password" required />
+          </label>
+          <button type="submit" class="botao botao-principal">Entrar</button>
+          <button type="button" class="botao-link" id="link-recuperar">Esqueci-me da palavra-passe</button>
+        </form>
+
+        <form class="formulario escondido" id="form-registar" data-modo="registar">
+          <label class="campo">
+            <span>Nome</span>
+            <input type="text" name="nome" maxlength="60" autocomplete="given-name" required />
+          </label>
+          <label class="campo">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label class="campo">
+            <span>Palavra-passe</span>
+            <input type="password" name="senha" minlength="8" autocomplete="new-password" required />
+            <small>Mínimo de 8 caracteres.</small>
+          </label>
+          <button type="submit" class="botao botao-principal">Criar conta</button>
+        </form>
+
+        <form class="formulario escondido" id="form-recuperar" data-modo="recuperar">
+          <p class="texto-suave">Enviamos um email com um link para definires uma nova palavra-passe.</p>
+          <label class="campo">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <button type="submit" class="botao botao-principal">Enviar link</button>
+          <button type="button" class="botao-link" id="link-voltar">Voltar</button>
+        </form>
+
+        <form class="formulario escondido" id="form-nova-senha" data-modo="nova-senha">
+          <p class="texto-suave">Escolhe a tua nova palavra-passe.</p>
+          <label class="campo">
+            <span>Nova palavra-passe</span>
+            <input type="password" name="senha" minlength="8" autocomplete="new-password" required />
+          </label>
+          <button type="submit" class="botao botao-principal">Guardar</button>
+        </form>
+
+        <p class="mensagem" id="mensagem" role="status"></p>
+      </div>
+    </main>
+  </body>
+</html>
