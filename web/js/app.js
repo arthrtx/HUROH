@@ -6,6 +6,7 @@ import { iniciarResumo } from './resumo.js';
 import { iniciarGrafico } from './grafico.js';
 import { iniciarTarefas } from './tarefas.js';
 import { iniciarAgenda } from './agenda.js';
+import { iniciarCalendario } from './calendario.js';
 
 
 // sessão
@@ -48,6 +49,7 @@ iniciarResumo();
 iniciarGrafico();
 iniciarTarefas();
 iniciarAgenda();
+iniciarCalendario();
 document.body.classList.remove('a-carregar');
 
 

@@ -151,8 +151,30 @@
 
           <div class="colunas colunas-agenda">
             <div class="cartao">
+              <div class="cabecalho-pagina">
+                <h2 id="titulo-mes">Mês</h2>
+                <div class="navegar-mes">
+                  <button type="button" class="botao-link" id="mes-anterior" aria-label="Mês anterior">‹</button>
+                  <button type="button" class="botao-link" id="mes-hoje">Hoje</button>
+                  <button type="button" class="botao-link" id="mes-seguinte" aria-label="Mês seguinte">›</button>
+                </div>
+              </div>
+              <div class="calendario" id="calendario"></div>
+            </div>
+
+            <div class="coluna-lateral">
+            <div class="cartao">
+              <div class="cabecalho-pagina">
+                <h2 id="titulo-dia">Hoje</h2>
+                <button type="button" class="botao-link" id="evento-no-dia">+ Neste dia</button>
+              </div>
+              <ul class="lista" id="lista-dia"></ul>
+            </div>
+
+            <div class="cartao">
               <h2>Próximos eventos</h2>
               <ul class="lista" id="lista-proximos"></ul>
+            </div>
             </div>
           </div>
         </section>
