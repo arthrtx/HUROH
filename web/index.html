@@ -82,6 +82,22 @@
             <button type="button" class="botao botao-principal" id="novo-movimento">+ Movimento</button>
           </div>
 
+          <div class="grelha resumo-mes">
+            <article class="widget">
+              <h2 class="widget-titulo">Rendimentos do mês</h2>
+              <p class="widget-valor positivo" id="resumo-rendimentos">—</p>
+            </article>
+            <article class="widget">
+              <h2 class="widget-titulo">Despesas do mês</h2>
+              <p class="widget-valor negativo" id="resumo-despesas">—</p>
+            </article>
+            <article class="widget">
+              <h2 class="widget-titulo">Saldo do mês</h2>
+              <p class="widget-valor" id="resumo-saldo-mes">—</p>
+              <p class="widget-detalhe" id="resumo-saldo-total"></p>
+            </article>
+          </div>
+
           <div class="colunas colunas-financas">
             <div class="cartao">
               <h2>Movimentos</h2>
@@ -97,12 +113,19 @@
               <ul class="lista" id="lista-movimentos"></ul>
             </div>
 
+            <div class="coluna-lateral">
+            <div class="cartao">
+              <h2>Despesas por categoria</h2>
+              <ul class="lista" id="lista-por-categoria"></ul>
+            </div>
+
             <div class="cartao">
               <div class="cabecalho-pagina">
                 <h2>Categorias</h2>
                 <button type="button" class="botao" id="nova-categoria">+ Categoria</button>
               </div>
               <ul class="lista" id="lista-categorias"></ul>
+            </div>
             </div>
           </div>
         </section>
