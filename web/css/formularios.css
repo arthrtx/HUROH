@@ -1,0 +1,118 @@
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+}
+
+.campo small {
+    font-size: 12px;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    background-color: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+    border-radius: 12px;
+    padding: 11px 12px;
+    font: inherit;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: var(--cor-destaque);
+}
+
+.linha-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.botao {
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-cartao-alto);
+    color: var(--cor-texto);
+    border-radius: var(--raio-pilula);
+    padding: 11px 18px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.botao:hover {
+    opacity: 0.85;
+}
+
+.botao:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.botao-principal {
+    background-color: var(--cor-destaque);
+    border-color: var(--cor-destaque);
+    color: #0b0b0d;
+}
+
+.botao-perigo {
+    color: var(--cor-despesa);
+}
+
+.botao-link {
+    background: none;
+    border: none;
+    color: var(--cor-texto-suave);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.botao-link:hover {
+    color: var(--cor-texto);
+}
+
+.escondido {
+    display: none !important;
+}
+
+.texto-suave {
+    color: var(--cor-texto-suave);
+    font-size: 14px;
+}
+
+.mensagem {
+    min-height: 20px;
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+    margin-top: 12px;
+}
+
+.mensagem.erro {
+    color: var(--cor-despesa);
+}
+
+.mensagem.ok {
+    color: var(--cor-destaque);
+}
