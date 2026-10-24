@@ -12,8 +12,10 @@
     />
 
     <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/formularios.css" />
+    <link rel="stylesheet" href="css/paginas.css" />
   </head>
-  <body>
+  <body class="a-carregar">
     <div class="app">
       <aside class="menu">
         <div class="logo">HUROH</div>
@@ -92,6 +94,31 @@
 
         <section class="pagina" id="definicoes">
           <h1>Definições</h1>
+
+          <div class="colunas">
+            <div class="cartao">
+              <h2>Perfil</h2>
+              <form class="formulario" id="form-perfil">
+                <label class="campo">
+                  <span>Nome</span>
+                  <input type="text" name="nome" maxlength="60" required />
+                </label>
+                <label class="campo">
+                  <span>Email</span>
+                  <input type="email" id="perfil-email" disabled />
+                </label>
+                <button type="submit" class="botao botao-principal">Guardar</button>
+              </form>
+            </div>
+
+            <div class="cartao">
+              <h2>Sessão</h2>
+              <p class="texto-suave">Os teus dados ficam guardados na conta e aparecem em todos os dispositivos.</p>
+              <div class="janela-botoes">
+                <button type="button" class="botao botao-perigo" id="botao-sair">Terminar sessão</button>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
     </div>

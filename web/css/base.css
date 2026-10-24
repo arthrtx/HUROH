@@ -45,6 +45,10 @@ h1, h2, h3, p {
     margin: 0;
 }
 
+body.a-carregar .app {
+    visibility: hidden;
+}
+
 .app {
     display: grid;
     grid-template-columns: 240px 1fr;

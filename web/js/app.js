@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { iniciarDefinicoes } from './definicoes.js';
 
 
 // sessão
@@ -18,6 +19,10 @@ supabase.auth.onAuthStateChange(evento => {
     }
 });
 
+function mostrarNome(nome) {
+    document.getElementById('saudacao').textContent = `Olá, ${nome}`;
+}
+
 async function carregarPerfil() {
     const { data } = await supabase
         .from('profiles')
@@ -25,11 +30,13 @@ async function carregarPerfil() {
         .eq('id', utilizador.id)
         .single();
 
-    const nome = data?.display_name || utilizador.email.split('@')[0];
-    document.getElementById('saudacao').textContent = `Olá, ${nome}`;
+    return { nome: data?.display_name || utilizador.email.split('@')[0] };
 }
 
-carregarPerfil();
+const perfil = await carregarPerfil();
+mostrarNome(perfil.nome);
+iniciarDefinicoes(utilizador, perfil, mostrarNome);
+document.body.classList.remove('a-carregar');
 
 
 // relógio
