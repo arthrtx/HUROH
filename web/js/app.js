@@ -119,11 +119,14 @@ function guardarTema(tema) {
     }
 }
 
-botaoTema.addEventListener('click', () => {
+function mudarTema() {
     const novoTema = document.body.classList.contains('tema-claro') ? 'escuro' : 'claro';
     aplicarTema(novoTema);
     guardarTema(novoTema);
-});
+}
+
+botaoTema.addEventListener('click', mudarTema);
+document.getElementById('botao-tema-definicoes').addEventListener('click', mudarTema);
 
 aplicarTema(lerTema());
 

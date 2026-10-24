@@ -1,6 +1,6 @@
 // formatação
 // ======================================================
-const formatoEuros = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' });
+const formatoEuros = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', useGrouping: 'always' });
 
 export function euros(valor) {
     return formatoEuros.format(Number(valor) || 0);
@@ -48,6 +48,7 @@ export function paraInputDataHora(data) {
 // avisos
 // ======================================================
 export function aviso(texto, tipo = 'ok') {
+    document.querySelectorAll('.aviso').forEach(antigo => antigo.remove());
     const caixa = document.createElement('div');
     caixa.className = `aviso aviso-${tipo}`;
     caixa.textContent = texto;

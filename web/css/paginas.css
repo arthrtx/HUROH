@@ -420,7 +420,7 @@
 }
 
 .cal-dia {
-    aspect-ratio: 1;
+    height: 52px;
     background: none;
     border: 1px solid transparent;
     border-radius: 12px;
