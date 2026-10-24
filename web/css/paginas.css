@@ -39,6 +39,16 @@
     margin-top: 0;
 }
 
+.colunas-financas {
+    grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 1000px) {
+    .colunas-financas {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 /* listas */
 
