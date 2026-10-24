@@ -77,7 +77,19 @@
         </section>
 
         <section class="pagina" id="financas">
-          <h1>Finanças</h1>
+          <div class="cabecalho-pagina">
+            <h1>Finanças</h1>
+          </div>
+
+          <div class="colunas colunas-financas">
+            <div class="cartao">
+              <div class="cabecalho-pagina">
+                <h2>Categorias</h2>
+                <button type="button" class="botao" id="nova-categoria">+ Categoria</button>
+              </div>
+              <ul class="lista" id="lista-categorias"></ul>
+            </div>
+          </div>
         </section>
 
         <section class="pagina" id="agenda">
@@ -122,6 +134,39 @@
         </section>
       </main>
     </div>
+
+    <dialog class="janela" id="janela-categoria">
+      <h2 id="titulo-categoria">Nova categoria</h2>
+      <form class="formulario" id="form-categoria">
+        <input type="hidden" name="id_categoria" />
+        <div class="alternador">
+          <input type="radio" name="tipo" id="categoria-despesa" value="expense" checked />
+          <label for="categoria-despesa">Despesa</label>
+          <input type="radio" name="tipo" id="categoria-rendimento" value="income" />
+          <label for="categoria-rendimento">Rendimento</label>
+        </div>
+        <label class="campo">
+          <span>Nome</span>
+          <input type="text" name="nome" maxlength="40" required />
+        </label>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Cor</span>
+            <input type="color" name="cor" value="#8b8b93" />
+          </label>
+          <label class="campo">
+            <span>Limite mensal (€)</span>
+            <input type="number" name="limite" min="0.01" step="0.01" inputmode="decimal" />
+          </label>
+        </div>
+        <div class="janela-botoes">
+          <button type="button" class="botao botao-perigo escondido" id="apagar-categoria">Apagar</button>
+          <button type="button" class="botao" data-fechar>Cancelar</button>
+          <button type="submit" class="botao botao-principal">Guardar</button>
+        </div>
+      </form>
+    </dialog>
+
     <script type="module" src="js/app.js"></script>
   </body>
 </html>
