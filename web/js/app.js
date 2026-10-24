@@ -1,3 +1,37 @@
+import { supabase } from './supabase.js';
+
+
+// sessão
+// ======================================================
+const { data: { session } } = await supabase.auth.getSession();
+
+if (!session) {
+    location.replace('login.html');
+    throw new Error('sem sessão');
+}
+
+export const utilizador = session.user;
+
+supabase.auth.onAuthStateChange(evento => {
+    if (evento === 'SIGNED_OUT') {
+        location.replace('login.html');
+    }
+});
+
+async function carregarPerfil() {
+    const { data } = await supabase
+        .from('profiles')
+        .select('display_name')
+        .eq('id', utilizador.id)
+        .single();
+
+    const nome = data?.display_name || utilizador.email.split('@')[0];
+    document.getElementById('saudacao').textContent = `Olá, ${nome}`;
+}
+
+carregarPerfil();
+
+
 // relógio
 // ======================================================
 const relogioHora = document.getElementById('relogio-hora');
