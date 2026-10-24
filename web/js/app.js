@@ -8,6 +8,7 @@ import { iniciarTarefas } from './tarefas.js';
 import { iniciarAgenda } from './agenda.js';
 import { iniciarCalendario } from './calendario.js';
 import { iniciarDashboard } from './dashboard.js';
+import { iniciarTempoReal } from './tempo-real.js';
 
 
 // sessão
@@ -43,6 +44,8 @@ async function carregarPerfil() {
 
 const perfil = await carregarPerfil();
 mostrarNome(perfil.nome);
+document.body.classList.remove('a-carregar');
+
 iniciarDefinicoes(utilizador, perfil, mostrarNome);
 await iniciarCategorias();
 iniciarMovimentos();
@@ -51,7 +54,7 @@ iniciarGrafico();
 await Promise.all([iniciarTarefas(), iniciarAgenda()]);
 iniciarCalendario();
 iniciarDashboard();
-document.body.classList.remove('a-carregar');
+iniciarTempoReal(utilizador);
 
 
 // relógio
