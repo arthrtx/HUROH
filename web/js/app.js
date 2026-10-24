@@ -2,6 +2,7 @@ import { supabase } from './supabase.js';
 import { iniciarDefinicoes } from './definicoes.js';
 import { iniciarCategorias } from './categorias.js';
 import { iniciarMovimentos } from './movimentos.js';
+import { iniciarResumo } from './resumo.js';
 
 
 // sessão
@@ -40,6 +41,7 @@ mostrarNome(perfil.nome);
 iniciarDefinicoes(utilizador, perfil, mostrarNome);
 await iniciarCategorias();
 iniciarMovimentos();
+iniciarResumo();
 document.body.classList.remove('a-carregar');
 
 
