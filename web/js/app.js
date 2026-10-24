@@ -3,6 +3,7 @@ import { iniciarDefinicoes } from './definicoes.js';
 import { iniciarCategorias } from './categorias.js';
 import { iniciarMovimentos } from './movimentos.js';
 import { iniciarResumo } from './resumo.js';
+import { iniciarGrafico } from './grafico.js';
 
 
 // sessão
@@ -42,6 +43,7 @@ iniciarDefinicoes(utilizador, perfil, mostrarNome);
 await iniciarCategorias();
 iniciarMovimentos();
 iniciarResumo();
+iniciarGrafico();
 document.body.classList.remove('a-carregar');
 
 

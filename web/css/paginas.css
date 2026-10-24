@@ -269,3 +269,54 @@
 .aviso-texto {
     color: var(--cor-aviso);
 }
+
+
+/* gráfico */
+
+.grafico svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.grafico text {
+    fill: var(--cor-texto-suave);
+    font-size: 12px;
+    font-family: var(--fonte);
+}
+
+.grafico .barra-r {
+    fill: var(--cor-destaque);
+}
+
+.grafico .barra-d {
+    fill: var(--cor-despesa);
+}
+
+.grafico .linha-base {
+    stroke: var(--cor-borda);
+}
+
+.legenda {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--cor-texto-suave);
+}
+
+.legenda i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: -1px;
+}
+
+.legenda-r {
+    background-color: var(--cor-destaque);
+}
+
+.legenda-d {
+    background-color: var(--cor-despesa);
+}
