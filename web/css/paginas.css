@@ -359,3 +359,28 @@
 .interruptor input {
     accent-color: var(--cor-destaque);
 }
+
+
+/* agenda */
+
+.data-evento {
+    width: 44px;
+    flex-shrink: 0;
+    text-align: center;
+    background-color: var(--cor-cartao-alto);
+    border-radius: 12px;
+    padding: 6px 0;
+}
+
+.data-evento span {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.data-evento small {
+    display: block;
+    font-size: 11px;
+    color: var(--cor-texto-suave);
+    text-transform: uppercase;
+}

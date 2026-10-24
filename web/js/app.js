@@ -5,6 +5,7 @@ import { iniciarMovimentos } from './movimentos.js';
 import { iniciarResumo } from './resumo.js';
 import { iniciarGrafico } from './grafico.js';
 import { iniciarTarefas } from './tarefas.js';
+import { iniciarAgenda } from './agenda.js';
 
 
 // sessão
@@ -46,6 +47,7 @@ iniciarMovimentos();
 iniciarResumo();
 iniciarGrafico();
 iniciarTarefas();
+iniciarAgenda();
 document.body.classList.remove('a-carregar');
 
 

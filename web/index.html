@@ -144,7 +144,17 @@
         </section>
 
         <section class="pagina" id="agenda">
-          <h1>Agenda</h1>
+          <div class="cabecalho-pagina">
+            <h1>Agenda</h1>
+            <button type="button" class="botao botao-principal" id="novo-evento">+ Evento</button>
+          </div>
+
+          <div class="colunas colunas-agenda">
+            <div class="cartao">
+              <h2>Próximos eventos</h2>
+              <ul class="lista" id="lista-proximos"></ul>
+            </div>
+          </div>
         </section>
 
         <section class="pagina" id="tarefas">
@@ -296,6 +306,47 @@
         </div>
         <div class="janela-botoes">
           <button type="button" class="botao botao-perigo escondido" id="apagar-tarefa">Apagar</button>
+          <button type="button" class="botao" data-fechar>Cancelar</button>
+          <button type="submit" class="botao botao-principal">Guardar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="janela" id="janela-evento">
+      <h2 id="titulo-evento">Novo evento</h2>
+      <form class="formulario" id="form-evento">
+        <input type="hidden" name="id_evento" />
+        <label class="campo">
+          <span>Título</span>
+          <input type="text" name="titulo" maxlength="80" required />
+        </label>
+        <div class="linha-campos">
+          <label class="campo">
+            <span>Início</span>
+            <input type="datetime-local" name="inicio" required />
+          </label>
+          <label class="campo">
+            <span>Fim (opcional)</span>
+            <input type="datetime-local" name="fim" />
+          </label>
+        </div>
+        <label class="campo">
+          <span>Lembrete</span>
+          <select name="lembrete">
+            <option value="">Sem lembrete</option>
+            <option value="0">Na hora</option>
+            <option value="10">10 minutos antes</option>
+            <option value="30">30 minutos antes</option>
+            <option value="60">1 hora antes</option>
+            <option value="1440">1 dia antes</option>
+          </select>
+        </label>
+        <label class="campo">
+          <span>Descrição (opcional)</span>
+          <textarea name="descricao" maxlength="500"></textarea>
+        </label>
+        <div class="janela-botoes">
+          <button type="button" class="botao botao-perigo escondido" id="apagar-evento">Apagar</button>
           <button type="button" class="botao" data-fechar>Cancelar</button>
           <button type="submit" class="botao botao-principal">Guardar</button>
         </div>
