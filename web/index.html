@@ -33,45 +33,45 @@
       <main class="conteudo">
         <section class="pagina ativa" id="dashboard">
           <h1 id="saudacao">Olá</h1>
-          <section class="grelha">
-            <article class="widget grande">
+          <section class="grelha" id="grelha-dashboard">
+            <article class="widget grande" data-widget="saldo">
               <h2 class="widget-titulo">Saldo</h2>
-              <p class="widget-valor">1.250,00 €</p>
-              <p class="widget-detalhe">
-                <span class="positivo">+ 320,00 €</span> este mês
-              </p>
+              <p class="widget-valor" id="w-saldo">—</p>
+              <p class="widget-detalhe" id="w-saldo-detalhe"></p>
+              <div class="widget-acoes">
+                <button type="button" class="botao" data-rapido="expense">− Despesa</button>
+                <button type="button" class="botao" data-rapido="income">+ Rendimento</button>
+              </div>
             </article>
 
-            <article class="widget">
-              <h2 class="widget-titulo">Finanças</h2>
-              <p class="widget-valor">820,00 €</p>
-              <p class="widget-detalhe">
-                <span class="negativo">- 430,00 €</span> Despesas este mês
-              </p>
+            <article class="widget" data-widget="financas">
+              <h2 class="widget-titulo">Despesas do mês</h2>
+              <p class="widget-valor" id="w-despesas">—</p>
+              <p class="widget-detalhe" id="w-despesas-detalhe"></p>
             </article>
 
-            <article class="widget">
-              <h2 class="widget-titulo">Agenda</h2>
-              <p class="widget-valor">14:30</p>
-              <p class="widget-detalhe">Reunião de Estágio</p>
+            <article class="widget" data-widget="agenda">
+              <h2 class="widget-titulo">Próximo evento</h2>
+              <p class="widget-valor" id="w-evento-hora">—</p>
+              <p class="widget-detalhe" id="w-evento"></p>
             </article>
 
-            <article class="widget">
+            <article class="widget" data-widget="tarefas">
               <h2 class="widget-titulo">Tarefas</h2>
-              <p class="widget-valor">3</p>
-              <p class="widget-detalhe">Tarefas pendentes</p>
+              <p class="widget-valor" id="w-tarefas">—</p>
+              <p class="widget-detalhe" id="w-tarefa"></p>
             </article>
 
-            <article class="widget">
+            <article class="widget" data-widget="relogio">
               <h2 class="widget-titulo">Relógio</h2>
               <p class="widget-valor" id="relogio-hora">--:--</p>
               <p class="widget-detalhe" id="relogio-data"></p>
             </article>
 
-            <article class="widget">
+            <article class="widget" data-widget="lembretes">
               <h2 class="widget-titulo">Lembretes</h2>
-              <p class="widget-valor">2</p>
-              <p class="widget-detalhe">Pagar renda amanhã</p>
+              <p class="widget-valor" id="w-lembretes">—</p>
+              <ul class="widget-lista" id="w-lembretes-lista"></ul>
             </article>
           </section>
         </section>

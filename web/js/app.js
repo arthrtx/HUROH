@@ -7,6 +7,7 @@ import { iniciarGrafico } from './grafico.js';
 import { iniciarTarefas } from './tarefas.js';
 import { iniciarAgenda } from './agenda.js';
 import { iniciarCalendario } from './calendario.js';
+import { iniciarDashboard } from './dashboard.js';
 
 
 // sessão
@@ -47,9 +48,9 @@ await iniciarCategorias();
 iniciarMovimentos();
 iniciarResumo();
 iniciarGrafico();
-iniciarTarefas();
-iniciarAgenda();
+await Promise.all([iniciarTarefas(), iniciarAgenda()]);
 iniciarCalendario();
+iniciarDashboard();
 document.body.classList.remove('a-carregar');
 
 

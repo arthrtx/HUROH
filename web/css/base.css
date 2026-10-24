@@ -175,6 +175,27 @@ body.a-carregar .app {
     color: var(--cor-texto-suave);
 }
 
+.widget-acoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.widget-lista {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.widget-lista span {
+    color: var(--cor-texto-suave);
+}
+
 .positivo {
     color: var(--cor-destaque);
 }
