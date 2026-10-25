@@ -1,125 +1,238 @@
+import { local, t } from './idioma.js';
 import { supabase } from './supabase.js';
-import { dataCurta, escapar, euros, hora, intervaloDoMes } from './utils.js';
+import { dataCurta, dataISO, escapar, euros, hora, intervaloDoMes } from './utils.js';
+import { icone } from './icones.js';
 import { abrirMovimento } from './movimentos.js';
-import { obterEventos, proximosEventos } from './agenda.js';
+import { abrirEvento, obterEventos, proximosEventos } from './agenda.js';
 import { obterTarefas } from './tarefas.js';
+import { categoriaPorId } from './categorias.js';
 
-function texto(id, valor) {
+const estado = { saldo: 0, despesasMes: 0, rendimentosMes: 0 };
+const movimentosRecentes = new Map();
+
+function definir(id, valor) {
     document.getElementById(id).textContent = valor;
 }
 
+function animarEuros(elemento, valor, semMoeda = false) {
+    const inicio = Number(elemento.dataset.valor || 0);
+    const comeco = performance.now();
+    elemento.dataset.valor = valor;
 
-// saldo e despesas
+    function passo(agora) {
+        const t = Math.min(1, (agora - comeco) / 900);
+        const suave = 1 - Math.pow(1 - t, 3);
+        const texto = euros(inicio + (valor - inicio) * suave);
+        elemento.textContent = semMoeda ? texto.replace(/\s?€\s?/, '') : texto;
+        if (t < 1) requestAnimationFrame(passo);
+    }
+
+    requestAnimationFrame(passo);
+}
+
+function plural(n, um, varios) {
+    return `${n} ${t(n === 1 ? um : varios)}`;
+}
+
+
+// saudação
+// ======================================================
+function atualizarBanner() {
+    const hoje = new Date().toDateString();
+    const pendentes = obterTarefas().filter(t => !t.completed);
+    const tarefasHoje = pendentes.filter(t => t.due_at && new Date(t.due_at).toDateString() === hoje).length;
+    const eventosHoje = obterEventos().filter(e => new Date(e.start_at).toDateString() === hoje).length;
+
+    const partes = [];
+    if (tarefasHoje) partes.push(`<strong>${plural(tarefasHoje, 'tarefa', 'tarefas')}</strong> ${t('para hoje')}`);
+    if (eventosHoje) partes.push(`<strong>${plural(eventosHoje, 'evento', 'eventos')}</strong> ${t('na agenda')}`);
+
+    let texto = partes.length ? `${t('Tens')} ${partes.join(` ${t('e')} `)}.` : t('Dia livre: não tens nada marcado para hoje.');
+    texto += estado.despesasMes > 0
+        ? ` ${t('Este mês já saíram')} <strong>${euros(estado.despesasMes)}</strong>.`
+        : ' ' + t('Ainda não registaste despesas este mês.');
+
+    document.getElementById('resumo-dia').innerHTML = texto;
+}
+
+
+// finanças
 // ======================================================
 async function atualizarFinancas() {
     const { inicio, fim } = intervaloDoMes();
+    const dezDias = new Date();
+    dezDias.setDate(dezDias.getDate() - 9);
 
-    const [total, mes] = await Promise.all([
+    const [total, mes, ultimos] = await Promise.all([
         supabase.rpc('resumo_financeiro').single(),
         supabase.rpc('resumo_financeiro', { inicio, fim }).single(),
+        supabase.from('transactions').select('type, amount, transaction_date').gte('transaction_date', dataISO(dezDias)),
     ]);
 
-    if (total.error || mes.error) {
-        return;
-    }
+    if (total.error || mes.error) return;
 
-    const saldo = Number(total.data.saldo);
+    estado.saldo = Number(total.data.saldo);
+    estado.despesasMes = Number(mes.data.despesas);
+    estado.rendimentosMes = Number(mes.data.rendimentos);
     const saldoMes = Number(mes.data.saldo);
+
     const valorSaldo = document.getElementById('w-saldo');
-    valorSaldo.textContent = euros(saldo);
-    valorSaldo.classList.toggle('negativo', saldo < 0);
+    animarEuros(valorSaldo, estado.saldo, true);
+    valorSaldo.classList.toggle('negativo', estado.saldo < 0);
 
-    document.getElementById('w-saldo-detalhe').innerHTML =
-        `<span class="${saldoMes < 0 ? 'negativo' : 'positivo'}">${saldoMes < 0 ? '−' : '+'} ${euros(Math.abs(saldoMes))}</span> este mês`;
+    definir('w-saldo-estado', t(estado.saldo < 0 ? 'Negativo' : 'Positivo'));
+    document.getElementById('w-saldo-detalhe').textContent =
+        `${saldoMes < 0 ? '−' : '+'}${euros(Math.abs(saldoMes))} ${t('este mês')}`;
 
-    texto('w-despesas', euros(mes.data.despesas));
-    texto('w-despesas-detalhe', `Rendimentos: ${euros(mes.data.rendimentos)}`);
+    const gasto = estado.rendimentosMes > 0 ? Math.min(1, estado.despesasMes / estado.rendimentosMes) : (estado.despesasMes > 0 ? 1 : 0);
+    document.getElementById('w-saldo-linha').style.width = `${Math.round(gasto * 100)}%`;
+
+    const nomeMes = new Date().toLocaleDateString(local, { month: 'long' });
+    definir('w-mes-nome', nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1));
+    animarEuros(document.getElementById('w-rendimentos'), estado.rendimentosMes);
+    animarEuros(document.getElementById('w-despesas'), estado.despesasMes);
+    definir('w-mes-texto', `${saldoMes < 0 ? '−' : ''}${euros(Math.abs(saldoMes))}`);
+    const sobra = estado.rendimentosMes > 0 ? Math.max(0, Math.round((saldoMes / estado.rendimentosMes) * 100)) : 0;
+    definir('w-mes-pct', `${sobra}%`);
+    document.getElementById('w-mes-barra').style.width = `${Math.min(100, sobra)}%`;
+    atualizarBanner();
 }
 
 
-// agenda e tarefas
+// recentes
 // ======================================================
-function atualizarAgenda() {
-    const [proximo] = proximosEventos(1);
+async function atualizarRecentes() {
+    const { data } = await supabase
+        .from('transactions')
+        .select('id, type, amount, category_id, description, transaction_date, created_at')
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-    if (!proximo) {
-        texto('w-evento-hora', '—');
-        texto('w-evento', 'Sem eventos marcados');
-        return;
-    }
+    movimentosRecentes.clear();
+    (data || []).forEach(m => movimentosRecentes.set(m.id, m));
 
-    const hoje = new Date().toDateString() === new Date(proximo.start_at).toDateString();
-    texto('w-evento-hora', hora(proximo.start_at));
-    texto('w-evento', `${hoje ? 'Hoje' : dataCurta(proximo.start_at)} · ${proximo.title}`);
+    const movimentos = (data || []).map(m => {
+        const categoria = categoriaPorId(m.category_id);
+        const entrada = m.type === 'income';
+        return {
+            quando: m.created_at,
+            html: `
+                <li class="lista-item recente" data-movimento="${m.id}">
+                    <span class="icone-item ${entrada ? 'ok' : 'erro'}">${icone(entrada ? 'entrada' : 'saida')}</span>
+                    <div class="lista-principal">
+                        <p class="lista-titulo">${escapar(m.description || categoria?.name || 'Movimento')}</p>
+                        <p class="lista-sub">${escapar(categoria?.name || 'Sem categoria')} · ${dataCurta(m.transaction_date)}</p>
+                    </div>
+                    <span class="lista-valor ${entrada ? 'positivo' : 'negativo'}">${entrada ? '+' : '−'}${euros(m.amount)}</span>
+                </li>`,
+        };
+    });
+
+    const tarefas = obterTarefas().slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3).map(t => ({
+        quando: t.created_at,
+        html: `
+            <li class="lista-item">
+                <span class="icone-item ${t.completed ? 'ok' : 'info'}">${icone(t.completed ? 'visto' : 'tarefas')}</span>
+                <div class="lista-principal">
+                    <p class="lista-titulo">${escapar(t.title)}</p>
+                    <p class="lista-sub">${t.completed ? 'Tarefa concluída' : 'Nova tarefa'} · ${dataCurta(t.created_at)}</p>
+                </div>
+            </li>`,
+    }));
+
+    const todos = [...movimentos, ...tarefas].sort((a, b) => new Date(b.quando) - new Date(a.quando)).slice(0, 3);
+
+    const lista = document.getElementById('w-recentes');
+    if (!lista) return;
+    lista.innerHTML = todos.length
+        ? todos.map(t => t.html).join('')
+        : '<li class="vazio">Ainda não há atividade. Regista um movimento para começar.</li>';
 }
 
-function atualizarTarefas() {
-    const pendentes = obterTarefas().filter(tarefa => !tarefa.completed);
-    const urgente = pendentes.find(tarefa => tarefa.priority === 'alta') || pendentes[0];
 
-    texto('w-tarefas', pendentes.length);
-    texto('w-tarefa', urgente ? urgente.title : 'Nada pendente');
-}
-
-
-// lembretes: eventos com lembrete e tarefas com prazo nos próximos 3 dias
+// eventos
 // ======================================================
-export function lembretesProximos() {
-    const agora = new Date();
-    const limite = new Date(agora.getTime() + 3 * 24 * 60 * 60 * 1000);
+function atualizarSemana() {
+    const hoje = new Date();
+    const doDia = obterEventos().filter(e => new Date(e.start_at).toDateString() === hoje.toDateString()).length;
+    const mes = hoje.toLocaleDateString(local, { month: 'short' }).replace('.', '');
 
-    const deEventos = obterEventos()
-        .filter(evento => evento.reminder_at && new Date(evento.start_at) >= agora && new Date(evento.start_at) <= limite)
-        .map(evento => ({ quando: evento.start_at, texto: evento.title }));
+    definir('w-dia-data', `${hoje.getDate()} ${mes.charAt(0).toUpperCase()}${mes.slice(1)}`);
+    definir('w-dia-semana', hoje.toLocaleDateString(local, { weekday: 'long' }).replace(/^./, c => c.toUpperCase()));
+    definir('w-dia-total', plural(doDia, 'evento', 'eventos'));
 
-    const deTarefas = obterTarefas()
-        .filter(tarefa => !tarefa.completed && tarefa.due_at && new Date(tarefa.due_at) <= limite)
-        .map(tarefa => ({ quando: tarefa.due_at, texto: tarefa.title, atrasada: new Date(tarefa.due_at) < agora }));
-
-    return [...deTarefas, ...deEventos].sort((a, b) => new Date(a.quando) - new Date(b.quando));
+    const proximos = proximosEventos(3);
+    document.getElementById('w-proximos').innerHTML = proximos.length
+        ? proximos.map(e => {
+            const inicio = new Date(e.start_at);
+            const quando = inicio.toDateString() === hoje.toDateString()
+                ? `${hora(e.start_at)}${e.end_at ? ' - ' + hora(e.end_at) : ''}`
+                : `${dataCurta(e.start_at)} · ${hora(e.start_at)}`;
+            return `
+                <li data-editar-evento="${e.id}">
+                    <p>${escapar(e.title)}</p>
+                    <small>${quando}</small>
+                </li>`;
+        }).join('')
+        : '<li class="vazio">Sem eventos marcados.</li>';
 }
 
-function atualizarLembretes() {
-    const lembretes = lembretesProximos();
-    texto('w-lembretes', lembretes.length);
 
-    document.getElementById('w-lembretes-lista').innerHTML = lembretes.slice(0, 3).map(lembrete => `
-        <li class="${lembrete.atrasada ? 'negativo' : ''}">
-            ${escapar(lembrete.texto)} <span>· ${dataCurta(lembrete.quando)} ${hora(lembrete.quando)}</span>
-        </li>
-    `).join('') || '<li>Sem lembretes próximos</li>';
+// cartão
+// ======================================================
+function ligarCartao() {
+    const cartao = document.getElementById('cartao-credito');
+    if (!cartao) return;
+
+    cartao.addEventListener('pointermove', evento => {
+        const caixa = cartao.getBoundingClientRect();
+        const x = (evento.clientX - caixa.left) / caixa.width;
+        const y = (evento.clientY - caixa.top) / caixa.height;
+        cartao.style.transform = `perspective(900px) rotateX(${(0.5 - y) * 12}deg) rotateY(${(x - 0.5) * 16}deg)`;
+        cartao.style.setProperty('--brilho-x', `${x * 100}%`);
+    });
+
+    cartao.addEventListener('pointerleave', () => {
+        cartao.style.transform = '';
+        cartao.style.setProperty('--brilho-x', '50%');
+    });
 }
 
 
 // início
 // ======================================================
 export function iniciarDashboard() {
-    document.getElementById('grelha-dashboard').addEventListener('click', evento => {
-        const tipo = evento.target.dataset.rapido;
-        if (tipo) {
-            abrirMovimento(null, tipo);
-        }
+    ligarCartao();
+
+    document.getElementById('w-novo-evento').addEventListener('click', () => abrirEvento());
+
+    document.addEventListener('click', evento => {
+        const rapido = evento.target.closest('[data-rapido]');
+        if (rapido) abrirMovimento(null, rapido.dataset.rapido);
+
+        const recente = evento.target.closest('[data-movimento]');
+        if (recente) abrirMovimento(movimentosRecentes.get(recente.dataset.movimento));
     });
 
     document.addEventListener('dados-alterados', evento => {
-        if (evento.detail === 'transactions') atualizarFinancas();
+        if (evento.detail === 'transactions') {
+            atualizarFinancas();
+            atualizarRecentes();
+        }
     });
+    document.addEventListener('categorias-alteradas', atualizarRecentes);
     document.addEventListener('eventos-carregados', () => {
-        atualizarAgenda();
-        atualizarLembretes();
+        atualizarSemana();
+        atualizarBanner();
     });
     document.addEventListener('tarefas-carregadas', () => {
-        atualizarTarefas();
-        atualizarLembretes();
+        atualizarRecentes();
+        atualizarBanner();
     });
 
-    setInterval(() => {
-        atualizarAgenda();
-        atualizarLembretes();
-    }, 60000);
+    setInterval(atualizarSemana, 60000);
 
     atualizarFinancas();
-    atualizarAgenda();
-    atualizarTarefas();
-    atualizarLembretes();
+    atualizarRecentes();
+    atualizarSemana();
 }
