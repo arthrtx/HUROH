@@ -6,12 +6,17 @@
 }
 
 .entrada-cartao {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    max-width: 380px;
-    background-color: var(--cor-cartao);
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio-cartao);
-    padding: 32px 28px;
+    max-width: 390px;
+    border-radius: 28px;
+    padding: 34px 30px 38px;
+    animation: aparecer 0.6s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.entrada-cartao .logo {
+    font-size: 20px;
 }
 
 .entrada-cartao .logo {
@@ -28,7 +33,7 @@
 .separadores {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background-color: var(--cor-fundo);
+    background-color: var(--cor-campo);
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio-pilula);
     padding: 4px;
@@ -49,4 +54,58 @@
 .separador.ativo {
     background-color: var(--cor-cartao-alto);
     color: var(--cor-texto);
+}
+
+/* janela da app */
+body.desktop .entrada {
+    min-height: 100vh;
+    padding: 0;
+    place-items: stretch;
+}
+
+body.desktop .entrada-cartao {
+    max-width: none;
+    padding: 46px 30px 30px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: rgba(8, 8, 10, 0.95);
+}
+
+body.vidro::before {
+    display: none;
+}
+
+body.vidro .entrada-cartao {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(10, 10, 13, 0.92);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.vidro.tema-claro .entrada-cartao {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(250, 250, 252, 0.92);
+}
+
+.entrada .logo-marca {
+    display: inline-grid;
+    width: 40px;
+    height: 40px;
+    margin: 0 10px 0 0;
+    border-radius: 12px;
+    font-size: 17px;
+    vertical-align: middle;
+}
+
+body.desktop .botoes-janela {
+    top: 8px;
+    right: 8px;
+}
+
+.logo-nome-entrada {
+    height: 22px;
+    width: auto;
+    vertical-align: middle;
 }

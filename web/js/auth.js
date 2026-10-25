@@ -1,8 +1,18 @@
+import './idioma.js';
 import { supabase } from './supabase.js';
+import './janela.js';
+import { guardarAceitacao, mostrarTermos } from './termos.js';
 
 const mensagem = document.getElementById('mensagem');
 const formularios = document.querySelectorAll('.formulario');
 const separadores = document.getElementById('separadores');
+
+const naWeb = location.protocol.startsWith('http');
+
+if (window.huroh?.desktop) {
+    document.body.classList.add('desktop');
+    document.body.classList.toggle('vidro', Boolean(window.huroh.vidro));
+}
 
 try {
     if (localStorage.getItem('tema') === 'claro') {
@@ -89,10 +99,11 @@ document.getElementById('form-registar').addEventListener('submit', evento => {
             password: dados.get('senha'),
             options: {
                 data: { display_name: dados.get('nome').trim() },
-                emailRedirectTo: new URL('index.html', location.href).href,
+                emailRedirectTo: naWeb ? new URL('index.html', location.href).href : undefined,
             },
         });
         if (error) throw error;
+        guardarAceitacao();
 
         if (data.session) {
             location.replace('index.html');
@@ -112,7 +123,7 @@ document.getElementById('form-recuperar').addEventListener('submit', evento => {
     evento.preventDefault();
     enviar(evento.target, async dados => {
         const { error } = await supabase.auth.resetPasswordForEmail(dados.get('email').trim(), {
-            redirectTo: new URL('login.html', location.href).href,
+            redirectTo: naWeb ? new URL('login.html', location.href).href : undefined,
         });
         if (error) throw error;
         escrever('Se o email existir, vais receber um link em breve.', 'ok');
@@ -136,7 +147,7 @@ supabase.auth.onAuthStateChange(evento => {
 });
 
 
-// já tem sessão? vai direto para o painel
+// sessão
 // ======================================================
 const { data: { session } } = await supabase.auth.getSession();
 const veioRecuperar = location.hash.includes('type=recovery');
@@ -144,3 +155,10 @@ const veioRecuperar = location.hash.includes('type=recovery');
 if (session && !veioRecuperar) {
     location.replace('index.html');
 }
+
+document.querySelectorAll('[data-ver-termos]').forEach(botao => {
+    botao.addEventListener('click', evento => {
+        evento.preventDefault();
+        mostrarTermos();
+    });
+});
