@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js';
-import { escapar, euros, intervaloDoMes } from './utils.js';
+import { dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
+import { t } from './idioma.js';
 
 const filtros = document.getElementById('filtros-movimentos');
 
@@ -37,10 +38,71 @@ async function carregarTotais() {
     saldoMes.className = `widget-valor ${Number(mes.data.saldo) < 0 ? 'negativo' : ''}`;
 
     document.getElementById('resumo-saldo-total').textContent = `Saldo total: ${euros(total.data.saldo)}`;
+
+    desenharBolsas(inicio, fim);
 }
 
 
-// despesas por categoria e limites
+// rendimentos e despesas
+// ======================================================
+async function desenharBolsas(inicio, fim) {
+    const { data } = await supabase
+        .from('transactions')
+        .select('type, amount, description, transaction_date, created_at')
+        .gte('transaction_date', inicio)
+        .lte('transaction_date', fim)
+        .order('transaction_date');
+
+    const movimentos = data || [];
+    const [ano, mes] = inicio.split('-').map(Number);
+    const diasNoMes = new Date(ano, mes, 0).getDate();
+    const hoje = new Date();
+    const ultimoDia = hoje.getFullYear() === ano && hoje.getMonth() + 1 === mes ? hoje.getDate() : diasNoMes;
+
+    [['income', 'bolsa-r'], ['expense', 'bolsa-d']].forEach(([tipo, pre]) => {
+        const doTipo = movimentos.filter(m => m.type === tipo);
+
+        const pontos = [];
+        let soma = 0;
+        for (let dia = 1; dia <= ultimoDia; dia++) {
+            const chave = dataISO(new Date(ano, mes - 1, dia));
+            doTipo.filter(m => m.transaction_date === chave).forEach(m => { soma += Number(m.amount); });
+            pontos.push(soma);
+        }
+        linha(document.getElementById(`${pre}-grafico`), pontos, tipo === 'income' ? '#34d399' : '#ff5c6c');
+
+        const ultimo = doTipo.slice().sort((a, b) => (a.transaction_date + a.created_at).localeCompare(b.transaction_date + b.created_at)).pop();
+        document.getElementById(`${pre}-ultimo-nome`).textContent = ultimo ? (ultimo.description || t(tipo === 'income' ? 'Rendimento' : 'Despesa')) : t('Sem movimentos');
+        document.getElementById(`${pre}-ultimo-valor`).textContent = ultimo ? `${tipo === 'income' ? '+' : '−'}${euros(ultimo.amount)} · ${dataCurta(ultimo.transaction_date)}` : '';
+
+        document.getElementById(`${pre}-movs`).textContent = `${doTipo.length} ${t(doTipo.length === 1 ? 'movimento' : 'movimentos')}`;
+        document.getElementById(`${pre}-media`).textContent = doTipo.length ? `${t('média')} ${euros(soma / doTipo.length)}` : '';
+    });
+}
+
+function linha(svg, pontos, cor) {
+    if (!svg) return;
+    if (pontos.length < 2) pontos = [0, ...pontos, pontos[pontos.length - 1] || 0];
+    const maior = Math.max(1, ...pontos);
+    const coords = pontos.map((v, i) => [(i / (pontos.length - 1)) * 300, 54 - (v / maior) * 46]);
+    const caminho = coords.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+    const id = svg.id + '-area';
+
+    svg.innerHTML = `
+        <defs>
+            <linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="${cor}" stop-opacity="0.35" />
+                <stop offset="1" stop-color="${cor}" stop-opacity="0" />
+            </linearGradient>
+        </defs>
+        <line x1="0" y1="54" x2="300" y2="54" class="bolsa-base" />
+        <path d="${caminho} L300,60 L0,60 Z" fill="url(#${id})" />
+        <path d="${caminho}" fill="none" stroke="${cor}" stroke-width="2" vector-effect="non-scaling-stroke" class="bolsa-linha" />
+    `;
+}
+
+
+// categorias
 // ======================================================
 async function carregarPorCategoria() {
     const { inicio, fim } = mesEscolhido();
