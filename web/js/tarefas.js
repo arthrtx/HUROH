@@ -1,7 +1,6 @@
 import { supabase } from './supabase.js';
 import { aviso, dataCurta, escapar, hora, paraInputDataHora } from './utils.js';
 
-const PRIORIDADES = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
 const ORDEM = { alta: 0, media: 1, baixa: 2 };
 
 let tarefas = [];
@@ -53,30 +52,41 @@ function textoPrazo(tarefa) {
 }
 
 function desenharTarefas() {
-    const lista = document.getElementById('lista-tarefas');
-    const visiveis = tarefas.filter(tarefa => mostrarConcluidas || !tarefa.completed).sort(ordenar);
-    const pendentes = tarefas.filter(tarefa => !tarefa.completed).length;
+    const pendentes = tarefas.filter(tarefa => !tarefa.completed);
+    const feitas = tarefas.length - pendentes.length;
+    const agora = new Date();
+    const hojeTexto = agora.toDateString();
+    const paraHoje = pendentes.filter(t => t.due_at && new Date(t.due_at).toDateString() === hojeTexto).sort(ordenar);
+    const atrasadas = pendentes.filter(t => t.due_at && new Date(t.due_at) < agora).sort(ordenar);
+    const pct = tarefas.length ? Math.round((feitas / tarefas.length) * 100) : 0;
 
     document.getElementById('contagem-tarefas').textContent =
-        pendentes === 1 ? '1 pendente' : `${pendentes} pendentes`;
+        pendentes.length === 1 ? '1 pendente' : `${pendentes.length} pendentes`;
+    document.getElementById('tp-feitas').textContent = feitas === 1 ? '1 concluída' : `${feitas} concluídas`;
+    document.getElementById('tp-pct').textContent = `${pct}%`;
+    document.getElementById('tp-anel').style.setProperty('--pct', pct);
+    document.getElementById('tp-hoje').textContent = paraHoje.length;
+    document.getElementById('tp-seguinte').textContent = paraHoje[0] ? `${hora(paraHoje[0].due_at)} · ${paraHoje[0].title}` : 'Nada marcado para hoje';
+    document.getElementById('tp-atrasadas').textContent = atrasadas.length;
+    document.getElementById('tp-atrasada-nome').textContent = atrasadas[0] ? atrasadas[0].title : 'Tudo em dia';
+    document.querySelector('.tarefas-atraso').classList.toggle('com-atraso', atrasadas.length > 0);
 
-    if (visiveis.length === 0) {
-        lista.innerHTML = '<li class="vazio">Nada por fazer. Cria uma tarefa com "+ Tarefa".</li>';
-        return;
-    }
-
-    lista.innerHTML = visiveis.map(tarefa => `
-        <li class="lista-item tarefa ${tarefa.completed ? 'feita' : ''}">
-            <input type="checkbox" class="caixa" data-concluir="${tarefa.id}" ${tarefa.completed ? 'checked' : ''}
-                   aria-label="Concluir ${escapar(tarefa.title)}" />
-            <div class="lista-principal">
-                <p class="lista-titulo">${escapar(tarefa.title)}</p>
-                <p class="lista-sub">${textoPrazo(tarefa)}</p>
-            </div>
-            <span class="etiqueta prioridade-${tarefa.priority}">${PRIORIDADES[tarefa.priority]}</span>
-            <button type="button" class="botao-link" data-editar="${tarefa.id}">Editar</button>
-        </li>
-    `).join('');
+    const visiveis = tarefas.filter(tarefa => mostrarConcluidas || !tarefa.completed).sort(ordenar);
+    document.querySelectorAll('#lista-tarefas [data-coluna]').forEach(coluna => {
+        const daColuna = visiveis.filter(t => t.priority === coluna.dataset.coluna);
+        coluna.querySelector('[data-conta]').textContent = daColuna.filter(t => !t.completed).length;
+        coluna.querySelector('ul').innerHTML = daColuna.length
+            ? daColuna.map(tarefa => `
+                <li class="cartao-tarefa ${tarefa.completed ? 'feita' : ''}">
+                    <input type="checkbox" class="caixa" data-concluir="${tarefa.id}" ${tarefa.completed ? 'checked' : ''}
+                           aria-label="Concluir ${escapar(tarefa.title)}" />
+                    <div class="lista-principal" data-editar="${tarefa.id}">
+                        <p class="lista-titulo" data-editar="${tarefa.id}">${escapar(tarefa.title)}</p>
+                        <p class="lista-sub" data-editar="${tarefa.id}">${textoPrazo(tarefa) || 'Sem prazo'}</p>
+                    </div>
+                </li>`).join('')
+            : '<li class="vazio">Nada aqui.</li>';
+    });
 }
 
 
