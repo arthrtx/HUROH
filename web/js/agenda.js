@@ -1,3 +1,4 @@
+import { local } from './idioma.js';
 import { supabase } from './supabase.js';
 import { aviso, escapar, hora, paraInputDataHora } from './utils.js';
 
@@ -8,7 +9,7 @@ export function obterEventos() {
 }
 
 
-// carregar (do início do mês passado até daqui a 1 ano)
+// carregar
 // ======================================================
 export async function carregarEventos() {
     const hoje = new Date();
@@ -48,7 +49,7 @@ export function linhaEvento(evento) {
         <li class="lista-item">
             <div class="data-evento">
                 <span>${new Date(evento.start_at).getDate()}</span>
-                <small>${new Date(evento.start_at).toLocaleDateString('pt-PT', { month: 'short' }).replace('.', '')}</small>
+                <small>${new Date(evento.start_at).toLocaleDateString(local, { month: 'short' }).replace('.', '')}</small>
             </div>
             <div class="lista-principal">
                 <p class="lista-titulo">${escapar(evento.title)}</p>
@@ -167,7 +168,7 @@ export function iniciarAgenda() {
     document.getElementById('novo-evento').addEventListener('click', () => abrirEvento());
 
     document.addEventListener('click', evento => {
-        const id = evento.target.dataset?.editarEvento;
+        const id = evento.target.closest?.('[data-editar-evento]')?.dataset.editarEvento;
         if (id) {
             abrirEvento(eventoPorId(id));
         }
