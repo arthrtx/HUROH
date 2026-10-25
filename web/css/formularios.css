@@ -19,7 +19,7 @@
 .campo input,
 .campo select,
 .campo textarea {
-    background-color: var(--cor-fundo);
+    background-color: var(--cor-campo);
     border: 1px solid var(--cor-borda);
     color: var(--cor-texto);
     border-radius: 12px;
@@ -45,6 +45,7 @@
 .campo textarea:focus {
     outline: none;
     border-color: var(--cor-destaque);
+    box-shadow: 0 0 0 3px var(--cor-destaque-fundo);
 }
 
 .linha-campos {
@@ -56,6 +57,7 @@
 .botao {
     border: 1px solid var(--cor-borda);
     background-color: var(--cor-cartao-alto);
+    backdrop-filter: blur(10px);
     color: var(--cor-texto);
     border-radius: var(--raio-pilula);
     padding: 11px 18px;
@@ -63,11 +65,16 @@
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: opacity 0.2s, background-color 0.2s;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .botao:hover {
-    opacity: 0.85;
+    border-color: var(--cor-borda-forte);
+    transform: translateY(-1px);
+}
+
+.botao:active {
+    transform: scale(0.97);
 }
 
 .botao:disabled {
@@ -78,7 +85,12 @@
 .botao-principal {
     background-color: var(--cor-destaque);
     border-color: var(--cor-destaque);
-    color: #0b0b0d;
+    color: #050506;
+    box-shadow: 0 0 22px rgba(61, 242, 160, 0.3);
+}
+
+.botao-principal:hover {
+    box-shadow: 0 0 32px rgba(61, 242, 160, 0.5);
 }
 
 .botao-perigo {

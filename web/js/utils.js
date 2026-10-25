@@ -1,17 +1,18 @@
+import { local } from './idioma.js';
 // formatação
 // ======================================================
-const formatoEuros = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', useGrouping: 'always' });
+const formatoEuros = new Intl.NumberFormat(local, { style: 'currency', currency: 'EUR', useGrouping: 'always' });
 
 export function euros(valor) {
     return formatoEuros.format(Number(valor) || 0);
 }
 
 export function dataCurta(data) {
-    return new Date(data).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' });
+    return new Date(data).toLocaleDateString(local, { day: '2-digit', month: 'short' });
 }
 
 export function hora(data) {
-    return new Date(data).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    return new Date(data).toLocaleTimeString(local, { hour: '2-digit', minute: '2-digit' });
 }
 
 export function escapar(texto) {

@@ -3,8 +3,6 @@ import { supabase } from './supabase.js';
 const TABELAS = ['transactions', 'events', 'tasks'];
 
 
-// alterações feitas noutro dispositivo chegam aqui sem recarregar
-// ======================================================
 export function iniciarTempoReal(utilizador) {
     const canal = supabase.channel('huroh-' + utilizador.id);
 
@@ -25,7 +23,6 @@ export function iniciarTempoReal(utilizador) {
     });
 }
 
-// junta várias alterações seguidas numa só atualização
 const pendentes = new Map();
 
 function avisar(tabela) {

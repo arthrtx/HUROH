@@ -24,7 +24,7 @@ function permitido() {
 }
 
 
-// verificar o que está na hora de avisar
+// verificar
 // ======================================================
 function verificar() {
     if (!permitido()) return;
@@ -60,7 +60,7 @@ function verificar() {
 }
 
 
-// botão nas definições
+// botão
 // ======================================================
 function atualizarEstado() {
     const estado = document.getElementById('estado-notificacoes');

@@ -1,4 +1,4 @@
-const VERSAO = 'huroh-v1';
+const VERSAO = 'huroh-v5';
 
 const FICHEIROS = [
     './',
@@ -6,27 +6,35 @@ const FICHEIROS = [
     './login.html',
     './manifest.json',
     './css/base.css',
+    './css/componentes.css',
     './css/formularios.css',
     './css/paginas.css',
     './css/login.css',
     './js/app.js',
     './js/auth.js',
     './js/supabase.js',
+    './js/vendor/supabase.js',
+    './js/icones.js',
+    './js/perfil.js',
+    './js/topo.js',
     './js/utils.js',
     './js/definicoes.js',
     './js/categorias.js',
     './js/movimentos.js',
     './js/resumo.js',
-    './js/grafico.js',
     './js/tarefas.js',
     './js/agenda.js',
     './js/calendario.js',
     './js/dashboard.js',
     './js/tempo-real.js',
-    './js/widgets.js',
     './js/notificacoes.js',
+    './js/idioma.js',
+    './js/janela.js',
+    './js/termos.js',
     './assets/icones/icone-192.png',
     './assets/icones/icone-512.png',
+    './assets/fundo-claro.jpg',
+    './assets/fundo-escuro.jpg',
 ];
 
 self.addEventListener('install', evento => {
