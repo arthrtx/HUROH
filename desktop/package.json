@@ -1,0 +1,14 @@
+{
+    "name": "huroh",
+    "version": "2.0.0",
+    "description": "HUROH - Your life. In sync.",
+    "author": "Arthur da Hora de Sal",
+    "main": "main.js",
+    "private": true,
+    "scripts": {
+        "start": "electron ."
+    },
+    "devDependencies": {
+        "electron": "33.4.11"
+    }
+}

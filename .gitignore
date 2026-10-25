@@ -147,3 +147,7 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# app de computador
+desktop/node_modules/
+desktop/dist/
