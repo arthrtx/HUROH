@@ -150,6 +150,29 @@ body.aberto .trilho {
     opacity: 1;
 }
 
+/* entrada: a gota abre-se no trilho e o trilho aparece por cima, sem deslizar */
+body.chegada .trilho {
+    transition: opacity 0.35s;
+}
+
+.gota {
+    position: fixed;
+    z-index: 20;
+    border-radius: 999px;
+    background: #0c0c0f;
+    border: 1px solid var(--borda);
+    /* brilho suave à volta, com as cores do LED */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 22px 2px rgba(99, 102, 241, 0.4),
+        -8px -6px 26px rgba(61, 242, 160, 0.22),
+        8px 8px 26px rgba(236, 72, 153, 0.2);
+    pointer-events: none;
+    will-change: left, top, width, height, transform, opacity;
+}
+
+
+
 .trilho-logo {
     width: 38px;
     height: 38px;
@@ -713,4 +736,13 @@ body.tema-claro .cartao-saldo .saldo-valor {
 
 body.tema-claro .cartao-saldo .pilula-icone {
     background-color: rgba(255, 255, 255, 0.7);
+}
+
+body.tema-claro .gota {
+    background: #f6f2ec;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 0 22px 2px rgba(99, 102, 241, 0.3),
+        -8px -6px 26px rgba(61, 242, 160, 0.2),
+        8px 8px 26px rgba(236, 72, 153, 0.18);
 }

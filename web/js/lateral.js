@@ -1,5 +1,6 @@
 import { local } from './idioma.js';
-import { supabase } from './supabase.js';
+import { obterSessao, supabase } from './supabase.js';
+import * as bd from './bd.js';
 import { dataISO, escapar, euros, hora, intervaloDoMes } from './utils.js';
 
 const huroh = window.huroh || {};
@@ -7,6 +8,7 @@ const corpo = document.body;
 let ratoAtivo = false;
 let fecharDepois;
 let expandirDepois;
+let mostrarAte = 0;
 
 
 // abrir e fechar
@@ -18,7 +20,6 @@ function definirRato(ativo) {
 }
 
 function abrir() {
-    clearTimeout(fecharDepois);
     if (!corpo.classList.contains('aberto')) {
         corpo.classList.add('aberto');
         atualizarTudo();
@@ -26,44 +27,107 @@ function abrir() {
 }
 
 function expandir() {
-    clearTimeout(fecharDepois);
+    expandirDepois = null;
     corpo.classList.add('aberto', 'expandido');
 }
 
 function fechar() {
     clearTimeout(expandirDepois);
+    expandirDepois = null;
+    clearTimeout(fecharDepois);
+    fecharDepois = null;
     corpo.classList.remove('expandido', 'aberto');
     definirRato(false);
 }
 
 function agendarFecho() {
     clearTimeout(expandirDepois);
-    clearTimeout(fecharDepois);
-    fecharDepois = setTimeout(fechar, 450);
+    expandirDepois = null;
+    if (!fecharDepois) fecharDepois = setTimeout(fechar, 450);
 }
 
-document.addEventListener('mousemove', evento => {
-    const alvo = document.elementFromPoint(evento.clientX, evento.clientY);
-    const dentro = Boolean(alvo?.closest('.zona, .gatilho'));
-    definirRato(dentro);
+// a posição do rato chega pelo Electron (e pelo mousemove, quando o Windows o entrega)
+function verPonto(ponto) {
+    const alvo = ponto && document.elementFromPoint(ponto.x, ponto.y);
+    const zona = alvo?.closest('.zona, .gatilho');
+    definirRato(Boolean(zona));
 
-    if (!dentro && corpo.classList.contains('aberto')) agendarFecho();
-    if (dentro) clearTimeout(fecharDepois);
-});
+    if (!zona) {
+        if (corpo.classList.contains('aberto') && Date.now() > mostrarAte) agendarFecho();
+        return;
+    }
 
-document.getElementById('gatilho').addEventListener('mouseenter', abrir);
-
-document.querySelector('.trilho').addEventListener('mouseenter', () => {
+    clearTimeout(fecharDepois);
+    fecharDepois = null;
     abrir();
-    clearTimeout(expandirDepois);
-    expandirDepois = setTimeout(expandir, 280);
-});
 
-document.addEventListener('mouseleave', agendarFecho);
+    if (zona.classList.contains('trilho') && !corpo.classList.contains('expandido') && !expandirDepois) {
+        expandirDepois = setTimeout(expandir, 220);
+    } else if (!zona.classList.contains('trilho')) {
+        clearTimeout(expandirDepois);
+        expandirDepois = null;
+    }
+}
+
+document.addEventListener('mousemove', evento => verPonto({ x: evento.clientX, y: evento.clientY }));
+huroh.aoRato?.(verPonto);
 
 document.addEventListener('keydown', evento => {
     if (evento.key === 'Escape') fechar();
 });
+
+// entrada: uma gota com brilho sai da janela principal e abre-se no trilho
+// ======================================================
+const DURACAO_GOTA = 1000;
+
+function mostrarTrilhoAberto() {
+    mostrarAte = Date.now() + 1800;
+    corpo.classList.add('chegada');
+    abrir();
+    setTimeout(() => corpo.classList.remove('chegada'), 500);
+    setTimeout(() => {
+        if (!ratoAtivo) fechar();
+    }, 1800);
+}
+
+function apresentar(origem) {
+    const trilho = document.querySelector('.trilho');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !trilho) return mostrarTrilhoAberto();
+
+    document.querySelector('.gota')?.remove();
+    const gota = document.createElement('div');
+    gota.className = 'gota';
+    corpo.appendChild(gota);
+
+    const altura = trilho.offsetHeight;
+    const topo = (innerHeight - altura) / 2;
+    const meio = innerHeight / 2;
+    const x = Math.min(Math.max(origem?.x ?? innerWidth, 90), innerWidth - 24);
+    const y = Math.min(Math.max(origem?.y ?? meio, 60), innerHeight - 60);
+
+    const posicao = (cx, cy, largura, alto) => ({
+        left: `${cx - largura / 2}px`,
+        top: `${cy - alto / 2}px`,
+        width: `${largura}px`,
+        height: `${alto}px`,
+    });
+
+    const animacao = gota.animate([
+        { ...posicao(x, y, 44, 44), opacity: 0, transform: 'scale(0.3)', offset: 0 },
+        { ...posicao(x - 6, y, 46, 46), opacity: 1, transform: 'scale(1)', offset: 0.18 },
+        { ...posicao((x + 40) / 2, (y + meio) / 2, 66, 42), opacity: 1, transform: 'scale(1)', offset: 0.42 },
+        { ...posicao(40, meio, 60, 60), opacity: 1, transform: 'scale(1)', offset: 0.66 },
+        { ...posicao(40, topo + altura / 2, 60, altura), opacity: 1, transform: 'scale(1)', offset: 1 },
+    ], { duration: DURACAO_GOTA, easing: 'cubic-bezier(0.45, 0, 0.2, 1)', fill: 'forwards' });
+
+    animacao.finished.then(() => {
+        mostrarTrilhoAberto();
+        gota.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, easing: 'ease-out', fill: 'forwards' })
+            .finished.then(() => gota.remove());
+    }).catch(() => gota.remove());
+}
+
+huroh.aoApresentar?.(apresentar);
 
 
 // cliques
@@ -71,6 +135,12 @@ document.addEventListener('keydown', evento => {
 document.addEventListener('click', evento => {
     const pagina = evento.target.closest('[data-pagina]');
     const acao = evento.target.closest('[data-acao]');
+
+    // o X só recolhe os menus; o botão de sair do trilho é que esconde o menu lateral
+    if (evento.target.closest('[data-fechar]')) {
+        fechar();
+        return;
+    }
 
     if (evento.target.closest('[data-esconder]')) {
         fechar();
@@ -147,15 +217,14 @@ function avatarIniciais(nome) {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
-async function carregarPerfil() {
-    const { data } = await supabase
-        .from('profiles')
-        .select('display_name, avatar_url')
-        .eq('id', sessao.user.id)
-        .single();
+function carregarPerfil() {
+    let guardado = null;
+    try {
+        guardado = JSON.parse(localStorage.getItem('perfil-' + sessao.user.id));
+    } catch {}
 
-    const nome = data?.display_name || sessao.user.email.split('@')[0];
-    const foto = data?.avatar_url || avatarIniciais(nome);
+    const nome = guardado?.nome || sessao.user.email.split('@')[0];
+    const foto = guardado?.avatar || avatarIniciais(nome);
 
     document.getElementById('perfil-nome').textContent = nome;
     document.getElementById('perfil-email').textContent = sessao.user.email;
@@ -168,16 +237,16 @@ async function carregarSaldo() {
     const trintaDias = new Date();
     trintaDias.setDate(trintaDias.getDate() - 29);
 
-    const [total, mes, movimentos] = await Promise.all([
-        supabase.rpc('resumo_financeiro').single(),
-        supabase.rpc('resumo_financeiro', { inicio, fim }).single(),
-        supabase.from('transactions').select('type, amount, transaction_date').gte('transaction_date', dataISO(trintaDias)),
+    const [total, mes, todos] = await Promise.all([
+        bd.resumoFinanceiro(),
+        bd.resumoFinanceiro(inicio, fim),
+        bd.listar('transactions'),
     ]);
 
-    if (total.error) return;
-
-    const saldo = Number(total.data.saldo);
-    const saldoMes = Number(mes.data?.saldo || 0);
+    const saldo = total.saldo;
+    const saldoMes = mes.saldo;
+    const desde = dataISO(trintaDias);
+    const movimentos = todos.filter(m => m.transaction_date >= desde);
     const valor = document.getElementById('saldo-valor');
     valor.textContent = euros(saldo);
     valor.classList.toggle('negativo', saldo < 0);
@@ -191,7 +260,7 @@ async function carregarSaldo() {
         d.setDate(d.getDate() + i);
         return { chave: dataISO(d), variacao: 0 };
     });
-    (movimentos.data || []).forEach(m => {
+    movimentos.forEach(m => {
         const dia = dias.find(d => d.chave === m.transaction_date);
         if (dia) dia.variacao += (m.type === 'income' ? 1 : -1) * Math.round(Number(m.amount) * 100);
     });
@@ -224,8 +293,7 @@ function desenharLinha(pontos) {
 }
 
 async function carregarTarefas() {
-    const { data } = await supabase.from('tasks').select('title, priority, completed, due_at').limit(300);
-    const tarefas = data || [];
+    const tarefas = await bd.listar('tasks');
     const pendentes = tarefas.filter(t => !t.completed);
     const feitas = tarefas.length - pendentes.length;
     const pct = tarefas.length ? Math.round((feitas / tarefas.length) * 100) : 0;
@@ -244,15 +312,10 @@ async function carregarTarefas() {
 }
 
 async function carregarEvento() {
-    const { data } = await supabase
-        .from('events')
-        .select('title, start_at, end_at')
-        .gte('start_at', new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString())
-        .order('start_at')
-        .limit(5);
-
     const agora = new Date();
-    const proximo = (data || []).find(e => new Date(e.end_at || e.start_at) >= agora);
+    const proximo = (await bd.listar('events'))
+        .sort((a, b) => new Date(a.start_at) - new Date(b.start_at))
+        .find(e => new Date(e.end_at || e.start_at) >= agora);
 
     if (!proximo) {
         document.getElementById('evento-quando').textContent = 'AGENDA';
@@ -283,22 +346,18 @@ async function atualizarTudo(forcar = false) {
 
 // início
 // ======================================================
-const { data } = await supabase.auth.getSession();
-sessao = data.session;
+sessao = await obterSessao();
 
 if (!sessao) {
     document.getElementById('avatar-trilho').src = avatarIniciais('H');
     document.getElementById('avatar-painel').src = avatarIniciais('H');
 } else {
-    await carregarPerfil();
+    await bd.abrirBd(sessao.user);
+    carregarPerfil();
     await atualizarTudo(true);
 
-    supabase.channel('lateral-' + sessao.user.id)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `user_id=eq.${sessao.user.id}` }, () => atualizarTudo(true))
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `user_id=eq.${sessao.user.id}` }, () => atualizarTudo(true))
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events', filter: `user_id=eq.${sessao.user.id}` }, () => atualizarTudo(true))
-        .subscribe();
-
+    // a janela principal grava os dados; aqui só se lê
+    document.addEventListener('dados-alterados', () => atualizarTudo(true));
     setInterval(() => atualizarTudo(true), 60000);
 }
 
