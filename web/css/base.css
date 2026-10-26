@@ -103,6 +103,23 @@ body.a-carregar .lateral {
     visibility: hidden;
 }
 
+/* a janela abre-se com um pequeno zoom e os cartões entram a seguir */
+body.a-entrar .app {
+    animation: app-entra 0.45s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+@keyframes app-entra {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 ::selection {
     background-color: var(--cor-destaque-fundo);
 }
@@ -387,8 +404,8 @@ body.desktop .topo-barra {
     display: block;
 }
 
-.pagina.ativa > *,
-.pagina.ativa .grelha > * {
+body:not(.a-carregar) .pagina.ativa > *,
+body:not(.a-carregar) .pagina.ativa .grelha > * {
     animation: aparecer 0.55s cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }
 
@@ -856,5 +873,118 @@ body.vidro.tema-claro .app {
 @media (min-width: 1081px) and (min-height: 620px) {
     body[data-pagina="dashboard"] .conteudo {
         overflow: hidden;
+    }
+}
+
+
+/* abertura: o nome HUROH sozinho no ecrã; uma "casca" lisa cresce até ao tamanho da janela
+   e o conteúdo aparece por cima dela (só se anima uma camada simples, para ficar suave) */
+.abertura-logo,
+.casca {
+    display: none;
+}
+
+body.abertura .abertura-logo {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    color: #f4f4f5;
+}
+
+body.abertura.tema-claro .abertura-logo {
+    color: #141414;
+}
+
+.abertura-logo svg {
+    width: 240px;
+    height: 52px;
+    filter: drop-shadow(0 8px 28px rgba(99, 102, 241, 0.45));
+    animation: logo-entra 0.55s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+    will-change: transform, opacity;
+}
+
+body.abertura .casca {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(12, 12, 15, 0.92);
+    opacity: 0;
+    transform: scale(0.3);
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+body.abertura.tema-claro .casca {
+    border-color: rgba(70, 50, 30, 0.1);
+    background-color: rgba(238, 234, 226, 0.94);
+}
+
+/* enquanto a casca cresce, o vidro e os botões da janela ficam escondidos */
+body.abertura:not(.a-revelar)::before,
+body.abertura:not(.a-revelar) > .botoes-janela {
+    opacity: 0;
+}
+
+body.a-abrir .abertura-logo svg {
+    animation: logo-sai 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+body.a-abrir .casca {
+    animation: casca-cresce 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+body.a-revelar .casca {
+    animation: casca-sai 0.4s ease-out forwards;
+}
+
+body.a-revelar::before,
+body.a-revelar > .lateral,
+body.a-revelar > .app,
+body.a-revelar > .botoes-janela {
+    animation: conteudo-entra 0.4s ease-out both;
+}
+
+@keyframes logo-entra {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+}
+
+@keyframes logo-sai {
+    to {
+        opacity: 0;
+        transform: scale(1.6);
+    }
+}
+
+@keyframes casca-cresce {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes casca-sai {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+
+    to {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+@keyframes conteudo-entra {
+    from {
+        opacity: 0;
     }
 }

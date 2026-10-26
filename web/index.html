@@ -2,7 +2,7 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https://mkcqjgvradohwlkunepi.supabase.co; connect-src 'self' data: https://mkcqjgvradohwlkunepi.supabase.co wss://mkcqjgvradohwlkunepi.supabase.co; worker-src 'self'; manifest-src 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https://mkcqjgvradohwlkunepi.supabase.co https://lh3.googleusercontent.com; connect-src 'self' data: https://mkcqjgvradohwlkunepi.supabase.co wss://mkcqjgvradohwlkunepi.supabase.co; worker-src 'self'; manifest-src 'self'" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050506" />
     <link rel="manifest" href="manifest.json" />
@@ -14,8 +14,31 @@
     <link rel="stylesheet" href="css/componentes.css" />
     <link rel="stylesheet" href="css/formularios.css" />
     <link rel="stylesheet" href="css/paginas.css" />
+    <link rel="modulepreload" href="js/agenda.js" />
+    <link rel="modulepreload" href="js/app.js" />
+    <link rel="modulepreload" href="js/bd.js" />
+    <link rel="modulepreload" href="js/calendario.js" />
+    <link rel="modulepreload" href="js/categorias.js" />
+    <link rel="modulepreload" href="js/dashboard.js" />
+    <link rel="modulepreload" href="js/definicoes.js" />
+    <link rel="modulepreload" href="js/icones.js" />
+    <link rel="modulepreload" href="js/idioma.js" />
+    <link rel="modulepreload" href="js/janela.js" />
+    <link rel="modulepreload" href="js/movimentos.js" />
+    <link rel="modulepreload" href="js/notificacoes.js" />
+    <link rel="modulepreload" href="js/perfil.js" />
+    <link rel="modulepreload" href="js/resumo.js" />
+    <link rel="modulepreload" href="js/sincronizar.js" />
+    <link rel="modulepreload" href="js/supabase.js" />
+    <link rel="modulepreload" href="js/tarefas.js" />
+    <link rel="modulepreload" href="js/termos.js" />
+    <link rel="modulepreload" href="js/topo.js" />
+    <link rel="modulepreload" href="js/utils.js" />
+    <link rel="modulepreload" href="js/versao.js" />
+    <link rel="modulepreload" href="js/vendor/supabase.js" />
+    <link rel="preload" href="assets/fontes/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   </head>
-  <body class="a-carregar">
+  <body class="a-carregar abertura">
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <symbol id="marca-h" viewBox="46 48 148 148" fill="currentColor"><g transform="translate(120 120) skewX(-12) translate(-120 -120)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></symbol>
       <symbol id="marca-nome" viewBox="34 40 734 160" fill="currentColor"><g fill="currentColor" transform="translate(0 120) skewX(-12) translate(0 -120)"><g transform="translate(0 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g><g fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
@@ -24,6 +47,10 @@
 <rect x="484" y="75" width="98" height="90" rx="45"/>
 </g><g transform="translate(559 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></g></symbol>
     </svg>
+    <div class="casca" aria-hidden="true"></div>
+    <div class="abertura-logo" id="abertura" aria-hidden="true">
+      <svg viewBox="0 0 734 160"><use href="#marca-nome"/></svg>
+    </div>
     <div class="barra-janela" aria-hidden="true"></div>
     <div class="botoes-janela">
       <button type="button" data-janela="minimizar" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8"/></svg></button>
@@ -96,6 +123,29 @@
             <svg class="icone icone-lua" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
             <svg class="icone icone-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           </button>
+
+          <div class="ancora so-desktop">
+            <button type="button" class="versao-botao" id="botao-versao" title="Versão e atualizações">
+              <span class="versao-ponto escondido" id="versao-ponto"></span>
+              <span id="versao-texto">v—</span>
+            </button>
+            <div class="painel painel-versao escondido" id="painel-versao">
+              <div class="painel-topo">
+                <strong>Atualizações</strong>
+                <span class="versao-atual" id="versao-atual"></span>
+              </div>
+              <p class="versao-estado" id="versao-estado"></p>
+              <div class="versao-barra escondido" id="versao-barra"><span id="versao-progresso"></span></div>
+              <label class="versao-auto">
+                <input type="checkbox" id="versao-auto" />
+                <span>
+                  <strong>Atualizações automáticas</strong>
+                  <small>Descarrega sozinha e instala quando fechas a HUROH.</small>
+                </span>
+              </label>
+              <button type="button" class="botao versao-acao" id="versao-acao">Procurar atualizações</button>
+            </div>
+          </div>
 
           <div class="ancora">
             <button type="button" class="botao-redondo" id="botao-notificacoes" aria-label="Notificações">
@@ -469,10 +519,25 @@
               <button type="button" class="botao" id="alternar-lateral">Esconder menu lateral</button>
             </div>
 
+            <div class="cartao def-cartao so-desktop escondido" id="cartao-arranque">
+              <h2>Iniciar com o Windows</h2>
+              <p class="texto-suave" id="estado-arranque">A HUROH abre sozinha quando ligas o computador.</p>
+              <button type="button" class="botao" id="alternar-arranque">Ligar</button>
+            </div>
+
             <div class="cartao def-cartao">
               <h2>Notificações</h2>
               <p class="texto-suave" id="estado-notificacoes"></p>
               <button type="button" class="botao" id="ativar-notificacoes">Ativar notificações</button>
+            </div>
+
+            <div class="cartao def-cartao def-dados">
+              <h2>Os teus dados</h2>
+              <p class="texto-suave">Leva uma cópia de tudo ou apaga a conta e todos os dados de uma vez.</p>
+              <div class="def-botoes">
+                <button type="button" class="botao" id="exportar-dados">Exportar dados</button>
+                <button type="button" class="botao botao-perigo" id="apagar-conta">Apagar conta</button>
+              </div>
             </div>
 
             <div class="cartao def-cartao def-sessao">
@@ -487,6 +552,25 @@
         </section>
       </main>
     </div>
+
+    <dialog class="janela" id="janela-apagar-conta">
+      <h2>Apagar conta</h2>
+      <form class="formulario" id="form-apagar-conta">
+        <p class="texto-suave">Isto apaga para sempre a tua conta e todos os dados: movimentos, categorias, eventos, tarefas, foto e perfil, na nuvem e neste dispositivo. Não dá para desfazer.</p>
+        <label class="termos-aceitar so-desktop" id="linha-apagar-backups">
+          <input type="checkbox" name="backups" checked />
+          <span>Apagar também os backups deste computador</span>
+        </label>
+        <label class="campo">
+          <span>Escreve APAGAR para confirmar</span>
+          <input type="text" name="confirmar" autocomplete="off" required />
+        </label>
+        <div class="janela-botoes">
+          <button type="button" class="botao" data-cancelar>Cancelar</button>
+          <button type="submit" class="botao botao-perigo" disabled>Apagar tudo</button>
+        </div>
+      </form>
+    </dialog>
 
     <dialog class="janela" id="janela-movimento">
       <h2 id="titulo-movimento">Novo movimento</h2>

@@ -1,5 +1,7 @@
 import { local, t } from './idioma.js';
-import { supabase } from './supabase.js';
+import { obterSessao, supabase } from './supabase.js';
+import { abrirBd, lerMeta } from './bd.js';
+import { iniciarSincronizacao, sincronizar, terminarSessao } from './sincronizar.js';
 import './janela.js';
 import { exigirTermos, mostrarTermos } from './termos.js';
 import { icone } from './icones.js';
@@ -12,14 +14,72 @@ import { abrirTarefa, iniciarTarefas } from './tarefas.js';
 import { abrirEvento, iniciarAgenda } from './agenda.js';
 import { iniciarCalendario } from './calendario.js';
 import { iniciarDashboard } from './dashboard.js';
-import { iniciarTempoReal } from './tempo-real.js';
 import { iniciarNotificacoes } from './notificacoes.js';
 import { iniciarTopo } from './topo.js';
+import { iniciarVersao } from './versao.js';
+
+
+// abertura: o nome HUROH aparece e cresce até virar a janela (sempre que a app abre)
+// ======================================================
+const comAbertura = Boolean(window.huroh?.desktop);
+let inicioAbertura = performance.now();
+let preparada = false;
+if (!comAbertura) document.body.classList.remove('abertura');
+
+// ao esconder ou minimizar, a janela fica já no início da abertura, para a animação correr quando voltar
+window.huroh?.aoEsconderJanela?.(() => {
+    if (document.body.classList.contains('a-carregar')) return;
+    preparada = true;
+    document.body.classList.remove('a-abrir', 'a-revelar');
+    document.body.classList.add('a-carregar', 'abertura');
+});
+
+window.huroh?.aoMostrarJanela?.(() => {
+    if (!preparada) return janelaPronta();
+    preparada = false;
+    inicioAbertura = performance.now();
+    janelaPronta();
+    abrirJanela();
+});
+
+// a janela só fica visível depois de já estar desenhada no início da abertura (evita ver o dashboard antigo)
+function janelaPronta() {
+    requestAnimationFrame(() => requestAnimationFrame(() => window.huroh?.janelaPronta?.()));
+}
+
+janelaPronta();
+
+const esperar = ms => new Promise(resolver => setTimeout(resolver, ms));
+
+async function abrirJanela() {
+    if (!comAbertura) {
+        document.body.classList.add('a-entrar');
+        document.body.classList.remove('a-carregar');
+        setTimeout(() => document.body.classList.remove('a-entrar'), 600);
+        return;
+    }
+
+    const falta = 650 - (performance.now() - inicioAbertura);
+    if (falta > 0) await esperar(falta);
+
+    // 1. o nome sai e a casca cresce até ao tamanho da janela
+    document.body.classList.add('a-abrir');
+    await esperar(520);
+    if (preparada) return;
+
+    // 2. o conteúdo aparece por cima e a casca desaparece
+    document.body.classList.add('a-revelar');
+    document.body.classList.remove('a-carregar');
+    await esperar(450);
+    if (preparada) return;
+
+    document.body.classList.remove('abertura', 'a-abrir', 'a-revelar');
+}
 
 
 // sessão
 // ======================================================
-const { data: { session } } = await supabase.auth.getSession();
+const session = await obterSessao();
 
 if (!session) {
     location.replace('login.html');
@@ -35,8 +95,7 @@ supabase.auth.onAuthStateChange(evento => {
 });
 
 async function sair() {
-    await supabase.auth.signOut();
-    location.replace('login.html');
+    await terminarSessao();
 }
 
 document.getElementById('menu-sair').addEventListener('click', sair);
@@ -362,14 +421,34 @@ if (window.huroh?.desktop) {
 
 // arranque
 // ======================================================
+await abrirBd(utilizador);
+if (!(await lerMeta('ultima-sincronizacao'))) await sincronizar();
+
 await carregarPerfil(utilizador);
 iniciarPerfil(utilizador);
-document.body.classList.remove('a-carregar');
+
+// a janela só aparece já desenhada; as animações de entrada começam quando ela estiver à vista
+function janelaVisivel() {
+    if (document.visibilityState === 'visible') return Promise.resolve();
+    return new Promise(resolver => {
+        const pronto = () => {
+            if (document.visibilityState !== 'visible') return;
+            document.removeEventListener('visibilitychange', pronto);
+            resolver();
+        };
+        document.addEventListener('visibilitychange', pronto);
+        setTimeout(resolver, 1500);
+    });
+}
+
+await janelaVisivel();
+requestAnimationFrame(abrirJanela);
 
 await exigirTermos(sair);
 
 iniciarDefinicoes(utilizador, perfilAtual());
 iniciarTopo();
+iniciarVersao();
 await iniciarCategorias();
 iniciarMovimentos();
 iniciarResumo();
@@ -377,7 +456,10 @@ await Promise.all([iniciarTarefas(), iniciarAgenda()]);
 iniciarCalendario();
 iniciarDashboard(perfilAtual);
 iniciarNotificacoes();
-iniciarTempoReal(utilizador);
+iniciarSincronizacao(utilizador);
+
+// o menu lateral só é criado depois das animações de entrada, para não as atrasar
+setTimeout(() => window.huroh?.appPronta?.(), 900);
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('sw.js').catch(() => {});

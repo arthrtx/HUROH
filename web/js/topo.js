@@ -1,5 +1,5 @@
 import { local } from './idioma.js';
-import { supabase } from './supabase.js';
+import * as bd from './bd.js';
 import { dataCurta, escapar, euros, hora, intervaloDoMes } from './utils.js';
 import { icone } from './icones.js';
 import { obterTarefas, abrirTarefa } from './tarefas.js';
@@ -15,6 +15,7 @@ const CHAVE_LIDAS = 'huroh-lidas';
 const paineis = {
     'botao-notificacoes': document.getElementById('painel-notificacoes'),
     'botao-perfil': document.getElementById('painel-perfil'),
+    'botao-versao': document.getElementById('painel-versao'),
 };
 
 function fecharPaineis(exceto) {
@@ -66,9 +67,9 @@ function guardarLidas(lidas) {
 
 async function verificarLimites() {
     const { inicio, fim } = intervaloDoMes();
-    const { data } = await supabase.rpc('despesas_por_categoria', { inicio, fim });
+    const data = await bd.despesasPorCategoria(inicio, fim);
 
-    limitesPassados = (data || []).filter(linha => linha.limite && Number(linha.total) > Number(linha.limite));
+    limitesPassados = data.filter(linha => linha.limite && Number(linha.total) > Number(linha.limite));
     calcularNotificacoes();
 }
 
@@ -182,18 +183,11 @@ async function pesquisar(termo) {
     const categorias = obterCategorias().filter(x => contem(x.name, t)).slice(0, 3)
         .map(x => ({ grupo: 'Categorias', icone: 'widgets', titulo: x.name, texto: x.type === 'income' ? 'Rendimento' : 'Despesa', pagina: 'financas' }));
 
-    const seguro = termo.replace(/[%_,()]/g, ' ').trim();
-    let movimentos = [];
-
-    if (seguro) {
-        const { data } = await supabase
-            .from('transactions')
-            .select('id, type, amount, category_id, description, transaction_date')
-            .ilike('description', `%${seguro}%`)
-            .order('transaction_date', { ascending: false })
-            .limit(5);
-
-        movimentos = (data || []).map(x => ({
+    const movimentos = (await bd.listar('transactions'))
+        .filter(x => x.description && contem(x.description, t))
+        .sort((a, b) => b.transaction_date.localeCompare(a.transaction_date))
+        .slice(0, 5)
+        .map(x => ({
             grupo: 'Movimentos',
             icone: x.type === 'income' ? 'entrada' : 'saida',
             titulo: x.description,
@@ -201,7 +195,6 @@ async function pesquisar(termo) {
             pagina: 'financas',
             abrir: () => abrirMovimento(x),
         }));
-    }
 
     return [...movimentos, ...tarefas, ...eventos, ...categorias];
 }
