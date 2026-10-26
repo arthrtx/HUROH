@@ -1440,14 +1440,24 @@ body.tema-claro .cartao-tarefa {
     margin: 0;
 }
 
+/* as linhas crescem com o conteúdo (os botões nunca saem dos cartões) */
 .definicoes-grelha {
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-    height: calc(100vh - 150px);
-    max-height: 560px;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    align-items: stretch;
+    padding-bottom: 20px;
+}
+
+.def-perfil {
+    grid-row: span 4;
 }
 
 .def-sessao {
     grid-column: 2 / span 2;
+}
+
+.def-botoes {
+    flex-wrap: wrap;
 }
 
 #definicoes .def-cartao > h2 {
@@ -1580,4 +1590,23 @@ body.tema-claro .em-breve p {
 
 .termos-texto:focus {
     outline: none;
+}
+
+@media (max-width: 1080px) {
+    .def-sessao {
+        grid-column: 1 / -1;
+    }
+
+    .def-perfil {
+        grid-row: auto;
+    }
+}
+
+/* só aparece na app instalada */
+body.desktop #definicoes #cartao-arranque.escondido {
+    display: none !important;
+}
+
+body.desktop #linha-apagar-backups {
+    display: flex !important;
 }

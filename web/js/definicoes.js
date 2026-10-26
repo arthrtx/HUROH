@@ -1,7 +1,8 @@
-import { aviso } from './utils.js';
-import { idioma, mudarIdioma } from './idioma.js';
-import { guardarNome } from './perfil.js';
-import { supabase } from './supabase.js';
+import { aviso, dataISO } from './utils.js';
+import { idioma, mudarIdioma, t } from './idioma.js';
+import { guardarNome, perfilAtual } from './perfil.js';
+import { apagarConta, terminarSessao } from './sincronizar.js';
+import { tudo } from './bd.js';
 
 try {
     localStorage.removeItem('huroh-fundo');
@@ -49,8 +50,90 @@ export function iniciarDefinicoes(utilizador, perfil) {
         aviso(ok ? 'Perfil guardado.' : 'Não foi possível guardar o nome.', ok ? 'ok' : 'erro');
     });
 
-    document.getElementById('botao-sair').addEventListener('click', async () => {
-        await supabase.auth.signOut();
-        location.replace('login.html');
+    document.getElementById('botao-sair').addEventListener('click', terminarSessao);
+    ligarArranque();
+    ligarDados(utilizador);
+}
+
+
+// os teus dados: exportar e apagar a conta
+// ======================================================
+async function exportarDados(utilizador) {
+    const conteudo = {
+        app: 'HUROH',
+        exportado: new Date().toISOString(),
+        conta: { id: utilizador.id, email: utilizador.email, nome: perfilAtual()?.nome || '' },
+        tabelas: await tudo(),
+    };
+
+    const blob = new Blob([JSON.stringify(conteudo, null, 2)], { type: 'application/json' });
+    const ligacao = document.createElement('a');
+    ligacao.href = URL.createObjectURL(blob);
+    ligacao.download = `huroh-dados-${dataISO()}.json`;
+    ligacao.click();
+    setTimeout(() => URL.revokeObjectURL(ligacao.href), 5000);
+}
+
+function ligarDados(utilizador) {
+    const janela = document.getElementById('janela-apagar-conta');
+    const form = document.getElementById('form-apagar-conta');
+    const botaoApagar = form.querySelector('[type="submit"]');
+
+    document.getElementById('exportar-dados').addEventListener('click', () => exportarDados(utilizador));
+
+    document.getElementById('apagar-conta').addEventListener('click', () => {
+        form.reset();
+        botaoApagar.disabled = true;
+        janela.showModal();
+    });
+
+    form.querySelector('[data-cancelar]').addEventListener('click', () => janela.close());
+    form.confirmar.addEventListener('input', () => {
+        botaoApagar.disabled = form.confirmar.value.trim().toUpperCase() !== 'APAGAR';
+    });
+
+    form.addEventListener('submit', async evento => {
+        evento.preventDefault();
+        botaoApagar.disabled = true;
+        botaoApagar.textContent = t('A apagar...');
+        try {
+            await apagarConta(form.backups.checked);
+        } catch (erro) {
+            botaoApagar.disabled = false;
+            botaoApagar.textContent = t('Apagar tudo');
+            aviso(erro.message === 'sem-internet'
+                ? 'Precisas de internet para apagar a conta.'
+                : 'Não foi possível apagar a conta. Tenta outra vez.', 'erro');
+        }
+    });
+}
+
+
+// iniciar com o Windows (só na app instalada)
+// ======================================================
+async function ligarArranque() {
+    const huroh = window.huroh;
+    if (!huroh?.arranqueDisponivel || !(await huroh.arranqueDisponivel())) return;
+
+    const cartao = document.getElementById('cartao-arranque');
+    const botao = document.getElementById('alternar-arranque');
+    const estado = document.getElementById('estado-arranque');
+
+    function mostrar(ligado) {
+        botao.textContent = t(ligado ? 'Desligar' : 'Ligar');
+        estado.textContent = t(ligado
+            ? 'A HUROH abre sozinha quando ligas o computador.'
+            : 'A HUROH só abre quando a abrires tu.');
+    }
+
+    let ligado = await huroh.arranque();
+    mostrar(ligado);
+    cartao.classList.remove('escondido');
+
+    botao.addEventListener('click', async () => {
+        botao.disabled = true;
+        ligado = await huroh.arranque(!ligado);
+        mostrar(ligado);
+        botao.disabled = false;
     });
 }
