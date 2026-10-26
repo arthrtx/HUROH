@@ -1,0 +1,55 @@
+﻿Términos de uso y protección de datos de HUROH
+
+1. Qué es HUROH
+HUROH es una aplicación personal para organizar finanzas, agenda y tareas. Sirve solo para registrar y organizar: no es un banco, no mueve dinero y no da asesoramiento financiero.
+
+2. Tu cuenta
+Para usar HUROH necesitas una cuenta de Google: tu cuenta de HUROH se crea la primera vez que inicias sesión con Google. HUROH no crea ni guarda contraseñas; la seguridad del acceso (contraseña, verificación en dos pasos) la gestiona Google y es tu responsabilidad, igual que la información que registras. Debes tener al menos 16 años o la autorización de tu madre, padre o tutor.
+
+3. Qué datos guardamos
+Cuenta: el nombre, el email y la foto de tu cuenta de Google (puedes cambiar el nombre y la foto en la aplicación). Nunca tenemos acceso a tu contraseña de Google, a Gmail ni a tus contactos.
+Lo que registras: movimientos, categorías, eventos, tareas y preferencias de la aplicación.
+No recogemos ubicación, contactos, datos publicitarios ni estadísticas de uso.
+
+4. Para qué usamos los datos
+Solo para que la aplicación funcione: crear e identificar tu cuenta y guardar y sincronizar tu información entre tus dispositivos. La base legal es la ejecución de este contrato, es decir, prestarte el servicio que pediste (RGPD, artículo 6.1.b; LGPD, artículo 7, inciso V). No usamos los datos para publicidad, no los vendemos, no creamos perfiles y no tomamos decisiones automatizadas sobre ti.
+
+5. Dónde se guardan
+En la nube: en Supabase, en servidores de la Unión Europea (Irlanda). Cada cuenta solo puede ver sus propios datos.
+En tu ordenador: una copia local para que la aplicación abra rápido y funcione sin internet, y una copia de seguridad diaria en Documentos\HUROH\backups (se guardan las últimas 14). Al cerrar sesión, la copia local se borra; las copias de seguridad se quedan en tu PC y solo tú las controlas.
+
+6. Con quién compartimos
+Con nadie, salvo los servicios técnicos necesarios, que tratan los datos solo en nuestro nombre: Supabase (alojamiento de las cuentas y los datos) y Google (para iniciar sesión en tu cuenta). Tus datos solo se entregan a las autoridades cuando la ley lo exige.
+
+7. Seguridad
+Las conexiones están cifradas (HTTPS) y el acceso a los datos está limitado a tu cuenta. La seguridad de tu ordenador y de tu contraseña también depende de ti. Si hay una brecha de datos que pueda afectarte, te avisaremos a ti y a las autoridades en los plazos legales.
+
+8. Durante cuánto tiempo
+Guardamos los datos mientras exista tu cuenta. Puedes borrar la cuenta en cualquier momento en Ajustes → Borrar cuenta: la cuenta y todos los datos se borran de inmediato de nuestros servidores y de este dispositivo y, si lo eliges, también las copias de seguridad de tu ordenador. No guardamos copias. Pueden quedar copias técnicas del servicio de alojamiento, que se eliminan automáticamente en un plazo máximo de 30 días.
+
+9. Tus derechos (RGPD y LGPD)
+Puedes, en cualquier momento y sin coste: saber qué datos tenemos sobre ti, corregirlos, borrarlos (Ajustes → Borrar cuenta), llevarte una copia (Ajustes → Exportar datos), limitar u oponerte al tratamiento y retirar el consentimiento. Para otras solicitudes escribe a huroh@outlook.pt; respondemos en un plazo de 30 días. También puedes reclamar ante tu autoridad de protección de datos (CNPD en Portugal, ANPD en Brasil, AEPD en España).
+
+10. Uso aceptable
+No uses HUROH para actividades ilegales ni intentes acceder a datos de otras personas.
+
+11. Disponibilidad
+HUROH es gratuita y se ofrece «tal cual» y «según disponibilidad», sin garantías de ningún tipo. Puede tener errores, fallos o interrupciones, y las funciones pueden cambiar o desaparecer. Podemos suspender o terminar el servicio, o una cuenta que no cumpla estos términos; siempre que sea posible avisaremos antes para que puedas exportar tus datos.
+
+12. Tus responsabilidades
+Eres responsable de la exactitud de lo que registras, de guardar copias de lo que sea importante (puedes exportar en cualquier momento) y de la seguridad de tu dispositivo y de tu cuenta. HUROH es para uso personal: no sustituye la contabilidad, las declaraciones fiscales ni los registros oficiales.
+
+13. Limitación de responsabilidad
+En la máxima medida permitida por la ley, no somos responsables de pérdidas de datos, pérdidas económicas, decisiones tomadas a partir de la información de la aplicación, errores de cálculo, recordatorios que no lleguen, interrupciones del servicio ni de ningún daño indirecto derivado del uso o de la imposibilidad de usar HUROH. Los importes y resúmenes mostrados son solo orientativos. Nada en estos términos excluye responsabilidades que la ley no permita excluir.
+
+14. Servicios de terceros
+Iniciar sesión con Google y el alojamiento de los datos dependen de servicios de terceros (Google y Supabase), con sus propios términos. No somos responsables del funcionamiento de esos servicios.
+
+15. Cambios
+Estos términos pueden actualizarse. Cuando eso ocurra, te pediremos que los aceptes de nuevo.
+
+16. Ley aplicable
+Estos términos se rigen por la ley portuguesa. Si eres consumidor en otro país, conservas los derechos que te da la ley de ese país.
+
+17. Contacto
+Para cualquier duda sobre estos términos o sobre tus datos: huroh@outlook.pt.

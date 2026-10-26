@@ -1,14 +1,89 @@
 {
     "name": "huroh",
-    "version": "2.0.0",
+    "version": "0.3.0",
     "description": "HUROH - Your life. In sync.",
-    "author": "Arthur da Hora de Sal",
+    "author": "Your life. In sync.",
     "main": "main.js",
     "private": true,
     "scripts": {
-        "start": "electron ."
+        "start": "electron .",
+        "instalador": "electron-builder --win nsis --publish never"
     },
     "devDependencies": {
-        "electron": "33.4.11"
+        "electron": "33.4.11",
+        "electron-builder": "^25.1.8"
+    },
+    "build": {
+        "appId": "pt.huroh.app",
+        "productName": "HUROH",
+        "copyright": "© 2026 HUROH",
+        "directories": {
+            "output": "dist",
+            "buildResources": "instalador"
+        },
+        "files": [
+            "main.js",
+            "preload.js",
+            "icone.ico",
+            "package.json"
+        ],
+        "extraResources": [
+            {
+                "from": "../web",
+                "to": "web",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "icon": "icone.ico",
+            "signAndEditExecutable": true
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": false,
+            "createStartMenuShortcut": true,
+            "shortcutName": "HUROH",
+            "installerIcon": "icone.ico",
+            "uninstallerIcon": "icone.ico",
+            "installerHeaderIcon": "icone.ico",
+            "installerSidebar": "lateral.bmp",
+            "uninstallerSidebar": "lateral.bmp",
+            "installerHeader": "topo.bmp",
+            "installerLanguages": [
+                "pt_PT",
+                "en_US",
+                "es_ES"
+            ],
+            "language": "2070",
+            "include": "extra.nsh",
+            "runAfterFinish": true,
+            "deleteAppDataOnUninstall": false,
+            "uninstallDisplayName": "HUROH",
+            "artifactName": "HUROH-Instalar.${ext}",
+            "displayLanguageSelector": true
+        },
+        "publish": [
+            {
+                "provider": "github",
+                "owner": "arthrtx",
+                "repo": "HUROH",
+                "releaseType": "release"
+            }
+        ]
+    },
+    "dependencies": {
+        "electron-updater": "6.3.9"
     }
 }
