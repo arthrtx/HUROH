@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import * as bd from './bd.js';
 import { aviso, dataCurta, escapar, hora, paraInputDataHora } from './utils.js';
 
 const ORDEM = { alta: 0, media: 1, baixa: 2 };
@@ -14,19 +14,8 @@ export function obterTarefas() {
 // carregar
 // ======================================================
 export async function carregarTarefas() {
-    const { data, error } = await supabase
-        .from('tasks')
-        .select('id, title, description, due_at, priority, completed, created_at')
-        .order('completed')
-        .order('due_at', { ascending: true, nullsFirst: false })
-        .limit(300);
-
-    if (error) {
-        aviso('Não foi possível carregar as tarefas.', 'erro');
-        return;
-    }
-
-    tarefas = data;
+    tarefas = (await bd.listar('tasks')).sort((a, b) =>
+        (a.completed - b.completed) || (a.due_at || '9999').localeCompare(b.due_at || '9999'));
     desenharTarefas();
     document.dispatchEvent(new CustomEvent('tarefas-carregadas'));
 }
@@ -96,17 +85,7 @@ async function alternarConcluida(id, concluida) {
     const tarefa = tarefas.find(t => t.id === id);
     tarefa.completed = concluida;
     desenharTarefas();
-
-    const { error } = await supabase.from('tasks').update({ completed: concluida }).eq('id', id);
-
-    if (error) {
-        tarefa.completed = !concluida;
-        desenharTarefas();
-        aviso('Não foi possível atualizar a tarefa.', 'erro');
-        return;
-    }
-
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
+    await bd.guardar('tasks', id, { completed: concluida });
 }
 
 
@@ -140,18 +119,9 @@ async function guardar(evento) {
     };
 
     const id = form.id_tarefa.value;
-    const { error } = id
-        ? await supabase.from('tasks').update(dados).eq('id', id)
-        : await supabase.from('tasks').insert(dados);
-
-    if (error) {
-        aviso('Não foi possível guardar a tarefa.', 'erro');
-        return;
-    }
-
+    await bd.guardar('tasks', id || null, dados);
     janela.close();
     aviso('Tarefa guardada.');
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
 }
 
 async function apagar() {
@@ -161,16 +131,9 @@ async function apagar() {
         return;
     }
 
-    const { error } = await supabase.from('tasks').delete().eq('id', id);
-
-    if (error) {
-        aviso('Não foi possível apagar a tarefa.', 'erro');
-        return;
-    }
-
+    await bd.apagar('tasks', id);
     janela.close();
     aviso('Tarefa apagada.');
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'tasks' }));
 }
 
 

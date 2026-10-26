@@ -1,5 +1,5 @@
-import { supabase } from './supabase.js';
-import { aviso, escapar, euros } from './utils.js';
+import * as bd from './bd.js';
+import { aviso, corSegura, escapar, euros } from './utils.js';
 
 let categorias = [];
 
@@ -15,18 +15,8 @@ export function categoriaPorId(id) {
 // carregar
 // ======================================================
 export async function carregarCategorias() {
-    const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, type, color, monthly_limit')
-        .order('type', { ascending: false })
-        .order('name');
-
-    if (error) {
-        aviso('Não foi possível carregar as categorias.', 'erro');
-        return;
-    }
-
-    categorias = data;
+    const lista = await bd.listar('categories');
+    categorias = lista.sort((a, b) => b.type.localeCompare(a.type) || a.name.localeCompare(b.name, 'pt'));
     desenharCategorias();
     document.dispatchEvent(new CustomEvent('categorias-alteradas'));
 }
@@ -44,7 +34,7 @@ function desenharCategorias() {
 
     lista.innerHTML = categorias.map(categoria => `
         <li class="lista-item">
-            <span class="bolinha" style="background-color: ${categoria.color}"></span>
+            <span class="bolinha" style="background-color: ${corSegura(categoria.color)}"></span>
             <div class="lista-principal">
                 <p class="lista-titulo">${escapar(categoria.name)}</p>
                 <p class="lista-sub">
@@ -94,21 +84,16 @@ async function guardar(evento) {
     };
 
     const id = form.id_categoria.value;
-    const pedido = id
-        ? supabase.from('categories').update(dados).eq('id', id)
-        : supabase.from('categories').insert(dados);
+    const repetida = categorias.some(c => c.id !== id && c.type === dados.type && c.name.toLowerCase() === dados.name.toLowerCase());
 
-    const { error } = await pedido;
-
-    if (error) {
-        const repetida = error.code === '23505';
-        aviso(repetida ? 'Já existe uma categoria com esse nome.' : 'Não foi possível guardar a categoria.', 'erro');
+    if (repetida) {
+        aviso('Já existe uma categoria com esse nome.', 'erro');
         return;
     }
 
+    await bd.guardar('categories', id || null, dados);
     janela.close();
     aviso('Categoria guardada.');
-    carregarCategorias();
 }
 
 async function apagar() {
@@ -118,17 +103,9 @@ async function apagar() {
         return;
     }
 
-    const { error } = await supabase.from('categories').delete().eq('id', id);
-
-    if (error) {
-        aviso('Não foi possível apagar a categoria.', 'erro');
-        return;
-    }
-
+    await bd.apagar('categories', id);
     janela.close();
     aviso('Categoria apagada.');
-    await carregarCategorias();
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'transactions' }));
 }
 
 
@@ -147,6 +124,9 @@ export function iniciarCategorias() {
     document.getElementById('apagar-categoria').addEventListener('click', apagar);
     form.querySelector('[data-fechar]').addEventListener('click', () => janela.close());
     form.querySelectorAll('[name="tipo"]').forEach(opcao => opcao.addEventListener('change', mostrarLimite));
+    document.addEventListener('dados-alterados', evento => {
+        if (evento.detail === 'categories') carregarCategorias();
+    });
 
     return carregarCategorias();
 }

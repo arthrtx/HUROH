@@ -1,4 +1,4 @@
-const VERSAO = 'huroh-v5';
+const VERSAO = 'huroh-v8';
 
 const FICHEIROS = [
     './',
@@ -18,6 +18,7 @@ const FICHEIROS = [
     './js/perfil.js',
     './js/topo.js',
     './js/utils.js',
+    './js/versao.js',
     './js/definicoes.js',
     './js/categorias.js',
     './js/movimentos.js',
@@ -26,7 +27,8 @@ const FICHEIROS = [
     './js/agenda.js',
     './js/calendario.js',
     './js/dashboard.js',
-    './js/tempo-real.js',
+    './js/bd.js',
+    './js/sincronizar.js',
     './js/notificacoes.js',
     './js/idioma.js',
     './js/janela.js',

@@ -1,6 +1,6 @@
 import { local, t } from './idioma.js';
-import { supabase } from './supabase.js';
-import { dataCurta, dataISO, escapar, euros, hora, intervaloDoMes } from './utils.js';
+import * as bd from './bd.js';
+import { dataCurta, escapar, euros, hora, intervaloDoMes } from './utils.js';
 import { icone } from './icones.js';
 import { abrirMovimento } from './movimentos.js';
 import { abrirEvento, obterEventos, proximosEventos } from './agenda.js';
@@ -60,21 +60,13 @@ function atualizarBanner() {
 // ======================================================
 async function atualizarFinancas() {
     const { inicio, fim } = intervaloDoMes();
-    const dezDias = new Date();
-    dezDias.setDate(dezDias.getDate() - 9);
 
-    const [total, mes, ultimos] = await Promise.all([
-        supabase.rpc('resumo_financeiro').single(),
-        supabase.rpc('resumo_financeiro', { inicio, fim }).single(),
-        supabase.from('transactions').select('type, amount, transaction_date').gte('transaction_date', dataISO(dezDias)),
-    ]);
+    const [total, mes] = await Promise.all([bd.resumoFinanceiro(), bd.resumoFinanceiro(inicio, fim)]);
 
-    if (total.error || mes.error) return;
-
-    estado.saldo = Number(total.data.saldo);
-    estado.despesasMes = Number(mes.data.despesas);
-    estado.rendimentosMes = Number(mes.data.rendimentos);
-    const saldoMes = Number(mes.data.saldo);
+    estado.saldo = total.saldo;
+    estado.despesasMes = mes.despesas;
+    estado.rendimentosMes = mes.rendimentos;
+    const saldoMes = mes.saldo;
 
     const valorSaldo = document.getElementById('w-saldo');
     animarEuros(valorSaldo, estado.saldo, true);
@@ -102,11 +94,9 @@ async function atualizarFinancas() {
 // recentes
 // ======================================================
 async function atualizarRecentes() {
-    const { data } = await supabase
-        .from('transactions')
-        .select('id, type, amount, category_id, description, transaction_date, created_at')
-        .order('created_at', { ascending: false })
-        .limit(5);
+    const data = (await bd.listar('transactions'))
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .slice(0, 5);
 
     movimentosRecentes.clear();
     (data || []).forEach(m => movimentosRecentes.set(m.id, m));

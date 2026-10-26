@@ -1,5 +1,5 @@
-import { supabase } from './supabase.js';
-import { aviso, dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
+import * as bd from './bd.js';
+import { aviso, corSegura, dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
 import { categoriaPorId, obterCategorias } from './categorias.js';
 
 const POR_PAGINA = 200;
@@ -11,35 +11,25 @@ const filtros = document.getElementById('filtros-movimentos');
 // carregar
 // ======================================================
 export async function carregarMovimentos() {
-    let pedido = supabase
-        .from('transactions')
-        .select('id, type, amount, category_id, description, transaction_date')
-        .order('transaction_date', { ascending: false })
-        .order('created_at', { ascending: false })
-        .limit(POR_PAGINA);
+    let lista = await bd.listar('transactions');
 
     if (filtros.mes.value) {
         const [ano, mes] = filtros.mes.value.split('-').map(Number);
         const { inicio, fim } = intervaloDoMes(new Date(ano, mes - 1, 1));
-        pedido = pedido.gte('transaction_date', inicio).lte('transaction_date', fim);
+        lista = lista.filter(m => m.transaction_date >= inicio && m.transaction_date <= fim);
     }
 
     if (filtros.tipo.value) {
-        pedido = pedido.eq('type', filtros.tipo.value);
+        lista = lista.filter(m => m.type === filtros.tipo.value);
     }
 
     if (filtros.categoria.value) {
-        pedido = pedido.eq('category_id', filtros.categoria.value);
+        lista = lista.filter(m => m.category_id === filtros.categoria.value);
     }
 
-    const { data, error } = await pedido;
-
-    if (error) {
-        aviso('Não foi possível carregar os movimentos.', 'erro');
-        return;
-    }
-
-    movimentos = data;
+    movimentos = lista
+        .sort((a, b) => b.transaction_date.localeCompare(a.transaction_date) || b.created_at.localeCompare(a.created_at))
+        .slice(0, POR_PAGINA);
     desenharMovimentos();
 }
 
@@ -63,7 +53,7 @@ function desenharMovimentos() {
 
         return `
             <li class="lista-item">
-                <span class="bolinha" style="background-color: ${categoria?.color || '#8b8b93'}"></span>
+                <span class="bolinha" style="background-color: ${corSegura(categoria?.color)}"></span>
                 <div class="lista-principal">
                     <p class="lista-titulo">${escapar(movimento.description || categoria?.name || 'Sem descrição')}</p>
                     <p class="lista-sub">${dataCurta(movimento.transaction_date)} · ${escapar(categoria?.name || 'Sem categoria')}</p>
@@ -108,10 +98,6 @@ export function abrirMovimento(movimento, tipo = 'expense') {
     form.valor.focus();
 }
 
-function avisarAlteracao() {
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'transactions' }));
-}
-
 async function guardar(evento) {
     evento.preventDefault();
 
@@ -131,23 +117,10 @@ async function guardar(evento) {
     };
 
     const id = form.id_movimento.value;
-    const botao = form.querySelector('button[type="submit"]');
-    botao.disabled = true;
-
-    const { error } = id
-        ? await supabase.from('transactions').update(dados).eq('id', id)
-        : await supabase.from('transactions').insert(dados);
-
-    botao.disabled = false;
-
-    if (error) {
-        aviso('Não foi possível guardar o movimento.', 'erro');
-        return;
-    }
+    await bd.guardar('transactions', id || null, dados);
 
     janela.close();
     aviso(id ? 'Movimento atualizado.' : 'Movimento registado.');
-    avisarAlteracao();
 }
 
 async function apagar() {
@@ -157,16 +130,9 @@ async function apagar() {
         return;
     }
 
-    const { error } = await supabase.from('transactions').delete().eq('id', id);
-
-    if (error) {
-        aviso('Não foi possível apagar o movimento.', 'erro');
-        return;
-    }
-
+    await bd.apagar('transactions', id);
     janela.close();
     aviso('Movimento apagado.');
-    avisarAlteracao();
 }
 
 

@@ -15,10 +15,15 @@ export function hora(data) {
     return new Date(data).toLocaleTimeString(local, { hour: '2-digit', minute: '2-digit' });
 }
 
+const ENTIDADES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
 export function escapar(texto) {
-    const div = document.createElement('div');
-    div.textContent = texto ?? '';
-    return div.innerHTML;
+    return String(texto ?? '').replace(/[&<>"']/g, letra => ENTIDADES[letra]);
+}
+
+// só aceita cores #rrggbb (vão para dentro de style="...")
+export function corSegura(cor) {
+    return /^#[0-9a-f]{6}$/i.test(cor || '') ? cor : '#8b8b93';
 }
 
 

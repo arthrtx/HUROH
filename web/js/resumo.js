@@ -1,5 +1,5 @@
-import { supabase } from './supabase.js';
-import { dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
+import * as bd from './bd.js';
+import { corSegura, dataCurta, dataISO, escapar, euros, intervaloDoMes } from './utils.js';
 import { t } from './idioma.js';
 
 const filtros = document.getElementById('filtros-movimentos');
@@ -21,23 +21,16 @@ function mesEscolhido() {
 async function carregarTotais() {
     const { inicio, fim } = mesEscolhido();
 
-    const [mes, total] = await Promise.all([
-        supabase.rpc('resumo_financeiro', { inicio, fim }).single(),
-        supabase.rpc('resumo_financeiro').single(),
-    ]);
+    const [mes, total] = await Promise.all([bd.resumoFinanceiro(inicio, fim), bd.resumoFinanceiro()]);
 
-    if (mes.error || total.error) {
-        return;
-    }
-
-    document.getElementById('resumo-rendimentos').textContent = euros(mes.data.rendimentos);
-    document.getElementById('resumo-despesas').textContent = euros(mes.data.despesas);
+    document.getElementById('resumo-rendimentos').textContent = euros(mes.rendimentos);
+    document.getElementById('resumo-despesas').textContent = euros(mes.despesas);
 
     const saldoMes = document.getElementById('resumo-saldo-mes');
-    saldoMes.textContent = euros(mes.data.saldo);
-    saldoMes.className = `widget-valor ${Number(mes.data.saldo) < 0 ? 'negativo' : ''}`;
+    saldoMes.textContent = euros(mes.saldo);
+    saldoMes.className = `widget-valor ${mes.saldo < 0 ? 'negativo' : ''}`;
 
-    document.getElementById('resumo-saldo-total').textContent = `Saldo total: ${euros(total.data.saldo)}`;
+    document.getElementById('resumo-saldo-total').textContent = `Saldo total: ${euros(total.saldo)}`;
 
     desenharBolsas(inicio, fim);
 }
@@ -46,14 +39,9 @@ async function carregarTotais() {
 // rendimentos e despesas
 // ======================================================
 async function desenharBolsas(inicio, fim) {
-    const { data } = await supabase
-        .from('transactions')
-        .select('type, amount, description, transaction_date, created_at')
-        .gte('transaction_date', inicio)
-        .lte('transaction_date', fim)
-        .order('transaction_date');
-
-    const movimentos = data || [];
+    const movimentos = (await bd.listar('transactions'))
+        .filter(m => m.transaction_date >= inicio && m.transaction_date <= fim)
+        .sort((a, b) => a.transaction_date.localeCompare(b.transaction_date));
     const [ano, mes] = inicio.split('-').map(Number);
     const diasNoMes = new Date(ano, mes, 0).getDate();
     const hoje = new Date();
@@ -108,11 +96,7 @@ async function carregarPorCategoria() {
     const { inicio, fim } = mesEscolhido();
     const lista = document.getElementById('lista-por-categoria');
 
-    const { data, error } = await supabase.rpc('despesas_por_categoria', { inicio, fim });
-
-    if (error) {
-        return;
-    }
+    const data = await bd.despesasPorCategoria(inicio, fim);
 
     if (data.length === 0) {
         lista.innerHTML = '<li class="vazio">Sem despesas neste mês.</li>';
@@ -137,12 +121,12 @@ async function carregarPorCategoria() {
         return `
             <li class="barra-categoria">
                 <div class="barra-topo">
-                    <span><span class="bolinha" style="background-color: ${linha.cor}"></span> ${escapar(linha.nome)}</span>
+                    <span><span class="bolinha" style="background-color: ${corSegura(linha.cor)}"></span> ${escapar(linha.nome)}</span>
                     <span>${euros(total)}</span>
                 </div>
                 <div class="barra">
                     <div class="barra-cheia ${passou ? 'passou' : perto ? 'perto' : ''}"
-                         style="width: ${percentagem}%; background-color: ${passou || perto ? '' : linha.cor}"></div>
+                         style="width: ${percentagem}%; background-color: ${passou || perto ? '' : corSegura(linha.cor)}"></div>
                 </div>
                 ${estado ? `<p class="lista-sub">${estado}</p>` : ''}
             </li>

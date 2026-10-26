@@ -19,17 +19,29 @@ function avatarIniciais(nome) {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
+// fica guardado no PC para abrir sem internet e para o menu lateral
 function avisarOutrasJanelas() {
     try {
+        localStorage.setItem('perfil-' + utilizador.id, JSON.stringify(perfil));
         localStorage.setItem('perfil-atualizado', String(Date.now()));
     } catch {}
+}
+
+function perfilGuardado() {
+    try {
+        return JSON.parse(localStorage.getItem('perfil-' + utilizador.id));
+    } catch {
+        return null;
+    }
 }
 
 function mostrarPerfil() {
     const foto = perfil.avatar || avatarIniciais(perfil.nome);
 
     ['avatar-topo', 'avatar-painel', 'avatar-grande'].forEach(id => {
-        document.getElementById(id).src = foto;
+        const imagem = document.getElementById(id);
+        imagem.onerror = () => { imagem.onerror = null; imagem.src = avatarIniciais(perfil.nome); };
+        imagem.src = foto;
     });
 
     document.getElementById('nome-utilizador').textContent = perfil.nome.split(' ')[0];
@@ -46,18 +58,20 @@ function mostrarPerfil() {
 export async function carregarPerfil(dono) {
     utilizador = dono;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
         .from('profiles')
         .select('display_name, avatar_url')
         .eq('id', utilizador.id)
         .single();
 
-    perfil = {
+    const guardado = perfilGuardado();
+    perfil = error && guardado ? guardado : {
         nome: data?.display_name || utilizador.email.split('@')[0],
         avatar: data?.avatar_url || null,
     };
 
     mostrarPerfil();
+    if (!error) avisarOutrasJanelas();
     return perfil;
 }
 

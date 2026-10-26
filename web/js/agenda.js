@@ -1,5 +1,5 @@
 import { local } from './idioma.js';
-import { supabase } from './supabase.js';
+import * as bd from './bd.js';
 import { aviso, escapar, hora, paraInputDataHora } from './utils.js';
 
 let eventos = [];
@@ -16,19 +16,9 @@ export async function carregarEventos() {
     const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
     const fim = new Date(hoje.getFullYear() + 1, hoje.getMonth(), 1);
 
-    const { data, error } = await supabase
-        .from('events')
-        .select('id, title, description, start_at, end_at, reminder_at')
-        .gte('start_at', inicio.toISOString())
-        .lt('start_at', fim.toISOString())
-        .order('start_at');
-
-    if (error) {
-        aviso('Não foi possível carregar a agenda.', 'erro');
-        return;
-    }
-
-    eventos = data;
+    eventos = (await bd.listar('events'))
+        .filter(e => new Date(e.start_at) >= inicio && new Date(e.start_at) < fim)
+        .sort((a, b) => new Date(a.start_at) - new Date(b.start_at));
     desenharProximos();
     document.dispatchEvent(new CustomEvent('eventos-carregados'));
 }
@@ -128,18 +118,9 @@ async function guardar(evento) {
     };
 
     const id = form.id_evento.value;
-    const { error } = id
-        ? await supabase.from('events').update(dados).eq('id', id)
-        : await supabase.from('events').insert(dados);
-
-    if (error) {
-        aviso('Não foi possível guardar o evento.', 'erro');
-        return;
-    }
-
+    await bd.guardar('events', id || null, dados);
     janela.close();
     aviso('Evento guardado.');
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'events' }));
 }
 
 async function apagar() {
@@ -149,16 +130,9 @@ async function apagar() {
         return;
     }
 
-    const { error } = await supabase.from('events').delete().eq('id', id);
-
-    if (error) {
-        aviso('Não foi possível apagar o evento.', 'erro');
-        return;
-    }
-
+    await bd.apagar('events', id);
     janela.close();
     aviso('Evento apagado.');
-    document.dispatchEvent(new CustomEvent('dados-alterados', { detail: 'events' }));
 }
 
 
