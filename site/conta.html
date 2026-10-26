@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conta · HUROH</title>
+    <meta name="description" content="Confirmação de conta da HUROH." />
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="marca-h" viewBox="46 48 148 148" fill="currentColor"><g transform="translate(120 120) skewX(-12) translate(-120 -120)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></symbol>
+      <symbol id="marca-nome" viewBox="34 40 734 160" fill="currentColor"><g fill="currentColor" transform="translate(0 120) skewX(-12) translate(0 -120)"><g transform="translate(0 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g><g fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
+<path d="M217 75 V128 A37 37 0 0 0 291 128 V75"/>
+<path d="M351 165 V75 H388 A30 30 0 0 1 388 135 H372 L414 165"/>
+<rect x="484" y="75" width="98" height="90" rx="45"/>
+</g><g transform="translate(559 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></g></symbol>
+    </svg>
+    <header class="topo">
+      <a class="logo" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="34 40 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
+      <nav><a href="./">Início</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a></nav>
+    </header>
+    <main>
+      <article class="texto" id="conta">
+        <h1 id="conta-titulo">A voltar para a HUROH...</h1>
+        <p id="conta-texto"></p>
+      </article>
+      <script>
+        // login com o Google na app de computador: a sessão segue para a app (só para o próprio PC)
+        const app = new URLSearchParams(location.search).get('app');
+        const paraApp = Boolean(app && /^http:\/\/127\.0\.0\.1:\d{2,5}\/google\/[0-9a-f]{32}$/.test(app));
+
+        if (paraApp) {
+            location.replace(app + location.hash);
+        } else {
+            history.replaceState(null, '', location.pathname);
+            document.getElementById('conta-titulo').textContent = 'Nada para fazer aqui';
+            document.getElementById('conta-texto').textContent = 'Esta página só serve para entrar na HUROH com o Google. Volta à aplicação.';
+        }
+      </script>
+    </main>
+    <footer>HUROH · Your life. In sync. · <a href="mailto:huroh@outlook.pt">huroh@outlook.pt</a></footer>
+  </body>
+</html>
