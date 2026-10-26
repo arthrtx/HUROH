@@ -30,32 +30,6 @@
     margin-bottom: 24px;
 }
 
-.separadores {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background-color: var(--cor-campo);
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio-pilula);
-    padding: 4px;
-    margin-bottom: 20px;
-}
-
-.separador {
-    background: none;
-    border: none;
-    color: var(--cor-texto-suave);
-    border-radius: var(--raio-pilula);
-    padding: 8px;
-    font: inherit;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.separador.ativo {
-    background-color: var(--cor-cartao-alto);
-    color: var(--cor-texto);
-}
-
 /* janela da app */
 body.desktop .entrada {
     min-height: 100vh;
@@ -108,4 +82,52 @@ body.desktop .botoes-janela {
     height: 22px;
     width: auto;
     vertical-align: middle;
+}
+
+/* entrar com o Google */
+.entrar-google {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.botao-google {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--cor-campo);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+}
+
+.botao-google:hover {
+    border-color: var(--cor-borda-forte);
+}
+
+.icone-google {
+    width: 18px;
+    height: 18px;
+}
+
+/* texto e termos */
+.entrada-texto {
+    color: var(--cor-texto);
+    opacity: 0.8;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.entrada-termos {
+    margin-top: 16px;
+    color: var(--cor-texto-suave);
+    font-size: 12px;
+    text-align: center;
+}
+
+.entrada-termos .botao-link {
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
 }
