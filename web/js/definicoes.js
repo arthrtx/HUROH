@@ -122,8 +122,8 @@ async function ligarArranque() {
     function mostrar(ligado) {
         botao.textContent = t(ligado ? 'Desligar' : 'Ligar');
         estado.textContent = t(ligado
-            ? 'A HUROH abre sozinha quando ligas o computador.'
-            : 'A HUROH só abre quando a abrires tu.');
+            ? 'O HUROH abre sozinho quando ligas o computador.'
+            : 'O HUROH só abre quando o abrires tu.');
     }
 
     let ligado = await huroh.arranque();

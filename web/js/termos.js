@@ -1,11 +1,11 @@
 const VERSAO_TERMOS = '4';
 
 const TEXTO = `
-    <h3>1. O que é a HUROH</h3>
-    <p>A HUROH é uma aplicação pessoal para organizar finanças, agenda e tarefas. Serve apenas para registo e organização: não é um banco, não movimenta dinheiro e não dá aconselhamento financeiro.</p>
+    <h3>1. O que é o HUROH</h3>
+    <p>O HUROH é uma aplicação pessoal para organizar finanças, agenda e tarefas. Serve apenas para registo e organização: não é um banco, não movimenta dinheiro e não dá aconselhamento financeiro.</p>
 
     <h3>2. A tua conta</h3>
-    <p>Para usar a HUROH precisas de uma conta Google: a conta HUROH é criada quando entras com o Google pela primeira vez. A HUROH não cria nem guarda palavras-passe; a segurança do acesso (palavra-passe, verificação em dois passos) é gerida pelo Google e é da tua responsabilidade, tal como a informação que registas. Deves ter pelo menos 16 anos ou autorização de quem tem a tua responsabilidade parental.</p>
+    <p>Para usar o HUROH precisas de uma conta Google: a conta HUROH é criada quando entras com o Google pela primeira vez. O HUROH não cria nem guarda palavras-passe; a segurança do acesso (palavra-passe, verificação em dois passos) é gerida pelo Google e é da tua responsabilidade, tal como a informação que registas. Deves ter pelo menos 16 anos ou autorização de quem tem a tua responsabilidade parental.</p>
 
     <h3>3. Que dados guardamos</h3>
     <p>Conta: o nome, o email e a foto da tua conta Google (podes mudar o nome e a foto na aplicação). Nunca temos acesso à tua palavra-passe do Google, ao Gmail nem aos teus contactos.</p>
@@ -32,16 +32,16 @@ const TEXTO = `
     <p>Podes, a qualquer momento e sem custos: saber que dados temos sobre ti, corrigi-los, apagá-los (em Definições → Apagar conta), levar uma cópia (em Definições → Exportar dados), limitar ou opor-te ao tratamento e retirar o consentimento. Para outros pedidos escreve para huroh@outlook.pt; respondemos no prazo de 30 dias. Podes também apresentar reclamação à CNPD (Portugal) ou à ANPD (Brasil).</p>
 
     <h3>10. Uso aceitável</h3>
-    <p>Não uses a HUROH para atividades ilegais nem tentes aceder a dados de outras pessoas.</p>
+    <p>Não uses o HUROH para atividades ilegais nem tentes aceder a dados de outras pessoas.</p>
 
     <h3>11. Disponibilidade</h3>
-    <p>A HUROH é gratuita e fornecida «tal como está» e «conforme disponível», sem garantias de qualquer tipo. Pode ter erros, falhas ou interrupções, e funcionalidades podem mudar ou deixar de existir. Podemos suspender ou terminar o serviço, ou uma conta que não cumpra estes termos; sempre que possível avisamos antes, para que possas exportar os teus dados.</p>
+    <p>O HUROH é gratuito e fornecido «tal como está» e «conforme disponível», sem garantias de qualquer tipo. Pode ter erros, falhas ou interrupções, e funcionalidades podem mudar ou deixar de existir. Podemos suspender ou terminar o serviço, ou uma conta que não cumpra estes termos; sempre que possível avisamos antes, para que possas exportar os teus dados.</p>
 
     <h3>12. As tuas responsabilidades</h3>
-    <p>És responsável pela exatidão do que registas, por manter cópias do que for importante (podes exportar a qualquer momento) e pela segurança do teu dispositivo e da tua conta. A HUROH é para uso pessoal: não substitui contabilidade, declarações fiscais nem registos oficiais.</p>
+    <p>És responsável pela exatidão do que registas, por manter cópias do que for importante (podes exportar a qualquer momento) e pela segurança do teu dispositivo e da tua conta. O HUROH é para uso pessoal: não substitui contabilidade, declarações fiscais nem registos oficiais.</p>
 
     <h3>13. Limitação de responsabilidade</h3>
-    <p>Na medida máxima permitida por lei, não somos responsáveis por perdas de dados, perdas financeiras, decisões tomadas com base na informação da aplicação, erros de cálculo, lembretes que não cheguem, interrupções do serviço nem por quaisquer danos indiretos resultantes do uso ou da impossibilidade de usar a HUROH. Os valores e resumos mostrados são apenas indicativos. Nada nestes termos exclui responsabilidades que a lei não permita excluir.</p>
+    <p>Na medida máxima permitida por lei, não somos responsáveis por perdas de dados, perdas financeiras, decisões tomadas com base na informação da aplicação, erros de cálculo, lembretes que não cheguem, interrupções do serviço nem por quaisquer danos indiretos resultantes do uso ou da impossibilidade de usar o HUROH. Os valores e resumos mostrados são apenas indicativos. Nada nestes termos exclui responsabilidades que a lei não permita excluir.</p>
 
     <h3>14. Serviços de terceiros</h3>
     <p>Entrar com o Google e o alojamento dos dados dependem de serviços de terceiros (Google e Supabase), com os seus próprios termos. Não somos responsáveis pelo funcionamento desses serviços.</p>

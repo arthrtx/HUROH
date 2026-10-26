@@ -2,9 +2,9 @@
 
 **Your life. In sync.**
 
-A HUROH junta num só sítio o que costuma andar espalhado por várias apps: o dinheiro, os compromissos e as tarefas do dia a dia. Abres o computador e tens logo à vista quanto gastaste este mês, o que tens marcado para hoje e o que falta fazer.
+O HUROH junta num só sítio o que costuma andar espalhado por várias apps: o dinheiro, os compromissos e as tarefas do dia a dia. Abres o computador e tens logo à vista quanto gastaste este mês, o que tens marcado para hoje e o que falta fazer.
 
-Foi pensada para ser rápida e bonita, e para não depender da internet: tudo fica guardado primeiro no teu dispositivo e sincroniza com a nuvem quando a rede volta. No Windows vive também num menu lateral discreto no ambiente de trabalho, que aparece quando encostas o rato à esquerda do ecrã.
+Foi pensado para ser rápido e bonito, e para não depender da internet: tudo fica guardado primeiro no teu dispositivo e sincroniza com a nuvem quando a rede volta. No Windows vive também num menu lateral discreto no ambiente de trabalho, que aparece quando encostas o rato à esquerda do ecrã.
 
 **Site e download:** https://arthrtx.github.io/HUROH/
 
@@ -29,7 +29,7 @@ Foi pensada para ser rápida e bonita, e para não depender da internet: tudo fi
 - Funciona sem internet e sincroniza entre dispositivos em tempo real
 - Tema claro e escuro, em português, inglês e espanhol
 - Abre com o Windows, se quiseres
-- Atualiza-se sozinha quando sai uma versão nova
+- Atualiza-se sozinho quando sai uma versão nova
 
 ## Melhorias futuras
 
@@ -37,12 +37,12 @@ Foi pensada para ser rápida e bonita, e para não depender da internet: tudo fi
 - **Versão para telemóvel** pelo navegador, com atalho no ecrã principal, como se fosse uma app
 - **Outros sistemas** além do Windows
 - **Widgets para a área de trabalho**: saldo, agenda e tarefas sempre à vista, sem abrir a app
-- **Tutorial inicial** para mostrar o essencial na primeira vez que se abre a HUROH
+- **Tutorial inicial** para mostrar o essencial na primeira vez que se abre o HUROH
 - **Melhorias de design** em todos os ecrãs
 
 ## Privacidade
 
-- A conta é criada com o Google: a HUROH não guarda palavras-passe
+- A conta é criada com o Google: o HUROH não guarda palavras-passe
 - Cada conta só vê os seus próprios dados
 - Podes exportar os teus dados ou apagar a conta a qualquer momento, nas Definições
 - [Política de privacidade](https://arthrtx.github.io/HUROH/privacidade.html) · [Termos de utilização](https://arthrtx.github.io/HUROH/termos.html)

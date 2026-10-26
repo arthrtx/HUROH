@@ -627,7 +627,7 @@ let servidorGoogle = null;
 
 const PAGINA_GOOGLE = `<!doctype html><html lang="pt"><meta charset="utf-8"><title>HUROH</title>
 <body style="font-family:system-ui,sans-serif;background:#111113;color:#f4f4f5;display:grid;place-items:center;height:100vh;margin:0">
-<p id="t">A voltar para a HUROH...</p>
+<p id="t">A voltar para o HUROH...</p>
 <script>
 const corpo = location.hash.slice(1) + '&' + location.search.slice(1);
 history.replaceState(null, '', location.pathname);
@@ -675,7 +675,7 @@ function prepararGoogle(destino) {
             const correu = Boolean(sessao.access_token && sessao.refresh_token);
 
             resposta.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-            resposta.end(correu ? 'Pronto, já entraste na HUROH. Este separador pode ser fechado.' : 'Não foi possível entrar. Volta à HUROH e tenta outra vez.');
+            resposta.end(correu ? 'Pronto, já entraste no HUROH. Este separador pode ser fechado.' : 'Não foi possível entrar. Volta ao HUROH e tenta outra vez.');
 
             if (!destino.isDestroyed()) destino.send('google-resultado', correu ? sessao : null);
             mostrarJanela();
@@ -692,7 +692,7 @@ function prepararGoogle(destino) {
     const este = servidorGoogle;
     setTimeout(() => { if (servidorGoogle === este) fecharGoogle(); }, 5 * 60 * 1000);
 
-    // o Supabase só aceita voltar ao site da HUROH; a página conta.html reencaminha para aqui
+    // o Supabase só aceita voltar ao site do HUROH; a página conta.html reencaminha para aqui
     return `https://arthrtx.github.io/HUROH/conta.html?app=${encodeURIComponent(`http://127.0.0.1:${PORTA_GOOGLE}${caminho}`)}`;
 }
 

@@ -5,11 +5,11 @@
 ; textos (português, inglês e espanhol)
 ; ======================================================
 !macro customHeader
-    LangString hurohBoasVindas ${LANG_PORTUGUESE} "Este assistente vai instalar a HUROH ${VERSION} no teu computador.$\r$\n$\r$\nFinanças, agenda e tarefas no mesmo sítio, sempre sincronizadas.$\r$\n$\r$\nClica em Seguinte para continuar."
+    LangString hurohBoasVindas ${LANG_PORTUGUESE} "Este assistente vai instalar o HUROH ${VERSION} no teu computador.$\r$\n$\r$\nFinanças, agenda e tarefas no mesmo sítio, sempre sincronizadas.$\r$\n$\r$\nClica em Seguinte para continuar."
     LangString hurohBoasVindas ${LANG_ENGLISH} "This wizard will install HUROH ${VERSION} on your computer.$\r$\n$\r$\nFinances, calendar and tasks in one place, always in sync.$\r$\n$\r$\nClick Next to continue."
     LangString hurohBoasVindas ${LANG_SPANISHINTERNATIONAL} "Este asistente instalará HUROH ${VERSION} en tu ordenador.$\r$\n$\r$\nFinanzas, agenda y tareas en un solo lugar, siempre sincronizadas.$\r$\n$\r$\nHaz clic en Siguiente para continuar."
 
-    LangString hurohBemVindo ${LANG_PORTUGUESE} "Bem-vindo à HUROH"
+    LangString hurohBemVindo ${LANG_PORTUGUESE} "Bem-vindo ao HUROH"
     LangString hurohBemVindo ${LANG_ENGLISH} "Welcome to HUROH"
     LangString hurohBemVindo ${LANG_SPANISHINTERNATIONAL} "Bienvenido a HUROH"
 
@@ -29,11 +29,11 @@
     LangString hurohAtalho ${LANG_ENGLISH} "Create a desktop shortcut"
     LangString hurohAtalho ${LANG_SPANISHINTERNATIONAL} "Crear acceso directo en el escritorio"
 
-    LangString hurohArranque ${LANG_PORTUGUESE} "Abrir a HUROH quando o Windows iniciar"
+    LangString hurohArranque ${LANG_PORTUGUESE} "Abrir o HUROH quando o Windows iniciar"
     LangString hurohArranque ${LANG_ENGLISH} "Open HUROH when Windows starts"
     LangString hurohArranque ${LANG_SPANISHINTERNATIONAL} "Abrir HUROH al iniciar Windows"
 
-    LangString hurohAInstalar ${LANG_PORTUGUESE} "A instalar a HUROH e as dependências (motor Electron: Chromium e Node.js)..."
+    LangString hurohAInstalar ${LANG_PORTUGUESE} "A instalar o HUROH e as dependências (motor Electron: Chromium e Node.js)..."
     LangString hurohAInstalar ${LANG_ENGLISH} "Installing HUROH and its dependencies (Electron engine: Chromium and Node.js)..."
     LangString hurohAInstalar ${LANG_SPANISHINTERNATIONAL} "Instalando HUROH y sus dependencias (motor Electron: Chromium y Node.js)..."
 

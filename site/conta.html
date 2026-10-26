@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Conta · HUROH</title>
-    <meta name="description" content="Confirmação de conta da HUROH." />
+    <meta name="description" content="Confirmação de conta do HUROH." />
     <link rel="stylesheet" href="estilo.css" />
   </head>
   <body>
@@ -22,7 +22,7 @@
     </header>
     <main>
       <article class="texto" id="conta">
-        <h1 id="conta-titulo">A voltar para a HUROH...</h1>
+        <h1 id="conta-titulo">A voltar para o HUROH...</h1>
         <p id="conta-texto"></p>
       </article>
       <script>
@@ -35,7 +35,7 @@
         } else {
             history.replaceState(null, '', location.pathname);
             document.getElementById('conta-titulo').textContent = 'Nada para fazer aqui';
-            document.getElementById('conta-texto').textContent = 'Esta página só serve para entrar na HUROH com o Google. Volta à aplicação.';
+            document.getElementById('conta-texto').textContent = 'Esta página só serve para entrar no HUROH com o Google. Volta à aplicação.';
         }
       </script>
     </main>

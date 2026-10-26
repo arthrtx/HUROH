@@ -3,7 +3,7 @@ import { obterSessao, supabase } from './supabase.js';
 import './janela.js';
 import { mostrarTermos } from './termos.js';
 
-// as contas são só com o Google: sem palavras-passe guardadas na HUROH
+// as contas são só com o Google: sem palavras-passe guardadas no HUROH
 const mensagem = document.getElementById('mensagem');
 const botaoGoogle = document.getElementById('entrar-google');
 
