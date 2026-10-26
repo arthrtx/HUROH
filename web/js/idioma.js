@@ -53,6 +53,34 @@ const TEXTOS = {
         'Gastaste {v} a mais do que recebeste.': 'You spent {v} more than you received.', 'Tudo feito. Bom trabalho!': 'All done. Good job!',
         'Sem tarefas. Cria a primeira em Tarefas.': 'No tasks. Create your first one in Tasks.',
         'Em breve': 'Coming soon', 'Em breve vais ter widgets para a área de trabalho.': 'Desktop widgets are coming soon.', 'Termos de Utilização': 'Terms of Use', 'Li e aceito os': 'I have read and accept the', 'Li e aceito os Termos de Utilização': 'I have read and accept the Terms of Use', 'Aceitar e continuar': 'Accept and continue',
+        'Entra ou cria a tua conta com o Google. Sem palavras-passe para decorar.': 'Sign in or create your account with Google. No passwords to remember.', 'Ao continuar, aceitas os': 'By continuing, you accept the',
+        'Entra ou cria a tua conta com o Google. Sem palavras-passe para decorar.': 'Inicia sesión o crea tu cuenta con Google. Sin contraseñas que recordar.', 'Ao continuar, aceitas os': 'Al continuar, aceptas los',
+        'Atualizações': 'Updates', 'Versão': 'Version', 'Atualizações automáticas': 'Automatic updates', 'Descarrega sozinha e instala quando fechas a HUROH.': 'Downloads by itself and installs when you close HUROH.',
+        'Procurar atualizações': 'Check for updates', 'Descarregar agora': 'Download now', 'Reiniciar e atualizar': 'Restart and update', 'A procurar atualizações...': 'Checking for updates...',
+        'Há uma versão nova: {v}.': 'A new version is available: {v}.', 'A descarregar a versão {v}...': 'Downloading version {v}...', 'A versão {v} está pronta. Reinicia para atualizar.': 'Version {v} is ready. Restart to update.',
+        'Não foi possível procurar atualizações. Vê a ligação à internet.': 'Could not check for updates. Check your internet connection.', 'Tens a versão mais recente.': 'You have the latest version.',
+        'Versão de desenvolvimento: as atualizações só funcionam na app instalada.': 'Development version: updates only work in the installed app.', 'Versão e atualizações': 'Version and updates',
+        'Atualizações': 'Actualizaciones', 'Versão': 'Versión', 'Atualizações automáticas': 'Actualizaciones automáticas', 'Descarrega sozinha e instala quando fechas a HUROH.': 'Se descarga sola y se instala al cerrar HUROH.',
+        'Procurar atualizações': 'Buscar actualizaciones', 'Descarregar agora': 'Descargar ahora', 'Reiniciar e atualizar': 'Reiniciar y actualizar', 'A procurar atualizações...': 'Buscando actualizaciones...',
+        'Há uma versão nova: {v}.': 'Hay una versión nueva: {v}.', 'A descarregar a versão {v}...': 'Descargando la versión {v}...', 'A versão {v} está pronta. Reinicia para atualizar.': 'La versión {v} está lista. Reinicia para actualizar.',
+        'Não foi possível procurar atualizações. Vê a ligação à internet.': 'No se pudo buscar actualizaciones. Revisa la conexión a internet.', 'Tens a versão mais recente.': 'Tienes la versión más reciente.',
+        'Versão de desenvolvimento: as atualizações só funcionam na app instalada.': 'Versión de desarrollo: las actualizaciones solo funcionan en la app instalada.', 'Versão e atualizações': 'Versión y actualizaciones',
+        'Os teus dados': 'Your data', 'Exportar dados': 'Export data', 'Apagar conta': 'Delete account', 'Apagar tudo': 'Delete everything', 'A apagar...': 'Deleting...',
+        'Leva uma cópia de tudo ou apaga a conta e todos os dados de uma vez.': 'Take a copy of everything, or delete your account and all your data at once.',
+        'Isto apaga para sempre a tua conta e todos os dados: movimentos, categorias, eventos, tarefas, foto e perfil, na nuvem e neste dispositivo. Não dá para desfazer.': 'This permanently deletes your account and all your data: transactions, categories, events, tasks, photo and profile, in the cloud and on this device. It cannot be undone.',
+        'Apagar também os backups deste computador': 'Also delete the backups on this computer', 'Escreve APAGAR para confirmar': 'Type APAGAR to confirm',
+        'Precisas de internet para apagar a conta.': 'You need internet to delete your account.', 'Não foi possível apagar a conta. Tenta outra vez.': 'Could not delete the account. Try again.',
+        'A tua conta e todos os teus dados foram apagados.': 'Your account and all your data have been deleted.',
+        'Os teus dados': 'Tus datos', 'Exportar dados': 'Exportar datos', 'Apagar conta': 'Borrar cuenta', 'Apagar tudo': 'Borrar todo', 'A apagar...': 'Borrando...',
+        'Leva uma cópia de tudo ou apaga a conta e todos os dados de uma vez.': 'Llévate una copia de todo o borra la cuenta y todos los datos de una vez.',
+        'Isto apaga para sempre a tua conta e todos os dados: movimentos, categorias, eventos, tarefas, foto e perfil, na nuvem e neste dispositivo. Não dá para desfazer.': 'Esto borra para siempre tu cuenta y todos los datos: movimientos, categorías, eventos, tareas, foto y perfil, en la nube y en este dispositivo. No se puede deshacer.',
+        'Apagar também os backups deste computador': 'Borrar también las copias de este ordenador', 'Escreve APAGAR para confirmar': 'Escribe APAGAR para confirmar',
+        'Precisas de internet para apagar a conta.': 'Necesitas internet para borrar la cuenta.', 'Não foi possível apagar a conta. Tenta outra vez.': 'No se pudo borrar la cuenta. Inténtalo de nuevo.',
+        'A tua conta e todos os teus dados foram apagados.': 'Tu cuenta y todos tus datos han sido borrados.',
+        'Iniciar com o Windows': 'Start with Windows', 'Ligar': 'Turn on', 'Desligar': 'Turn off',
+        'A HUROH abre sozinha quando ligas o computador.': 'HUROH opens by itself when you turn on the computer.',
+        'A HUROH só abre quando a abrires tu.': 'HUROH only opens when you open it.',
+        'ou': 'or', 'Continuar com Google': 'Continue with Google', 'Continua no navegador que acabou de abrir.': 'Continue in the browser that just opened.', 'Não foi possível entrar com o Google.': 'Could not sign in with Google.',
     },
     es: {
         '+ Categoria': '+ Categoría', '+ Evento': '+ Evento', '+ Movimento': '+ Movimiento', '+ Neste dia': '+ Este día', '+ Tarefa': '+ Tarea',
@@ -105,13 +133,25 @@ const TEXTOS = {
         'Sobram {v} este mês.': 'Te quedan {v} este mes.', 'Gastaste {v} a mais do que recebeste.': 'Gastaste {v} más de lo que recibiste.',
         'Tudo feito. Bom trabalho!': 'Todo hecho. ¡Buen trabajo!', 'Sem tarefas. Cria a primeira em Tarefas.': 'Sin tareas. Crea la primera en Tareas.',
         'Em breve': 'Próximamente', 'Em breve vais ter widgets para a área de trabalho.': 'Pronto tendrás widgets para el escritorio.', 'Termos de Utilização': 'Términos de uso', 'Li e aceito os': 'He leído y acepto los', 'Li e aceito os Termos de Utilização': 'He leído y acepto los Términos de uso', 'Aceitar e continuar': 'Aceptar y continuar',
+        'Iniciar com o Windows': 'Iniciar con Windows', 'Ligar': 'Activar', 'Desligar': 'Desactivar',
+        'A HUROH abre sozinha quando ligas o computador.': 'HUROH se abre sola al encender el ordenador.',
+        'A HUROH só abre quando a abrires tu.': 'HUROH solo se abre cuando tú la abres.',
+        'ou': 'o', 'Continuar com Google': 'Continuar con Google', 'Continua no navegador que acabou de abrir.': 'Continúa en el navegador que se acaba de abrir.', 'Não foi possível entrar com o Google.': 'No se pudo iniciar sesión con Google.',
     },
 };
 
 function lerIdioma() {
     try {
         const guardado = localStorage.getItem('idioma');
-        return LOCAIS[guardado] ? guardado : 'pt';
+        if (LOCAIS[guardado]) return guardado;
+
+        // primeira vez depois de instalar: usa o idioma escolhido no instalador
+        const instalacao = window.huroh?.idiomaInstalacao;
+        if (LOCAIS[instalacao]) {
+            localStorage.setItem('idioma', instalacao);
+            return instalacao;
+        }
+        return 'pt';
     } catch {
         return 'pt';
     }
