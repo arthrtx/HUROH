@@ -11,6 +11,11 @@ const PASTA_WEB = app.isPackaged ? path.join(process.resourcesPath, 'web') : pat
 const ICONE = path.join(__dirname, 'icone.ico');
 const LARGURA_LATERAL = 400;
 const VIDRO = process.platform === 'win32';
+let OPACIDADE = true;
+
+// máquinas virtuais e ambiente remoto costumam ter as animações do Windows desligadas,
+// o que desligava as animações do HUROH (como a entrada do menu lateral)
+app.commandLine.appendSwitch('force-prefers-no-reduced-motion');
 
 protocol.registerSchemesAsPrivileged([
     { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true, codeCache: true } },
@@ -70,6 +75,7 @@ if (!app.requestSingleInstanceLock()) {
 
     app.whenReady().then(() => {
         app.setAppUserModelId('pt.huroh.app');
+        OPACIDADE = podeUsarOpacidade();
         // só as notificações dos lembretes; câmara, microfone, localização, etc. ficam negados
         session.defaultSession.setPermissionRequestHandler((_conteudo, permissao, responder) => responder(permissao === 'notifications'));
         session.defaultSession.setPermissionCheckHandler((_conteudo, permissao) => permissao === 'notifications');
@@ -150,7 +156,7 @@ function criarJanela() {
         maximizable: false,
         fullscreenable: false,
         show: false,
-        opacity: 0,
+        ...(OPACIDADE ? { opacity: 0 } : {}),
         transparent: VIDRO,
         backgroundColor: VIDRO ? '#00000000' : '#111113',
         title: 'HUROH',
@@ -183,7 +189,10 @@ function criarJanela() {
 
     protegerNavegacao(janela.webContents);
 
-    janela.webContents.on('did-navigate', (_evento, url) => ajustarTamanho(url.includes('login.html')));
+    janela.webContents.on('did-navigate', (_evento, url) => {
+        estiloInvisivel = null;
+        ajustarTamanho(url.includes('login.html'));
+    });
     janela.webContents.on('did-finish-load', () => ajustarTamanho(janela.webContents.getURL().includes('login.html')));
 
     janela.webContents.on('did-fail-load', (_evento, codigo) => {
@@ -203,7 +212,7 @@ function criarJanela() {
     janela.on('close', evento => {
         if (!aSair) {
             evento.preventDefault();
-            janela.hide();
+            esconderJanela('hide');
         }
     });
 
@@ -218,7 +227,7 @@ function criarJanela() {
     // a animação de abertura corre sempre que a janela volta a aparecer; enquanto está fora de vista fica
     // transparente, e só volta a ver-se quando a página avisa que já desenhou o início da abertura
     const esconder = () => {
-        janela.setOpacity(0);
+        mudarOpacidade(0);
         janela.webContents.send('janela-escondida');
     };
     janela.on('hide', esconder);
@@ -244,7 +253,51 @@ function esperarPronta() {
 
 function mostrarPronta() {
     clearTimeout(seguranca);
-    if (janela && !janela.isDestroyed()) janela.setOpacity(1);
+    mudarOpacidade(1);
+}
+
+function mudarOpacidade(valor) {
+    if (!janela || janela.isDestroyed()) return Promise.resolve();
+    if (OPACIDADE) return Promise.resolve(janela.setOpacity(valor));
+    return mudarOpacidadePagina(valor);
+}
+
+// sem placa gráfica a opacidade é feita na própria página (a janela é transparente, por isso fica invisível)
+let estiloInvisivel = null;
+
+async function mudarOpacidadePagina(valor) {
+    const conteudo = janela.webContents;
+    try {
+        if (valor === 0 && !estiloInvisivel) {
+            estiloInvisivel = conteudo.insertCSS('html { opacity: 0 !important; }');
+            await estiloInvisivel;
+        } else if (valor === 1 && estiloInvisivel) {
+            const chave = await estiloInvisivel;
+            estiloInvisivel = null;
+            await conteudo.removeInsertedCSS(chave);
+        }
+    } catch {
+        estiloInvisivel = null;
+    }
+}
+
+// antes de esconder, a página fica invisível e desenhada assim; ao voltar já não se vê o dashboard antigo
+async function esconderJanela(acao) {
+    if (!janela || janela.isDestroyed()) return;
+    if (!OPACIDADE) {
+        await mudarOpacidadePagina(0);
+        const desenhada = janela.webContents.executeJavaScript('new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))');
+        await Promise.race([desenhada, new Promise(r => setTimeout(r, 300))]).catch(() => {});
+        await new Promise(r => setTimeout(r, 120));
+        if (!janela || janela.isDestroyed()) return;
+    }
+    janela[acao]();
+}
+
+// sem placa gráfica (máquinas virtuais, ambiente remoto) a opacidade numa janela transparente
+// deixa-a invisível, por isso aí a janela aparece sem o efeito de opacidade
+function podeUsarOpacidade() {
+    return String(app.getGPUFeatureStatus().gpu_compositing).startsWith('enabled');
 }
 
 // a janela de login fica com a altura do conteúdo (a página diz quanto precisa)
@@ -638,7 +691,7 @@ function ligarMensagens() {
     ouvir('janela', (evento, acao) => {
         const origem = BrowserWindow.fromWebContents(evento.sender);
         if (origem !== janela) return;
-        if (acao === 'minimizar') janela.minimize();
+        if (acao === 'minimizar') esconderJanela('minimize');
         if (acao === 'fechar') janela.close();
     });
 }

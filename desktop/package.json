@@ -1,6 +1,6 @@
 {
     "name": "huroh",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "HUROH - Your life. In sync.",
     "author": "Your life. In sync.",
     "main": "main.js",
@@ -75,7 +75,7 @@
             "displayLanguageSelector": true
         },
         "releaseInfo": {
-            "releaseNotes": "Update de design e de configuração de inicialização.\n\n- Ao iniciar com o Windows, abre só o menu lateral; a janela abre quando precisares.\n- O menu lateral mantém os dados sincronizados mesmo com a janela fechada.\n- Novo calendário na Agenda, com vistas semanal e mensal.\n- Modo claro com novo fundo, widgets em tons pastel e cinza escuro em vez de preto.\n- Cartão do saldo do menu lateral com novo fundo.\n- Ícone de engrenagem nas Definições; o botão Widgets do menu lateral abre a página de widgets."
+            "releaseNotes": "Correção de arranque.\n\n- O HUROH passa a abrir em computadores sem placa gráfica, máquinas virtuais e ambiente de trabalho remoto, com o efeito de vidro e o menu lateral.\n- As animações (abertura e entrada do menu lateral) passam a funcionar também em computadores com as animações do Windows desligadas."
         },
         "publish": [
             {
