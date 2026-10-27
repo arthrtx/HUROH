@@ -29,9 +29,9 @@
     LangString hurohAtalho ${LANG_ENGLISH} "Create a desktop shortcut"
     LangString hurohAtalho ${LANG_SPANISHINTERNATIONAL} "Crear acceso directo en el escritorio"
 
-    LangString hurohArranque ${LANG_PORTUGUESE} "Abrir o HUROH quando o Windows iniciar"
-    LangString hurohArranque ${LANG_ENGLISH} "Open HUROH when Windows starts"
-    LangString hurohArranque ${LANG_SPANISHINTERNATIONAL} "Abrir HUROH al iniciar Windows"
+    LangString hurohArranque ${LANG_PORTUGUESE} "Abrir o menu lateral do HUROH quando o Windows iniciar"
+    LangString hurohArranque ${LANG_ENGLISH} "Open the HUROH side menu when Windows starts"
+    LangString hurohArranque ${LANG_SPANISHINTERNATIONAL} "Abrir el menú lateral de HUROH al iniciar Windows"
 
     LangString hurohAInstalar ${LANG_PORTUGUESE} "A instalar o HUROH e as dependências (motor Electron: Chromium e Node.js)..."
     LangString hurohAInstalar ${LANG_ENGLISH} "Installing HUROH and its dependencies (Electron engine: Chromium and Node.js)..."
@@ -117,7 +117,7 @@
     ${EndIf}
 
     ${If} $IniciarComWindows == ${BST_CHECKED}
-        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "HUROH" '"$INSTDIR\HUROH.exe"'
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "HUROH" '"$INSTDIR\HUROH.exe" --arranque'
     ${EndIf}
 
     ; a app abre no idioma escolhido aqui

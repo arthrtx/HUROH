@@ -79,8 +79,11 @@ if (!app.requestSingleInstanceLock()) {
         });
         servirFicheiros();
         ligarMensagens();
-        criarJanela();
+        // ao ligar o computador só abre o menu lateral; a janela abre quando for precisa
+        if (ARRANQUE && lerConfig().lateral) criarLateral(true);
+        else criarJanela();
         criarBandeja();
+        atualizarArranque();
         prepararAtualizacoes();
         if (!app.isPackaged) vigiarAlteracoes();
         screen.on('display-metrics-changed', posicionarLateral);
@@ -164,6 +167,9 @@ function criarJanela() {
     });
 
     // só aparece já desenhada; o menu lateral só é criado quando o dashboard acabar de abrir
+    // a janela passa a sincronizar: o menu lateral para
+    avisarSincronizacao();
+
     janela.once('ready-to-show', () => {
         janela.show();
         esperarPronta();
@@ -222,7 +228,10 @@ function criarJanela() {
         esperarPronta();
     });
 
-    janela.on('closed', () => { janela = null; });
+    janela.on('closed', () => {
+        janela = null;
+        avisarSincronizacao();
+    });
     janela.loadURL('app://huroh/index.html');
 }
 
@@ -274,6 +283,10 @@ function ajustarTamanho(login) {
         height: altura,
     });
     janela.setResizable(false);
+}
+
+function avisarSincronizacao() {
+    if (lateral && !lateral.isDestroyed()) lateral.webContents.send('sincronizar-sozinho', !janela);
 }
 
 function mostrarJanela(pagina, acao) {
@@ -475,6 +488,7 @@ function instalarAtualizacao() {
 // iniciar com o Windows
 // ======================================================
 const CHAVE_ARRANQUE = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run';
+const ARRANQUE = process.argv.includes('--arranque');
 
 function correrReg(argumentos) {
     return new Promise(resolver => {
@@ -483,7 +497,13 @@ function correrReg(argumentos) {
 }
 
 function arranqueDisponivel() {
-    return process.platform === 'win32' && app.isPackaged;
+    return process.platform === 'win32';
+}
+
+// na app instalada é o HUROH.exe; a correr pelo run.bat é o Electron com a pasta da app
+function comandoArranque() {
+    const pasta = app.isPackaged ? '' : ` "${app.getAppPath()}"`;
+    return `"${process.execPath}"${pasta} --arranque`;
 }
 
 function lerArranque() {
@@ -494,11 +514,16 @@ function lerArranque() {
 async function mudarArranque(ligado) {
     if (!arranqueDisponivel()) return false;
     if (ligado) {
-        await correrReg(['add', CHAVE_ARRANQUE, '/v', 'HUROH', '/t', 'REG_SZ', '/d', `"${process.execPath}"`, '/f']);
+        await correrReg(['add', CHAVE_ARRANQUE, '/v', 'HUROH', '/t', 'REG_SZ', '/d', comandoArranque(), '/f']);
     } else {
         await correrReg(['delete', CHAVE_ARRANQUE, '/v', 'HUROH', '/f']);
     }
     return lerArranque();
+}
+
+// quem já tinha o arranque ligado numa versão anterior passa a abrir só o menu lateral
+async function atualizarArranque() {
+    if (app.isPackaged && await lerArranque()) await mudarArranque(true);
 }
 
 
@@ -567,6 +592,8 @@ function ligarMensagens() {
 
     ouvir('mostrar-lateral', (_evento, visivel) => mostrarLateral(Boolean(visivel)));
     ipcMain.handle('estado-lateral', evento => daApp(evento) && lateralVisivel());
+    // sem a janela principal aberta, é o menu lateral que mantém os dados em dia
+    ipcMain.handle('sincronizar-sozinho', evento => daApp(evento) && !janela);
 
     ouvir('sair', () => app.quit());
 

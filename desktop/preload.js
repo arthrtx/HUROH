@@ -37,4 +37,6 @@ contextBridge.exposeInMainWorld('huroh', {
     aoEsconderJanela: funcao => ipcRenderer.on('janela-escondida', () => funcao()),
     aoMostrarJanela: funcao => ipcRenderer.on('janela-mostrada', () => funcao()),
     aoMudarLateral: funcao => ipcRenderer.on('lateral-mudou', (_evento, visivel) => funcao(visivel)),
+    sincronizarSozinho: () => ipcRenderer.invoke('sincronizar-sozinho'),
+    aoSincronizarSozinho: funcao => ipcRenderer.on('sincronizar-sozinho', (_evento, ligado) => funcao(ligado)),
 });

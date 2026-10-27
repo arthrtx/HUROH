@@ -9,6 +9,7 @@ let utilizador;
 let aSincronizar = false;
 let deNovo = null;
 let ultimaVez = 0;
+let leve = null;
 
 
 // enviar o que está na fila
@@ -34,7 +35,7 @@ async function enviar() {
         }
 
         if (error && !recusado(error)) return false;
-        if (error) aviso('Uma alteração não foi aceite pelo servidor e foi desfeita.', 'erro');
+        if (error && !leve) aviso('Uma alteração não foi aceite pelo servidor e foi desfeita.', 'erro');
 
         await tirarDaFila(item);
     }
@@ -80,8 +81,8 @@ export async function sincronizar(tudoDeNovo = true) {
 
 // alterações feitas noutro dispositivo
 // ======================================================
-function ligarTempoReal() {
-    const canal = supabase.channel('huroh-' + utilizador.id);
+function ligarTempoReal(nome = 'huroh-') {
+    const canal = supabase.channel(nome + utilizador.id);
 
     TEMPO_REAL.forEach(tabela => {
         canal.on(
@@ -95,6 +96,34 @@ function ligarTempoReal() {
     });
 
     canal.subscribe();
+    return canal;
+}
+
+
+// menu lateral sozinho (ao ligar o computador, antes de abrir a janela)
+// ======================================================
+// leve: envia o que ficou pendente e recebe ao começar, em tempo real e de 15 em 15 minutos; para quando a janela abre
+export function sincronizacaoLeve(dono, ligada) {
+    if (ligada === Boolean(leve)) return;
+
+    if (!ligada) {
+        clearInterval(leve.intervalo);
+        window.removeEventListener('online', leve.online);
+        supabase.removeChannel(leve.canal);
+        leve = null;
+        return;
+    }
+
+    utilizador = dono;
+    const online = () => sincronizar();
+    window.addEventListener('online', online);
+    leve = { online, intervalo: setInterval(online, 15 * 60 * 1000), canal: ligarTempoReal('huroh-lateral-') };
+    sincronizar();
+}
+
+// ao abrir o menu: se os dados já têm uns minutos, vai buscar o que mudou
+export function sincronizarSeAntigo() {
+    if (leve && Date.now() - ultimaVez > 2 * 60 * 1000) sincronizar();
 }
 
 

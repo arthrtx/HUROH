@@ -74,6 +74,9 @@
             "artifactName": "HUROH-Instalar.${ext}",
             "displayLanguageSelector": true
         },
+        "releaseInfo": {
+            "releaseNotes": "Update de design e de configuração de inicialização.\n\n- Ao iniciar com o Windows, abre só o menu lateral; a janela abre quando precisares.\n- O menu lateral mantém os dados sincronizados mesmo com a janela fechada.\n- Novo calendário na Agenda, com vistas semanal e mensal.\n- Modo claro com novo fundo, widgets em tons pastel e cinza escuro em vez de preto.\n- Cartão do saldo do menu lateral com novo fundo.\n- Ícone de engrenagem nas Definições; o botão Widgets do menu lateral abre a página de widgets."
+        },
         "publish": [
             {
                 "provider": "github",

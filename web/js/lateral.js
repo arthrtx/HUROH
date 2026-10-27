@@ -22,6 +22,7 @@ function definirRato(ativo) {
 function abrir() {
     if (!corpo.classList.contains('aberto')) {
         corpo.classList.add('aberto');
+        document.dispatchEvent(new Event('menu-aberto'));
         atualizarTudo();
     }
 }
@@ -358,6 +359,21 @@ if (!sessao) {
 
     // a janela principal grava os dados; aqui só se lê
     document.addEventListener('dados-alterados', () => atualizarTudo(true));
+
+    // ao ligar o computador só o menu está aberto: é ele que vai buscando o que muda (só o carrega se precisar)
+    let sinc = null;
+    let ligada = false;
+    const sincronizarSozinho = async ligado => {
+        ligada = ligado;
+        if (!ligado && !sinc) return;
+        sinc ||= await import('./sincronizar.js');
+        sinc.sincronizacaoLeve(sessao.user, ligada);
+    };
+    huroh.aoSincronizarSozinho?.(sincronizarSozinho);
+    setTimeout(async () => {
+        if (await huroh.sincronizarSozinho?.()) sincronizarSozinho(true);
+    }, 2000);
+    document.addEventListener('menu-aberto', () => sinc?.sincronizarSeAntigo());
     setInterval(() => atualizarTudo(true), 60000);
 }
 
