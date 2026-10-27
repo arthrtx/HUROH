@@ -10,18 +10,25 @@
   <body>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <symbol id="marca-h" viewBox="46 48 148 148" fill="currentColor"><g transform="translate(120 120) skewX(-12) translate(-120 -120)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></symbol>
+      <symbol id="ic-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></symbol>
       <symbol id="marca-nome" viewBox="34 40 734 160" fill="currentColor"><g fill="currentColor" transform="translate(0 120) skewX(-12) translate(0 -120)"><g transform="translate(0 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g><g fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
 <path d="M217 75 V128 A37 37 0 0 0 291 128 V75"/>
 <path d="M351 165 V75 H388 A30 30 0 0 1 388 135 H372 L414 165"/>
 <rect x="484" y="75" width="98" height="90" rx="45"/>
 </g><g transform="translate(559 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></g></symbol>
     </svg>
+    <div class="feixe" aria-hidden="true"></div>
     <header class="topo">
-      <a class="logo" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="34 40 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
-      <nav><a href="./">Início</a><a href="privacidade.html" class="ativo">Privacidade</a><a href="termos.html">Termos</a></nav>
+      <a class="logo" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="0 0 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
+      <nav class="menu"><a href="./" data-t="nav.inicio">Início</a><a href="privacidade.html" class="ativo" data-t="nav.privacidade">Privacidade</a><a href="termos.html" data-t="nav.termos">Termos</a></nav>
+      <div class="topo-direita">
+        <div class="idiomas" role="group" aria-label="Idioma"><button type="button" data-idioma="pt">PT</button><button type="button" data-idioma="en">EN</button></div>
+        <a class="redondo" href="https://github.com/arthrtx" target="_blank" rel="noopener" aria-label="GitHub"><svg aria-hidden="true"><use href="#ic-github"/></svg></a>
+      </div>
     </header>
     <main>
       <article class="texto">
+        <p class="so-pt" data-t="so-pt">Este documento só está disponível em português.</p>
         <h1>Política de privacidade</h1>
         <p class="data">Última atualização: 26 de outubro de 2026</p>
 
@@ -59,6 +66,11 @@
         <p>Se esta política mudar, a data acima é atualizada e, se a mudança for importante, avisamos na aplicação.</p>
       </article>
     </main>
-    <footer>HUROH · Your life. In sync. · <a href="mailto:huroh@outlook.pt">huroh@outlook.pt</a></footer>
+    <footer class="rodape">
+      <a class="logo logo-pequeno" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="0 0 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
+      <nav><a href="privacidade.html" data-t="rod.privacidade">Privacidade</a><a href="termos.html" data-t="rod.termos">Termos</a><a href="mailto:huroh@outlook.pt">huroh@outlook.pt</a><a href="https://github.com/arthrtx" target="_blank" rel="noopener">GitHub</a></nav>
+      <small data-t="rod.direitos">© 2026 HUROH. Todos os direitos reservados.</small>
+    </footer>
+    <script src="idioma.js"></script>
   </body>
 </html>

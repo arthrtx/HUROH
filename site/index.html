@@ -3,44 +3,162 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HUROH</title>
+    <title>HUROH · Your life. In sync.</title>
     <meta name="description" content="O HUROH junta finanças, agenda e tarefas num só painel." />
+    <link rel="preload" href="fontes/inter-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="estilo.css" />
   </head>
   <body>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
       <symbol id="marca-h" viewBox="46 48 148 148" fill="currentColor"><g transform="translate(120 120) skewX(-12) translate(-120 -120)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></symbol>
-      <symbol id="marca-nome" viewBox="34 40 734 160" fill="currentColor"><g fill="currentColor" transform="translate(0 120) skewX(-12) translate(0 -120)"><g transform="translate(0 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g><g fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
-<path d="M217 75 V128 A37 37 0 0 0 291 128 V75"/>
-<path d="M351 165 V75 H388 A30 30 0 0 1 388 135 H372 L414 165"/>
-<rect x="484" y="75" width="98" height="90" rx="45"/>
-</g><g transform="translate(559 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></g></symbol>
+      <symbol id="marca-nome" viewBox="34 40 734 160" fill="currentColor"><g fill="currentColor" transform="translate(0 120) skewX(-12) translate(0 -120)"><g><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g><g fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"><path d="M217 75 V128 A37 37 0 0 0 291 128 V75"/><path d="M351 165 V75 H388 A30 30 0 0 1 388 135 H372 L414 165"/><rect x="484" y="75" width="98" height="90" rx="45"/></g><g transform="translate(559 0)"><path d="M64 75 A19 19 0 0 1 102 75 L102 165 A19 19 0 0 1 64 165 Z M138 75 A19 19 0 0 1 176 75 L176 115 A19 19 0 0 1 157 134 C142 134 134 124 120 124 C109 124 102 131 102 142 L84 142 L84 92 L102 92 C102 105 110 112 120 112 C130 112 138 106 138 94 Z"/><circle cx="157" cy="171" r="18"/></g></g></symbol>
+      <symbol id="ic-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></symbol>
     </svg>
+
+    <div class="feixe" aria-hidden="true"></div>
+
     <header class="topo">
-      <a class="logo" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="34 40 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
-      <nav><a href="./" class="ativo">Início</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a></nav>
+      <a class="logo" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="0 0 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
+      <nav class="menu">
+        <a href="#video" data-t="nav.video">Vídeo</a>
+        <a href="#funcionalidades" data-t="nav.funcionalidades">Funcionalidades</a>
+        <a href="#privacidade" data-t="nav.privacidade">Privacidade</a>
+        <a href="#descarregar" class="menu-destaque" data-t="nav.descarregar">Descarregar</a>
+      </nav>
+      <div class="topo-direita">
+        <div class="idiomas" role="group" aria-label="Idioma">
+          <button type="button" data-idioma="pt">PT</button>
+          <button type="button" data-idioma="en">EN</button>
+        </div>
+        <a class="redondo" href="https://github.com/arthrtx" target="_blank" rel="noopener" aria-label="GitHub"><svg aria-hidden="true"><use href="#ic-github"/></svg></a>
+      </div>
     </header>
+
     <main>
-      <section class="heroi">
-        <h1>A tua vida, sincronizada.</h1>
-        <p>O HUROH junta finanças, agenda e tarefas num só painel, no computador e no telemóvel. Funciona sem internet e sincroniza quando a rede volta.</p>
+      <!-- painel principal -->
+      <section class="painel heroi">
+        <span class="etiqueta"><b>v0.3</b><i></i><span data-t="heroi.etiqueta">Windows 10 e 11</span></span>
+        <h1 data-t="heroi.titulo">A tua vida, sincronizada.</h1>
+        <p data-t="heroi.texto">O HUROH junta finanças, agenda e tarefas num só painel. Funciona sem internet e sincroniza quando a rede volta.</p>
+        <div class="acoes">
+          <a class="botao" href="https://github.com/arthrtx/HUROH/releases/latest/download/HUROH-Instalar.exe" data-t="botao.descarregar">Descarregar para Windows</a>
+          <a class="botao-claro" href="#video" data-t="botao.ver">Ver o vídeo</a>
+        </div>
+
+        <div class="video" id="video">
+          <video src="media/huroh.mp4" poster="media/video-capa.webp" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
       </section>
-      <section class="cartoes">
-        <article><h2>Finanças</h2><p>Rendimentos, despesas, categorias com limite mensal e o saldo sempre à vista.</p></article>
-        <article><h2>Agenda</h2><p>Calendário com feriados nacionais e eventos com lembrete.</p></article>
-        <article><h2>Tarefas</h2><p>Prioridades, prazos e o progresso do dia.</p></article>
+
+      <!-- funcionalidades em carrossel -->
+      <section class="painel carrossel-secao" id="funcionalidades">
+        <span class="etiqueta"><b>01</b><i></i><span data-t="func.etiqueta">Funcionalidades</span></span>
+        <h2 data-t="func.titulo">Tudo num só sítio</h2>
+
+        <div class="carrossel">
+          <button type="button" class="seta seta-esq" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+          <div class="faixa" id="faixa">
+            <article class="slide">
+              <div class="slide-imagem"><img src="media/dashboard.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s1.titulo">Dashboard</h3>
+                <p data-t="s1.texto">O saldo, o mês, a agenda e o que fizeste por último, logo ao abrir.</p>
+                <dl><div><dt data-t="s1.a">Saldo</dt><dd data-t="s1.av">Em tempo real</dd></div><div><dt data-t="s1.b">Resumo do mês</dt><dd data-t="s1.bv">Quanto entrou, saiu e sobra</dd></div></dl>
+              </div>
+            </article>
+            <article class="slide">
+              <div class="slide-imagem"><img src="media/financas.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s2.titulo">Finanças</h3>
+                <p data-t="s2.texto">Rendimentos e despesas, categorias com limite mensal e para onde vai o teu dinheiro.</p>
+                <dl><div><dt data-t="s2.a">Categorias</dt><dd data-t="s2.av">Com limite mensal</dd></div><div><dt data-t="s2.b">Filtros</dt><dd data-t="s2.bv">Por mês, tipo e categoria</dd></div></dl>
+              </div>
+            </article>
+            <article class="slide">
+              <div class="slide-imagem"><img src="media/agenda.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s3.titulo">Agenda</h3>
+                <p data-t="s3.texto">Vista semanal ou mensal, feriados nacionais e eventos com lembrete.</p>
+                <dl><div><dt data-t="s3.a">Vistas</dt><dd data-t="s3.av">Semanal e mensal</dd></div><div><dt data-t="s3.b">Lembretes</dt><dd data-t="s3.bv">Notificações no PC</dd></div></dl>
+              </div>
+            </article>
+            <article class="slide">
+              <div class="slide-imagem"><img src="media/tarefas.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s4.titulo">Tarefas</h3>
+                <p data-t="s4.texto">Organizadas por prioridade, com prazos e o progresso do dia.</p>
+                <dl><div><dt data-t="s4.a">Prioridades</dt><dd data-t="s4.av">Alta, média e baixa</dd></div><div><dt data-t="s4.b">Prazos</dt><dd data-t="s4.bv">Avisos de atraso</dd></div></dl>
+              </div>
+            </article>
+            <article class="slide">
+              <div class="slide-imagem slide-imagem-alta"><img src="media/lateral.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s5.titulo">Menu lateral</h3>
+                <p data-t="s5.texto">Encosta o rato à esquerda do ecrã e tens o saldo, o dia e os registos rápidos, sem abrir a janela.</p>
+                <dl><div><dt data-t="s5.a">Arranque</dt><dd data-t="s5.av">Abre com o Windows</dd></div><div><dt data-t="s5.b">Registo rápido</dt><dd data-t="s5.bv">Despesa, rendimento, tarefa, evento</dd></div></dl>
+              </div>
+            </article>
+            <article class="slide">
+              <div class="slide-imagem"><img src="media/claro.webp" alt="" loading="lazy" /></div>
+              <div class="slide-texto">
+                <h3 data-t="s6.titulo">Claro e escuro</h3>
+                <p data-t="s6.texto">Dois temas, três idiomas e atualizações automáticas.</p>
+                <dl><div><dt data-t="s6.a">Idiomas</dt><dd data-t="s6.av">Português, inglês e espanhol</dd></div><div><dt data-t="s6.b">Atualizações</dt><dd data-t="s6.bv">Automáticas</dd></div></dl>
+              </div>
+            </article>
+          </div>
+          <button type="button" class="seta seta-dir" aria-label="Seguinte"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+        </div>
+        <div class="pontos" id="pontos"></div>
       </section>
-      <section class="descarregar">
-        <h2>Descarregar</h2>
-        <p>App para Windows 10 e 11. Instala sem pedir administrador e atualiza-se sozinha.</p>
-        <a class="botao" href="https://github.com/arthrtx/HUROH/releases/latest/download/HUROH-Instalar.exe">Descarregar para Windows</a>
-        <small><a href="https://github.com/arthrtx/HUROH/releases">Todas as versões e novidades</a></small>
+
+      <!-- privacidade: cartões de vidro sobre a imagem -->
+      <section class="vidros" id="privacidade">
+        <h2 data-t="priv.titulo">Os teus dados são teus</h2>
+        <div class="vidros-grelha">
+          <article class="vidro">
+            <span class="chip" data-t="priv.a.chip">Conta</span>
+            <svg class="vidro-icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/></svg>
+            <h3 data-t="priv.a.titulo">Entras com o Google</h3>
+            <p data-t="priv.a.texto">Sem palavras-passe guardadas no HUROH.</p>
+          </article>
+          <article class="vidro">
+            <span class="chip" data-t="priv.b.chip">Controlo</span>
+            <svg class="vidro-icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+            <h3 data-t="priv.b.titulo">Exporta ou apaga</h3>
+            <p data-t="priv.b.texto">Leva uma cópia de tudo ou apaga a conta e os dados quando quiseres.</p>
+          </article>
+          <article class="vidro">
+            <span class="chip" data-t="priv.c.chip">Offline</span>
+            <svg class="vidro-icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6M20 12a8 8 0 0 1-13.7 5.6M17 3v4h-4M7 21v-4h4"/></svg>
+            <h3 data-t="priv.c.titulo">Funciona sem internet</h3>
+            <p data-t="priv.c.texto">Guarda no computador e sincroniza quando a rede volta.</p>
+          </article>
+        </div>
       </section>
-      <section class="texto">
-        <h2>Entrar com o Google</h2>
-        <p>A conta é criada com a tua conta Google, por isso o HUROH não guarda palavras-passe. Recebemos apenas o teu nome, email e foto de perfil, para criar a conta e mostrar o teu perfil. Podes exportar os teus dados ou apagar a conta a qualquer momento, nas Definições. Lê a <a href="privacidade.html">política de privacidade</a> e os <a href="termos.html">termos de utilização</a>.</p>
+
+      <!-- descarregar -->
+      <section class="painel final" id="descarregar">
+        <span class="etiqueta"><b>02</b><i></i><span data-t="desc.etiqueta">Descarregar</span></span>
+        <h2 data-t="desc.titulo">Começa agora</h2>
+        <p data-t="desc.texto">Para Windows 10 e 11. Instala sem pedir administrador e atualiza-se sozinho.</p>
+        <a class="botao" href="https://github.com/arthrtx/HUROH/releases/latest/download/HUROH-Instalar.exe" data-t="botao.descarregar">Descarregar para Windows</a>
+        <a class="link-suave" href="https://github.com/arthrtx/HUROH/releases" data-t="desc.versoes">Todas as versões e novidades</a>
       </section>
     </main>
-    <footer>HUROH · Your life. In sync. · <a href="mailto:huroh@outlook.pt">huroh@outlook.pt</a></footer>
+
+    <footer class="rodape">
+      <a class="logo logo-pequeno" href="./" aria-label="HUROH"><svg class="marca" aria-hidden="true"><use href="#marca-h"/></svg><svg class="nome" viewBox="0 0 734 160" aria-hidden="true"><use href="#marca-nome"/></svg></a>
+      <nav>
+        <a href="privacidade.html" data-t="rod.privacidade">Privacidade</a>
+        <a href="termos.html" data-t="rod.termos">Termos</a>
+        <a href="mailto:huroh@outlook.pt">huroh@outlook.pt</a>
+        <a href="https://github.com/arthrtx" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <small data-t="rod.direitos">© 2026 HUROH. Todos os direitos reservados.</small>
+    </footer>
+
+    <script src="idioma.js"></script>
+    <script src="site.js"></script>
   </body>
 </html>
