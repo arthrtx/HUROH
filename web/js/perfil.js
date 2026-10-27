@@ -13,7 +13,7 @@ export function perfilAtual() {
 function avatarIniciais(nome) {
     const iniciais = nome.split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0].toUpperCase()).join('') || '?';
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
-        <rect width="80" height="80" fill="#16161b"/>
+        <rect width="80" height="80" fill="#2b2b31"/>
         <text x="40" y="50" font-family="Inter, sans-serif" font-size="30" font-weight="800" fill="#f4f4f5" text-anchor="middle">${escapar(iniciais)}</text>
     </svg>`;
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);

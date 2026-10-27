@@ -745,7 +745,7 @@ body.tema-claro .widget.resumo-saldo {
 body.tema-claro .resumo-saldo .resumo-icone,
 body.tema-claro .resumo-saldo .widget-titulo,
 body.tema-claro .resumo-saldo .widget-valor {
-    color: #1d1a16;
+    color: #2b2b31;
 }
 
 body.tema-claro .resumo-saldo .widget-detalhe {
@@ -861,7 +861,7 @@ body.tema-claro .widget.resumo-cartao.bolsa {
     gap: 6px;
     padding: 16px 18px 0;
     justify-content: flex-start;
-    background: #121215;
+    background: #2b2b31;
     border-color: rgba(255, 255, 255, 0.07);
     color: #f4f4f5;
 }
@@ -1005,7 +1005,7 @@ body.tema-claro .widget.resumo-cartao.bolsa {
 
 body.tema-claro .cartao.cartao-azul {
     background: linear-gradient(180deg, #f6f1ea 0%, #eee7dc 42%, #c3cdea 80%, #8ca0e0 100%);
-    color: #1d1a16;
+    color: #2b2b31;
 }
 
 body.tema-claro .cartao-azul h2 {
@@ -1035,7 +1035,7 @@ body.tema-claro .cartao-azul h2 {
 
 body.tema-claro .pagina .widget.resumo-cartao.bolsa {
     background: rgba(250, 250, 250, 0.55);
-    color: #141414;
+    color: #2b2b31;
     border-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
@@ -1609,4 +1609,300 @@ body.desktop #definicoes #cartao-arranque.escondido {
 
 body.desktop #linha-apagar-backups {
     display: flex !important;
+}
+
+/* calendário da agenda: vistas semanal e mensal, título grande e semana numa faixa curva */
+body .agenda-corrida > .agenda-bloco.cal-cartao {
+    --cal-hoje: linear-gradient(135deg, #6d4bff, #e0457b);
+    --cal-botao: rgba(255, 255, 255, 0.12);
+    --cal-botao-texto: #fff;
+    padding: 18px 20px 18px;
+    color: #fff;
+    background:
+        radial-gradient(45% 55% at 28% 62%, rgba(124, 58, 237, 0.55), transparent 72%),
+        radial-gradient(45% 55% at 72% 66%, rgba(225, 56, 96, 0.5), transparent 72%),
+        radial-gradient(70% 50% at 50% 105%, rgba(59, 90, 220, 0.45), transparent 75%),
+        linear-gradient(180deg, rgba(22, 20, 32, 0.78), rgba(18, 16, 30, 0.7));
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+body.tema-claro .agenda-corrida > .agenda-bloco.cal-cartao {
+    --cal-hoje: linear-gradient(135deg, #c418b0, #f2683a);
+    --cal-botao: rgba(255, 255, 255, 0.75);
+    --cal-botao-texto: #2b2b31;
+    background:
+        radial-gradient(50% 60% at 30% 60%, rgba(196, 60, 170, 0.85), transparent 72%),
+        radial-gradient(50% 60% at 70% 64%, rgba(232, 108, 92, 0.85), transparent 72%),
+        linear-gradient(180deg, rgba(196, 184, 204, 0.95), rgba(214, 196, 208, 0.9));
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 20px 44px rgba(170, 70, 120, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.cal-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.cal-vistas {
+    display: flex;
+    flex: 0 1 320px;
+    padding: 4px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.cal-vista {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 11px;
+    background: none;
+    color: rgba(255, 255, 255, 0.78);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.cal-vista.ativo {
+    background-color: #fff;
+    color: #2b2b31;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cal-cartao .cal-acoes {
+    margin-left: 0;
+    gap: 8px;
+}
+
+.cal-cartao .cal-botao {
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.cal-cartao .cal-botao:hover {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.cal-cartao .cal-topo {
+    margin-bottom: 12px;
+}
+
+.cal-cartao .cal-titulo {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 18px;
+    color: #fff;
+}
+
+.cal-cartao .cal-titulo strong,
+.cal-cartao .cal-titulo small {
+    font-size: clamp(40px, 7vh, 62px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: #fff;
+}
+
+.cal-cartao .cal-titulo small {
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.cal-cartao .cal-semana {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.cal-cartao .cal-dia {
+    color: #fff;
+}
+
+.cal-cartao .cal-dia.fora {
+    color: #fff;
+    opacity: 0.45;
+}
+
+.cal-cartao .cal-dia:hover > span:first-child {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+body .cal-cartao .cal-dia.hoje > span:first-child {
+    background: var(--cal-hoje);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.cal-cartao .cal-dia.escolhido:not(.hoje) > span:first-child {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.cal-cartao .ponto-cheio {
+    background-color: #fff;
+}
+
+.cal-cartao .ponto-vazio {
+    border-color: #fff;
+}
+
+.cal-cartao[data-vista="semanal"] .calendario,
+.cal-cartao[data-vista="mensal"] .cal-curva {
+    display: none;
+}
+
+.cal-curva {
+    position: relative;
+    height: 146px;
+    margin: 4px -20px 0;
+    padding: 0 20px;
+}
+
+.cal-arco {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 140px;
+    pointer-events: none;
+}
+
+.cal-arco-faixa {
+    fill: rgba(255, 255, 255, 0.1);
+}
+
+.cal-arco-linha {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.35);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+}
+
+.cal-curva-dias {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-cartao .cal-curva-dia {
+    height: auto;
+    gap: 16px;
+    justify-content: flex-start;
+    transform: translateY(calc(var(--curva) * 4px));
+}
+
+.cal-curva-dia small {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.cal-cartao .cal-curva-dia > span:nth-of-type(1) {
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.cal-curva-dia:first-child,
+.cal-curva-dia:last-child {
+    opacity: 0.75;
+}
+
+.cal-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.cal-rodape span {
+    font-size: 15px;
+    opacity: 0.88;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-novo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--cal-botao);
+    color: var(--cal-botao-texto);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.2s;
+}
+
+.cal-novo:hover {
+    transform: translateY(-1px);
+}
+
+.cal-novo .icone {
+    width: 18px;
+    height: 18px;
+}
+
+.cal-novo span {
+    opacity: 1;
+    font-size: inherit;
+}
+
+body.tema-claro .cal-cartao .cal-titulo strong,
+body.tema-claro .cal-cartao .cal-titulo small,
+body.tema-claro .cal-cartao .cal-curva-dia small {
+    text-shadow: 0 1px 16px rgba(120, 40, 100, 0.3);
+}
+
+body.tema-claro .cal-cartao .cal-dia.feriado > span:first-child {
+    color: #fff3c4;
+}
+
+body.tema-claro .cal-cartao .cal-dia.feriado > span:first-child::after {
+    background-color: #fff3c4;
+}
+
+.cal-cartao .cal-curva-dia > span:nth-of-type(1) {
+    position: relative;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.cal-cartao .cal-curva-dia:hover > span:nth-of-type(1) {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+body .cal-cartao .cal-curva-dia.hoje > span:nth-of-type(1) {
+    background: var(--cal-hoje);
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.cal-cartao .cal-curva-dia.escolhido:not(.hoje) > span:nth-of-type(1) {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.cal-cartao .cal-curva-dia.feriado > span:nth-of-type(1) {
+    color: #ffb36b;
+    font-weight: 600;
 }

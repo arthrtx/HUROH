@@ -1,4 +1,4 @@
-const VERSAO = 'huroh-v8';
+const VERSAO = 'huroh-v9';
 
 const FICHEIROS = [
     './',

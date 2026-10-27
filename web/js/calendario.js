@@ -7,6 +7,10 @@ const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
 let mesVisivel = new Date();
 let diaEscolhido = dataISO();
+let vista = 'mensal';
+try {
+    vista = localStorage.getItem('agenda-vista') === 'semanal' ? 'semanal' : 'mensal';
+} catch {}
 
 function eventosDoDia(dia) {
     return obterEventos().filter(evento => dataISO(new Date(evento.start_at)) === dia);
@@ -69,8 +73,6 @@ function plural(n, um, varios) {
 // ======================================================
 function celula(data, foraDoMes) {
     const chave = dataISO(data);
-    const eventos = eventosDoDia(chave).length;
-    const tarefas = tarefasDoDia(chave).length;
     const classes = ['cal-dia'];
     if (foraDoMes) classes.push('fora');
     if (chave === dataISO()) classes.push('hoje');
@@ -78,7 +80,7 @@ function celula(data, foraDoMes) {
     const nomeFeriado = feriado(chave);
     if (nomeFeriado) classes.push('feriado');
 
-    const pontos = '<i class="ponto-cheio"></i>'.repeat(Math.min(eventos, 2)) + '<i class="ponto-vazio"></i>'.repeat(Math.min(tarefas, 2));
+    const pontos = pontosDoDia(chave);
 
     return `
         <button type="button" class="${classes.join(' ')}" data-dia="${chave}"${nomeFeriado ? ` title="${t(nomeFeriado)}"` : ''}>
@@ -87,7 +89,56 @@ function celula(data, foraDoMes) {
         </button>`;
 }
 
+function pontosDoDia(chave) {
+    const eventos = eventosDoDia(chave).length;
+    const tarefas = tarefasDoDia(chave).length;
+    return '<i class="ponto-cheio"></i>'.repeat(Math.min(eventos, 2)) + '<i class="ponto-vazio"></i>'.repeat(Math.min(tarefas, 2));
+}
+
+function dataDe(chave) {
+    const [ano, mes, dia] = chave.split('-').map(Number);
+    return new Date(ano, mes - 1, dia);
+}
+
+function definirTitulo(data) {
+    const nome = data.toLocaleDateString(local, { month: 'long' });
+    document.getElementById('titulo-mes').textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
+    document.getElementById('titulo-ano').textContent = data.getFullYear();
+}
+
+// semana do dia escolhido numa faixa curva (segunda a domingo)
+function desenharSemana() {
+    const escolhido = dataDe(diaEscolhido);
+    const segunda = new Date(escolhido);
+    segunda.setDate(escolhido.getDate() - ((escolhido.getDay() + 6) % 7));
+    definirTitulo(escolhido);
+
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+        const data = new Date(segunda);
+        data.setDate(segunda.getDate() + i);
+        const chave = dataISO(data);
+        const classes = ['cal-dia', 'cal-curva-dia'];
+        if (chave === dataISO()) classes.push('hoje');
+        if (chave === diaEscolhido) classes.push('escolhido');
+        const nomeFeriado = feriado(chave);
+        if (nomeFeriado) classes.push('feriado');
+
+        html += `
+            <button type="button" class="${classes.join(' ')}" data-dia="${chave}" style="--curva:${(i - 3) * (i - 3)}"${nomeFeriado ? ` title="${t(nomeFeriado)}"` : ''}>
+                <small>${DIAS_SEMANA[i]}</small>
+                <span>${data.getDate()}</span>
+                <span class="cal-pontos">${pontosDoDia(chave)}</span>
+            </button>`;
+    }
+    document.getElementById('cal-curva').innerHTML = html;
+}
+
 function desenharMes() {
+    document.getElementById('cal-cartao').dataset.vista = vista;
+    document.querySelectorAll('.cal-vista').forEach(b => b.classList.toggle('ativo', b.dataset.vista === vista));
+    if (vista === 'semanal') return desenharSemana();
+
     const ano = mesVisivel.getFullYear();
     const mes = mesVisivel.getMonth();
     const primeiro = new Date(ano, mes, 1);
@@ -95,9 +146,7 @@ function desenharMes() {
     const diasNoMes = new Date(ano, mes + 1, 0).getDate();
     const semanas = Math.ceil((desvio + diasNoMes) / 7);
 
-    const nome = primeiro.toLocaleDateString(local, { month: 'long' });
-    document.getElementById('titulo-mes').textContent = nome.charAt(0).toUpperCase() + nome.slice(1);
-    document.getElementById('titulo-ano').textContent = ano;
+    definirTitulo(primeiro);
 
     let celulas = DIAS_SEMANA.map(dia => `<div class="cal-semana">${dia}</div>`).join('');
 
@@ -122,6 +171,8 @@ function desenharDia() {
         ? 'Hoje'
         : data.toLocaleDateString(local, { weekday: 'long', day: 'numeric', month: 'long' });
     document.getElementById('titulo-dia').textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+    const textoDia = data.toLocaleDateString(local, { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('cal-dia-texto').textContent = textoDia.charAt(0).toUpperCase() + textoDia.slice(1);
     const nomeFeriado = feriado(diaEscolhido);
     document.getElementById('resumo-dia-agenda').textContent =
         `${nomeFeriado ? t(nomeFeriado) + ' · ' : ''}${plural(eventos.length, 'evento', 'eventos')}, ${plural(tarefas.length, 'tarefa', 'tarefas')}`;
@@ -173,15 +224,29 @@ function atualizar() {
 // início
 // ======================================================
 export function iniciarCalendario() {
-    document.getElementById('mes-anterior').addEventListener('click', () => {
-        mesVisivel = new Date(mesVisivel.getFullYear(), mesVisivel.getMonth() - 1, 1);
+    // na vista semanal as setas andam uma semana; na mensal, um mês
+    const andar = sentido => {
+        if (vista === 'semanal') {
+            const data = dataDe(diaEscolhido);
+            data.setDate(data.getDate() + 7 * sentido);
+            diaEscolhido = dataISO(data);
+            mesVisivel = new Date(data.getFullYear(), data.getMonth(), 1);
+            atualizar();
+            return;
+        }
+        mesVisivel = new Date(mesVisivel.getFullYear(), mesVisivel.getMonth() + sentido, 1);
         desenharMes();
-    });
+    };
+    document.getElementById('mes-anterior').addEventListener('click', () => andar(-1));
+    document.getElementById('mes-seguinte').addEventListener('click', () => andar(1));
 
-    document.getElementById('mes-seguinte').addEventListener('click', () => {
-        mesVisivel = new Date(mesVisivel.getFullYear(), mesVisivel.getMonth() + 1, 1);
+    document.querySelectorAll('.cal-vista').forEach(botao => botao.addEventListener('click', () => {
+        vista = botao.dataset.vista;
+        try {
+            localStorage.setItem('agenda-vista', vista);
+        } catch {}
         desenharMes();
-    });
+    }));
 
     document.getElementById('mes-hoje').addEventListener('click', () => {
         mesVisivel = new Date();
@@ -189,7 +254,7 @@ export function iniciarCalendario() {
         atualizar();
     });
 
-    document.getElementById('calendario').addEventListener('click', evento => {
+    const escolherDia = evento => {
         const botao = evento.target.closest('[data-dia]');
         if (!botao) return;
 
@@ -202,7 +267,9 @@ export function iniciarCalendario() {
         const [ano, mes] = diaEscolhido.split('-').map(Number);
         if (mes - 1 !== mesVisivel.getMonth()) mesVisivel = new Date(ano, mes - 1, 1);
         atualizar();
-    });
+    };
+    document.getElementById('calendario').addEventListener('click', escolherDia);
+    document.getElementById('cal-curva').addEventListener('click', escolherDia);
 
     document.getElementById('lista-dia').addEventListener('click', evento => {
         const id = evento.target.closest('[data-tarefa-dia]')?.dataset.tarefaDia;
@@ -212,6 +279,7 @@ export function iniciarCalendario() {
 
     const novoNoDia = () => abrirEvento(null, diaEscolhido + 'T00:00');
     document.getElementById('evento-no-dia').addEventListener('click', novoNoDia);
+    document.getElementById('cal-novo').addEventListener('click', novoNoDia);
 
     document.addEventListener('eventos-carregados', atualizar);
     document.addEventListener('tarefas-carregadas', atualizar);

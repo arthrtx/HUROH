@@ -1122,7 +1122,7 @@ body.pesquisa-aberta:not([data-pagina="dashboard"]) .pesquisa {
 
 body.tema-claro .saldo-titulo,
 body.tema-claro .saldo-numero {
-    color: #111114;
+    color: #2b2b31;
 }
 
 body.tema-claro .saldo-sub,
@@ -1137,7 +1137,7 @@ body.tema-claro .saldo-linha {
 }
 
 body.tema-claro .banner {
-    color: #111114;
+    color: #2b2b31;
     backdrop-filter: blur(22px);
     border-color: rgba(255, 255, 255, 0.7);
 }
@@ -1858,6 +1858,10 @@ body.pesquisa-aberta:not([data-pagina="dashboard"]) .topo-barra .pesquisa {
     background-color: var(--cor-painel);
 }
 
+body.tema-claro .avatar {
+    background: #2b2b31;
+}
+
 /* modo claro */
 body.vidro.tema-claro .app,
 body.tema-claro .app {
@@ -1889,7 +1893,7 @@ body.tema-claro .widget.widget-saldo {
 }
 
 body.tema-claro .widget-saldo .saldo-titulo {
-    color: #141414;
+    color: #2b2b31;
 }
 
 body.tema-claro .widget-saldo .saldo-sub,
@@ -1910,12 +1914,12 @@ body.tema-claro .widget-saldo .saldo-linha {
 body.tema-claro .eventos-dia {
     background: radial-gradient(60% 60% at 50% 55%, #ff3d7f, rgba(255, 90, 140, 0.75) 40%, rgba(255, 190, 210, 0.6) 70%, #f6dbe3 100%);
     box-shadow: 0 14px 30px rgba(255, 60, 120, 0.2);
-    color: #141414;
+    color: #2b2b31;
 }
 
 body.tema-claro .botao-principal,
 body.tema-claro .banner .botao-principal {
-    background-color: #111113;
+    background-color: #2b2b31;
     color: #fff;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
 }
@@ -1928,7 +1932,7 @@ body.tema-claro .pesquisa {
 }
 
 body.tema-claro .eventos-mais {
-    background-color: #111113;
+    background-color: #2b2b31;
 }
 
 body.tema-claro .widget,
@@ -1981,12 +1985,12 @@ body.tema-claro .agenda-corrida > .agenda-bloco:nth-child(3) {
 }
 
 body.tema-claro .cal-dia.hoje > span:first-child {
-    box-shadow: 0 0 0 2px #f4f2ee, 0 0 0 4px #141414;
+    box-shadow: 0 0 0 2px #f4f2ee, 0 0 0 4px #2b2b31;
 }
 
 body.tema-claro .ilha {
     background-color: rgba(255, 255, 255, 0.8);
-    color: #141414;
+    color: #2b2b31;
     backdrop-filter: blur(16px);
     box-shadow: 0 10px 24px rgba(60, 30, 20, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
@@ -2063,7 +2067,7 @@ body.tema-claro .widget-semana-gastos .sg-canto {
 body.tema-claro .widget-mes .mes-topo strong,
 body.tema-claro .widget-mes .mes-linha strong,
 body.tema-claro .widget-semana-gastos .lista-titulo {
-    color: #15171c;
+    color: #2b2b31;
 }
 
 body.tema-claro .widget-mes small,
@@ -2099,12 +2103,91 @@ body.tema-claro .widget-semana-gastos .lista-item {
 }
 
 body.tema-claro .widget-mes .mes-barra span {
-    background-color: #15171c;
+    background-color: #2b2b31;
     box-shadow: none;
 }
 
 body.tema-claro .widget-mes .mes-barra {
     background-color: rgba(255, 255, 255, 0.45);
+}
+
+/* mês e recentes no modo claro: pastel rosa e amarelo, com o painel interior em vidro */
+body.tema-claro .widget.widget-mes,
+body.tema-claro .widget.widget-semana-gastos {
+    --rosa: #c56a9c;
+    background:
+        radial-gradient(75% 70% at 95% 5%, rgba(234, 176, 220, 0.95), transparent 70%),
+        radial-gradient(70% 75% at 0% 100%, rgba(240, 220, 160, 0.95), transparent 70%),
+        radial-gradient(60% 55% at 55% 60%, rgba(242, 190, 190, 0.85), transparent 75%),
+        #ecc8e0;
+    border: 1px solid rgba(170, 110, 140, 0.25);
+    box-shadow: 0 18px 40px rgba(160, 80, 120, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+body.tema-claro .widget-mes small,
+body.tema-claro .widget-mes .mes-canto,
+body.tema-claro .widget-mes .mes-linha b,
+body.tema-claro .widget-semana-gastos .sg-meta small {
+    color: var(--rosa);
+}
+
+body.tema-claro .widget-mes .mes-topo,
+body.tema-claro .widget-semana-gastos .sg-meta {
+    border-color: rgba(197, 106, 156, 0.2);
+}
+
+body.tema-claro .widget-mes .mes-topo strong,
+body.tema-claro .widget-mes .mes-linha strong {
+    color: #2b2b31;
+}
+
+body.tema-claro .widget-mes .mes-icone {
+    background-color: rgba(255, 255, 255, 0.45);
+    color: var(--rosa);
+}
+
+body.tema-claro .widget-mes .mes-dupla .positivo,
+body.tema-claro .widget-semana-gastos .lista-valor.positivo {
+    color: #1f7a52;
+}
+
+body.tema-claro .widget-mes .mes-dupla .negativo,
+body.tema-claro .widget-semana-gastos .lista-valor.negativo {
+    color: #b8324a;
+}
+
+body.tema-claro .widget-mes .mes-barra {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+body.tema-claro .widget-mes .mes-barra span {
+    background: linear-gradient(90deg, #e2bd70, #e49a8c, #d690c0);
+}
+
+body.tema-claro .widget-semana-gastos .sg-lista {
+    background: linear-gradient(110deg, rgba(226, 186, 110, 0.55), rgba(228, 150, 140, 0.5) 55%, rgba(214, 150, 200, 0.5));
+    border: 1px solid rgba(160, 100, 120, 0.18);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+body.tema-claro .widget-semana-gastos .lista-item {
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+body.tema-claro .widget-semana-gastos .lista-titulo {
+    color: #fff;
+}
+
+body.tema-claro .widget-semana-gastos .lista-sub {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+body.tema-claro .widget-semana-gastos .icone-item {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+body.tema-claro .widget-semana-gastos .sg-canto {
+    border-color: rgba(197, 106, 156, 0.55);
 }
 
 body:not(.tema-claro) .agenda-bloco {
