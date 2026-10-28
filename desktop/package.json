@@ -1,6 +1,6 @@
 {
     "name": "huroh",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "HUROH - Your life. In sync.",
     "author": "Your life. In sync.",
     "main": "main.js",
@@ -75,7 +75,7 @@
             "displayLanguageSelector": true
         },
         "releaseInfo": {
-            "releaseNotes": "Correção de arranque.\n\n- O HUROH passa a abrir em computadores sem placa gráfica, máquinas virtuais e ambiente de trabalho remoto, com o efeito de vidro e o menu lateral.\n- As animações (abertura e entrada do menu lateral) passam a funcionar também em computadores com as animações do Windows desligadas."
+            "releaseNotes": "Tutorial de boas-vindas.\n\n- Novo tutorial que corre na primeira vez e depois de terminar sessão e voltar, a explicar o HUROH passo a passo.\n- Destaque no botão de cada passo com o fundo desfocado, setas, botão Pular e textos em português, inglês e espanhol.\n- O menu lateral começa desligado; o tutorial ativa-o quando o explica e volta a desligá-lo a seguir."
         },
         "publish": [
             {
