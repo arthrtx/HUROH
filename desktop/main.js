@@ -33,9 +33,9 @@ const FICHEIRO_CONFIG = () => path.join(app.getPath('userData'), 'config.json');
 
 function lerConfig() {
     try {
-        return { lateral: true, ...JSON.parse(fs.readFileSync(FICHEIRO_CONFIG(), 'utf8')) };
+        return { lateral: false, ...JSON.parse(fs.readFileSync(FICHEIRO_CONFIG(), 'utf8')) };
     } catch {
-        return { lateral: true };
+        return { lateral: false };
     }
 }
 
