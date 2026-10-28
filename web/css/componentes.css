@@ -2434,3 +2434,128 @@ input[type="checkbox"]:checked::after {
     margin: 0 10px;
     justify-content: center;
 }
+
+/* tutorial */
+.tutorial-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background-color: rgba(5, 5, 7, 0.35);
+    backdrop-filter: blur(3px);
+    transition: clip-path 0.3s ease;
+}
+
+.tutorial-cobertura {
+    position: fixed;
+    inset: 0;
+    z-index: 2001;
+}
+
+.tutorial-aro {
+    position: fixed;
+    z-index: 2002;
+    border: 2px solid var(--cor-destaque);
+    border-radius: 14px;
+    box-shadow: 0 0 0 4px var(--cor-destaque-fundo), 0 0 26px var(--cor-destaque-fundo);
+    pointer-events: none;
+    transition: left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease;
+    animation: tutorial-pulsar 2.2s ease-in-out infinite;
+}
+
+@keyframes tutorial-pulsar {
+    50% {
+        box-shadow: 0 0 0 8px var(--cor-destaque-fundo), 0 0 36px var(--cor-destaque-fundo);
+    }
+}
+
+.tutorial-caixa {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2003;
+    width: min(440px, calc(100vw - 32px));
+    padding: 18px 20px;
+    border-radius: var(--raio-cartao);
+    background-color: var(--cor-painel);
+    border: 1px solid var(--cor-borda);
+    box-shadow: var(--sombra);
+}
+
+.tutorial-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.tutorial-pontos {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tutorial-pontos span {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--raio-pilula);
+    background-color: var(--cor-borda-forte);
+    transition: width 0.25s, background-color 0.25s;
+}
+
+.tutorial-pontos span.ativo {
+    width: 18px;
+    background-color: var(--cor-destaque);
+}
+
+.tutorial-titulo {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.tutorial-texto {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--cor-texto-suave);
+    margin-bottom: 16px;
+}
+
+.tutorial-botoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.tutorial-botoes .icone {
+    width: 16px;
+    height: 16px;
+}
+
+.tutorial-botoes .botao {
+    padding: 9px 14px;
+}
+
+/* o conteúdo da caixa entra a cada passo */
+.tutorial-troca .tutorial-topo,
+.tutorial-troca .tutorial-titulo,
+.tutorial-troca .tutorial-texto,
+.tutorial-troca .tutorial-botoes {
+    animation: tutorial-entra 0.4s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.tutorial-troca .tutorial-texto {
+    animation-delay: 0.05s;
+}
+
+.tutorial-troca .tutorial-botoes {
+    animation-delay: 0.1s;
+}
+
+@keyframes tutorial-entra {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}

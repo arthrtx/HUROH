@@ -1,4 +1,4 @@
-const VERSAO = 'huroh-v9';
+const VERSAO = 'huroh-v10';
 
 const FICHEIROS = [
     './',
@@ -33,6 +33,7 @@ const FICHEIROS = [
     './js/idioma.js',
     './js/janela.js',
     './js/termos.js',
+    './js/tutorial.js',
     './assets/icones/icone-192.png',
     './assets/icones/icone-512.png',
     './assets/fundo-claro.jpg',

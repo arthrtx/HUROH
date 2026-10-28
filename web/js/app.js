@@ -17,6 +17,7 @@ import { iniciarDashboard } from './dashboard.js';
 import { iniciarNotificacoes } from './notificacoes.js';
 import { iniciarTopo } from './topo.js';
 import { iniciarVersao } from './versao.js';
+import { iniciarTutorial } from './tutorial.js';
 
 
 // abertura: o nome HUROH aparece e cresce até virar a janela (sempre que a app abre)
@@ -457,6 +458,7 @@ iniciarCalendario();
 iniciarDashboard(perfilAtual);
 iniciarNotificacoes();
 iniciarSincronizacao(utilizador);
+iniciarTutorial(utilizador);
 
 // o menu lateral só é criado depois das animações de entrada, para não as atrasar
 setTimeout(() => window.huroh?.appPronta?.(), 900);

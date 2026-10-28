@@ -159,7 +159,11 @@ export async function terminarSessao() {
     }
 
     try {
-        if (utilizador) localStorage.removeItem('perfil-' + utilizador.id);
+        if (utilizador) {
+            localStorage.removeItem('perfil-' + utilizador.id);
+            // sem isto, quem voltar a entrar não vê o tutorial outra vez
+            localStorage.removeItem('tutorial-' + utilizador.id);
+        }
     } catch {}
 
     await apagarBd();
@@ -180,6 +184,7 @@ export async function apagarConta(apagarBackups) {
 
     try {
         localStorage.removeItem('perfil-' + utilizador.id);
+        localStorage.removeItem('tutorial-' + utilizador.id);
     } catch {}
 
     await apagarBd();

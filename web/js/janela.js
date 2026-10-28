@@ -8,7 +8,8 @@ document.querySelectorAll('[data-janela]').forEach(botao => {
 function haAlgoAberto() {
     return Boolean(
         document.querySelector('dialog[open], .painel:not(.escondido)') ||
-        document.body.classList.contains('pesquisa-aberta')
+        document.body.classList.contains('pesquisa-aberta') ||
+        document.body.classList.contains('tutorial-aberto')
     );
 }
 
